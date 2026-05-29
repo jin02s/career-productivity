@@ -108,6 +108,15 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csv
 
 /* Deadline bar */
 .deadline-today-badge{background:var(--danger);color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;white-space:nowrap;animation:pulse 1.5s ease-in-out infinite;}
+.proj-status-sel{border:1px solid var(--border);border-radius:6px;padding:4px 20px 4px 8px;font-size:12px;background:var(--surface);color:var(--text);outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 24 24' fill='none' stroke='%238A8880' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 5px center;cursor:pointer;font-weight:500}
+.proj-status-완료{color:var(--accent);border-color:var(--accent-mid);background:var(--accent-light)}
+.proj-status-부분완료{color:var(--warn);border-color:var(--warn);background:var(--warn-light)}
+.proj-status-미완료{color:var(--text-muted);border-color:var(--border)}
+.proj-status-딜레이{color:var(--danger);border-color:var(--danger);background:var(--danger-light)}
+.proj-delay-row{display:flex;gap:8px;align-items:center;padding:6px 14px;background:var(--danger-light);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.proj-delay-row label{font-size:11px;color:var(--danger);font-weight:500;white-space:nowrap}
+.proj-delay-row input{border:1px solid rgba(184,48,48,.3);border-radius:5px;padding:4px 8px;font-size:12px;background:var(--surface);outline:none;color:var(--text)}
+.sub-dl-badge{display:inline-flex;align-items:center;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700;background:var(--danger);color:#fff;margin-left:5px;animation:pulse 1.5s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
 .dl-bar{display:flex;align-items:center;gap:10px;padding:5px 14px;font-size:11px;border-bottom:1px solid var(--border)}
 .dl-ok{color:var(--accent);background:var(--accent-light)}
@@ -250,7 +259,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
 <body>
 
 <!-- LOGIN -->
-<div class="login-screen" id="login-screen">
+<div class="login-screen" id="login-screen" style="display: none;">
   <div class="login-box">
     <div class="login-logo">CAREER DIVISION</div>
     <div class="login-title">생산성 관리 시스템</div>
@@ -259,18 +268,18 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
       <input class="login-input" id="login-name" placeholder="본인 이름 입력" autocomplete="off" list="member-list-dl">
       <datalist id="member-list-dl">
         <option value="송진영">
-        <option value="임혜진">
-        <option value="박현지">
-        <option value="전율리">
-        <option value="정은지">
-        <option value="정현정">
-        <option value="김승현">
-        <option value="유화경">
-      </datalist>
+        </option><option value="임혜진">
+        </option><option value="박현지">
+        </option><option value="전율리">
+        </option><option value="정은지">
+        </option><option value="정현정">
+        </option><option value="김승현">
+        </option><option value="유화경">
+      </option></datalist>
     </div>
     <div class="login-field">
       <label class="login-label">PIN 번호</label>
-      <input class="login-input" id="login-pin" type="password" placeholder="관리자에게 문의" maxlength="6" onkeydown="if(event.key==='Enter')doLogin()">
+      <input class="login-input" id="login-pin" type="password" placeholder="관리자에게 문의" maxlength="6" onkeydown="if(event.key===&#39;Enter&#39;)doLogin()">
     </div>
     <button class="login-btn" onclick="doLogin()">로그인</button>
     <div class="login-error" id="login-error"></div>
@@ -278,87 +287,87 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   </div>
 </div>
 
-<div class="app" id="main-app" style="display:none">
+<div class="app" id="main-app" style="display: flex;">
 <!-- SIDEBAR -->
 <nav class="sidebar">
   <div class="sidebar-logo">
     <div class="org">CAREER DIVISION</div>
     <div class="title">생산성 관리 시스템</div>
-    <div class="role-badge" id="role-badge">팀원</div>
+    <div class="role-badge role-director" id="role-badge">부장</div>
   </div>
   <div class="sidebar-nav" id="nav-member">
     <div class="nav-section">내 업무</div>
-    <button class="nav-item active" onclick="showPage('input',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="12" y2="17"/></svg>오늘 업무 입력
+    <button class="nav-item" onclick="showPage(&#39;input&#39;,this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="12" y2="17"></line></svg>오늘 업무 입력
     </button>
-    <button class="nav-item" onclick="showPage('retro',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>데일리 회고
+    <button class="nav-item" onclick="showPage(&#39;retro&#39;,this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>데일리 회고
     </button>
-    <button class="nav-item" onclick="showPage('report',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>일일 리포트
+    <button class="nav-item" onclick="showPage(&#39;report&#39;,this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>일일 리포트
     </button>
-    <button class="nav-item" onclick="showPage('weekly',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>주간 리포트
+    <button class="nav-item" onclick="showPage(&#39;weekly&#39;,this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>주간 리포트
     </button>
-    <button class="nav-item" onclick="showPage('myhistory',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>나의 기록
+    <button class="nav-item" onclick="showPage(&#39;myhistory&#39;,this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>나의 기록
     </button>
-    <button class="nav-item" id="nav-inbox" onclick="showPage('inbox',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>피드백 수신함 <span id="inbox-badge" style="display:none;background:var(--danger);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:4px">N</span>
+    <button class="nav-item" id="nav-inbox" onclick="showPage(&#39;inbox&#39;,this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>피드백 수신함 <span id="inbox-badge" style="display:none;background:var(--danger);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:4px">N</span>
     </button>
   </div>
-  <div class="sidebar-nav" id="nav-admin" style="display:none">
-    <div class="nav-section" id="admin-nav-label">관리</div>
-    <button class="nav-item" onclick="showPage('dashboard',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span id="dash-nav-label">팀 대시보드</span>
+  <div class="sidebar-nav" id="nav-admin" style="">
+    <div class="nav-section" id="admin-nav-label">전체 관리 (부장)</div>
+    <button class="nav-item" onclick="showPage(&#39;dashboard&#39;,this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg><span id="dash-nav-label">전체 대시보드</span>
     </button>
-    <button class="nav-item" onclick="showPage('members',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>구성원 현황
+    <button class="nav-item active" onclick="showPage(&#39;members&#39;,this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg>구성원 현황
     </button>
-    <button class="nav-item" onclick="showPage('feedback',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>피드백 발송
+    <button class="nav-item" onclick="showPage(&#39;feedback&#39;,this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg>피드백 발송
     </button>
     <button class="nav-item" onclick="showPage('upload',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>리포트 업로드
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      구성원 리포트
     </button>
-    <button class="nav-item" onclick="openFirebaseModal()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>Firebase 설정
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"></path></svg>Firebase 설정
     </button>
   </div>
   <div class="sidebar-user">
     <div class="user-info">
-      <div class="avatar" id="sb-avatar" style="background:#E8F2EC;color:var(--accent)">?</div>
-      <div><div class="user-name" id="sb-name">—</div><div class="user-role-text" id="sb-role">—</div></div>
+      <div class="avatar" id="sb-avatar" style="background:#E8F2EC;color:var(--accent)">송</div>
+      <div><div class="user-name" id="sb-name">송진영</div><div class="user-role-text" id="sb-role">커리어사업부 · 부장</div></div>
     </div>
   </div>
   <button class="logout-btn" onclick="doLogout()">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>로그아웃
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>로그아웃
   </button>
 </nav>
 
 <main class="main">
 
 <!-- ── 업무 입력 ── -->
-<div id="page-input" class="page-section visible">
+<div id="page-input" class="page-section">
   <div class="page-header">
     <div class="page-title">오늘 업무 입력</div>
-    <div class="page-sub" id="today-date-label"></div>
+    <div class="page-sub" id="today-date-label">2026년 5월 29일 금요일</div>
   </div>
   <!-- 목표 업무 요약 배너 -->
   <div class="today-summary" id="today-summary">
-    <div class="ts-item"><div class="ts-val" id="ts-proj">0</div><div class="ts-label">프로젝트</div></div>
+    <div class="ts-item"><div class="ts-val" id="ts-proj">2</div><div class="ts-label">프로젝트</div></div>
     <div class="ts-divider"></div>
-    <div class="ts-item"><div class="ts-val" id="ts-total">0</div><div class="ts-label">총 세부업무</div></div>
+    <div class="ts-item"><div class="ts-val" id="ts-total">3</div><div class="ts-label">총 세부업무</div></div>
     <div class="ts-divider"></div>
     <div class="ts-item" style="color:var(--accent)"><div class="ts-val" id="ts-done">0</div><div class="ts-label">완료</div></div>
     <div class="ts-divider"></div>
     <div class="ts-item" style="color:var(--info)"><div class="ts-val" id="ts-prog">0</div><div class="ts-label">진행중</div></div>
     <div class="ts-divider"></div>
-    <div class="ts-item" style="color:var(--warn)"><div class="ts-val" id="ts-delay">0</div><div class="ts-label">딜레이</div></div>
+    <div class="ts-item" style="color:var(--warn)"><div class="ts-val" id="ts-delay">1</div><div class="ts-label">딜레이</div></div>
     <div class="ts-divider"></div>
-    <div class="ts-item" style="color:var(--text-muted)"><div class="ts-val" id="ts-rate">—</div><div class="ts-label">완료율</div></div>
+    <div class="ts-item" style="color:var(--text-muted)"><div class="ts-val" id="ts-rate">0%</div><div class="ts-label">완료율</div></div>
     <div class="ts-divider"></div>
-    <div class="ts-projects" id="ts-proj-names" style="font-size:12px;color:var(--text-muted)">프로젝트를 추가해 주세요</div>
+    <div class="ts-projects" id="ts-proj-names" style="font-size:12px;color:var(--text-muted)">📁 재물&amp;계정조사 제출  ·  사전직무교육 강사섭외</div>
   </div>
   <div class="card">
     <div class="card-title">기본 정보</div>
@@ -380,11 +389,128 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
     <div style="font-size:12px;color:var(--text-muted);background:var(--surface2);padding:7px 11px;border-radius:6px;margin-bottom:12px">
       💡 시작 버튼 → 자동으로 '진행중' / 완료 버튼 → '완료' 로 변경됩니다. 잘못 누른 경우 '수동편집'으로 수정하세요.
     </div>
-    <div id="project-list"></div>
+    <div id="project-list"><div class="project-block" id="proj-1">
+    <div class="project-header">
+      <input class="proj-name-input" style="width:100%" type="text" placeholder="프로젝트명" value="재물&amp;계정조사 제출" oninput="updateProjProgress(1);updateSummary()">
+      <span class="deadline-today-badge">! 금일 데드라인</span>
+      <select class="proj-cat-sel" id="proj-cat-1">
+        <option>사업운영</option>
+        <option>사업제안</option>
+        <option selected="">기타</option>
+      </select>
+      <span style="font-size:11px;color:var(--text-muted);white-space:nowrap">데드라인</span>
+      <input type="date" class="dl-input" id="proj-dl-1" value="2026-05-29" onchange="updateProjProgress(1)">
+      <span class="proj-prog-text" id="proj-prog-1">0/1</span>
+      <button class="del-proj-btn" onclick="document.getElementById(&#39;proj-1&#39;).remove();updateSummary()">×</button>
+    </div>
+    <div class="dl-bar dl-warn" id="proj-dlbar-1">
+      <span id="proj-dltext-1">⏰ D-0 (2026-05-29) — 미완료 1건</span>
+      <div class="dl-bar-track"><div class="dl-bar-fill" id="proj-bar-1" style="width:0%"></div></div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="sub-table">
+        <thead><tr>
+          <th style="padding-left:14px;min-width:170px">세부업무</th>
+          <th style="min-width:80px">시작 타각</th>
+          <th style="min-width:80px">완료 타각</th>
+          <th style="text-align:center;min-width:44px">소요</th>
+          <th style="min-width:90px">상태</th>
+          <th style="min-width:130px">딜레이 정보</th>
+          <th style="width:26px"></th>
+        </tr></thead>
+        <tbody id="sub-body-1"><tr id="sub-1" data-pid="1">
+    <td style="padding-left:14px"><input class="sub-input" type="text" placeholder="세부업무 입력" value="재물조사 및 계정조사 시트 업데이트, 텔레 제출" oninput="updateSummary()"></td>
+    <td>
+      <button class="time-btn" id="sbtn-s-1" onclick="stampTime(1,&#39;start&#39;,1)">▶ 시작</button>
+      <input class="time-edit" type="time" id="sedit-s-1" value="" onchange="onTimeEdit(1,&#39;start&#39;,1)">
+      <span class="edit-link" onclick="toggleEdit(1,&#39;start&#39;)">수동편집</span>
+    </td>
+    <td>
+      <button class="time-btn" id="sbtn-e-1" onclick="stampTime(1,&#39;end&#39;,1)">■ 완료</button>
+      <input class="time-edit" type="time" id="sedit-e-1" value="" onchange="onTimeEdit(1,&#39;end&#39;,1)">
+      <span class="edit-link" onclick="toggleEdit(1,&#39;end&#39;)">수동편집</span>
+    </td>
+    <td class="dur-cell" id="sdur-1">—</td>
+    <td><select class="status-sel" id="ssel-1" onchange="onStatusSelChange(1,1,this.value)"><option value="시작전" selected="">시작전</option><option value="진행중">진행중</option><option value="완료">완료</option><option value="딜레이-외부">딜레이(외부)</option><option value="딜레이-개인">딜레이(개인)</option></select></td>
+    <td id="sdelay-cell-1"><span style="color:var(--text-light);font-size:11px">—</span></td>
+    <td><button class="del-btn" onclick="removeSubTask(1,1)">×</button></td>
+  </tr></tbody>
+      </table>
+    </div>
+    <button class="add-sub-btn" onclick="addSubTask(1)">+ 세부업무 추가</button>
+  </div><div class="project-block" id="proj-2">
+    <div class="project-header">
+      <input class="proj-name-input" style="width:100%" type="text" placeholder="프로젝트명" value="사전직무교육 강사섭외" oninput="updateProjProgress(2);updateSummary()">
+      
+      <select class="proj-cat-sel" id="proj-cat-2">
+        <option selected="">사업운영</option>
+        <option>사업제안</option>
+        <option>기타</option>
+      </select>
+      <span style="font-size:11px;color:var(--text-muted);white-space:nowrap">데드라인</span>
+      <input type="date" class="dl-input" id="proj-dl-2" value="2026-06-02" onchange="updateProjProgress(2)">
+      <span class="proj-prog-text" id="proj-prog-2">0/2</span>
+      <button class="del-proj-btn" onclick="document.getElementById(&#39;proj-2&#39;).remove();updateSummary()">×</button>
+    </div>
+    <div class="dl-bar dl-ok" id="proj-dlbar-2">
+      <span id="proj-dltext-2">📅 D-4 (2026-06-02) — 미완료 2건</span>
+      <div class="dl-bar-track"><div class="dl-bar-fill" id="proj-bar-2" style="width:0%"></div></div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="sub-table">
+        <thead><tr>
+          <th style="padding-left:14px;min-width:170px">세부업무</th>
+          <th style="min-width:80px">시작 타각</th>
+          <th style="min-width:80px">완료 타각</th>
+          <th style="text-align:center;min-width:44px">소요</th>
+          <th style="min-width:90px">상태</th>
+          <th style="min-width:130px">딜레이 정보</th>
+          <th style="width:26px"></th>
+        </tr></thead>
+        <tbody id="sub-body-2"><tr id="sub-2" data-pid="2">
+    <td style="padding-left:14px"><input class="sub-input" type="text" placeholder="세부업무 입력" value="섭외문안 작성" oninput="updateSummary()"></td>
+    <td>
+      <button class="time-btn stamped" id="sbtn-s-2" onclick="stampTime(2,&#39;start&#39;,2)">11:11</button>
+      <input class="time-edit" type="time" id="sedit-s-2" value="11:11" onchange="onTimeEdit(2,&#39;start&#39;,2)">
+      <span class="edit-link" onclick="toggleEdit(2,&#39;start&#39;)">수동편집</span>
+    </td>
+    <td>
+      <button class="time-btn stamped" id="sbtn-e-2" onclick="stampTime(2,&#39;end&#39;,2)">11:11</button>
+      <input class="time-edit" type="time" id="sedit-e-2" value="11:11" onchange="onTimeEdit(2,&#39;end&#39;,2)">
+      <span class="edit-link" onclick="toggleEdit(2,&#39;end&#39;)">수동편집</span>
+    </td>
+    <td class="dur-cell" id="sdur-2" style="color: var(--danger);">오류</td>
+    <td><select class="status-sel" id="ssel-2" onchange="onStatusSelChange(2,2,this.value)"><option value="시작전">시작전</option><option value="진행중">진행중</option><option value="완료">완료</option><option value="딜레이-외부">딜레이(외부)</option><option value="딜레이-개인" selected="">딜레이(개인)</option></select></td>
+    <td id="sdelay-cell-2"><div class="delay-fields">
+    <label>사유</label><input type="text" id="sdr-2" value="컨디션 난조로 반반차 사용 " placeholder="딜레이 사유" style="flex:1;min-width:80px">
+    <label>목표기한</label><input type="date" id="sdd-2" value="2026-05-30" style="width:110px">
+  </div></td>
+    <td><button class="del-btn" onclick="removeSubTask(2,2)">×</button></td>
+  </tr><tr id="sub-3" data-pid="2">
+    <td style="padding-left:14px"><input class="sub-input" type="text" placeholder="세부업무 입력" value="강사 리스트업" oninput="updateSummary()"></td>
+    <td>
+      <button class="time-btn" id="sbtn-s-3" onclick="stampTime(3,&#39;start&#39;,2)">▶ 시작</button>
+      <input class="time-edit" type="time" id="sedit-s-3" value="" onchange="onTimeEdit(3,&#39;start&#39;,2)">
+      <span class="edit-link" onclick="toggleEdit(3,&#39;start&#39;)">수동편집</span>
+    </td>
+    <td>
+      <button class="time-btn" id="sbtn-e-3" onclick="stampTime(3,&#39;end&#39;,2)">■ 완료</button>
+      <input class="time-edit" type="time" id="sedit-e-3" value="" onchange="onTimeEdit(3,&#39;end&#39;,2)">
+      <span class="edit-link" onclick="toggleEdit(3,&#39;end&#39;)">수동편집</span>
+    </td>
+    <td class="dur-cell" id="sdur-3">—</td>
+    <td><select class="status-sel" id="ssel-3" onchange="onStatusSelChange(3,2,this.value)"><option value="시작전" selected="">시작전</option><option value="진행중">진행중</option><option value="완료">완료</option><option value="딜레이-외부">딜레이(외부)</option><option value="딜레이-개인">딜레이(개인)</option></select></td>
+    <td id="sdelay-cell-3"><span style="color:var(--text-light);font-size:11px">—</span></td>
+    <td><button class="del-btn" onclick="removeSubTask(3,2)">×</button></td>
+  </tr></tbody>
+      </table>
+    </div>
+    <button class="add-sub-btn" onclick="addSubTask(2)">+ 세부업무 추가</button>
+  </div></div>
     <button class="btn btn-sm" style="margin-top:4px" id="add-project-btn">+ 프로젝트 추가</button>
   </div>
   <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:12px">
-    <button class="btn btn-sm" onclick="loadTodayIntoForm().then(()=>{if(document.getElementById('project-list').children.length===0)addProject();showToast('최신 데이터로 불러왔습니다');})" style="color:var(--text-muted)">🔄 저장된 데이터 불러오기</button>
+    <button class="btn btn-sm" onclick="loadTodayIntoForm().then(()=&gt;{if(document.getElementById(&#39;project-list&#39;).children.length===0)addProject();showToast(&#39;최신 데이터로 불러왔습니다&#39;);})" style="color:var(--text-muted)">🔄 저장된 데이터 불러오기</button>
     <div style="display:flex;gap:8px">
       <button class="btn" onclick="saveToday(true)">임시저장</button>
       <button class="btn btn-primary" onclick="saveToday(false)">오늘 업무 저장</button>
@@ -398,13 +524,19 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   <!-- 오늘 달성 요약 (저장된 데이터 기반) -->
   <div class="retro-summary" id="retro-today-summary">
     <div class="retro-summary-title">오늘 업무 달성 현황</div>
-    <div id="retro-summary-body" style="color:var(--text-muted);font-size:13px">업무 입력 후 저장하면 여기에 표시됩니다.</div>
+    <div id="retro-summary-body" style="color:var(--text-muted);font-size:13px"><div style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap">
+    <span>총 세부업무 <strong>3</strong>건</span>
+    <span style="color:var(--accent)">완료 <strong>0</strong>건 (0%)</span>
+    <span style="color:var(--warn)">딜레이 <strong>1</strong>건</span>
+  </div><div class="retro-proj-item">
+      <div class="retro-proj-name">📁 재물&amp;계정조사 제출 <span style="font-size:11px;color:var(--text-muted);font-weight:400">0/1 완료 · D/L 2026-05-29</span></div><div class="retro-sub-row"><span class="badge b-notstart" style="font-size:10px">시작전</span><span>↳ 재물조사 및 계정조사 시트 업데이트, 텔레 제출</span></div><div class="retro-proj-item">
+      <div class="retro-proj-name">📁 사전직무교육 강사섭외 <span style="font-size:11px;color:var(--text-muted);font-weight:400">0/2 완료 · D/L 2026-06-02</span></div><div class="retro-sub-row"><span class="badge b-delay-per" style="font-size:10px">딜레이(개인)</span><span>↳ 섭외문안 작성</span><span style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px">오류</span><span style="color:var(--warn);font-size:11px">⚠ 컨디션 난조로 반반차 사용  (목표기한: 2026-05-30)</span><div class="retro-sub-row"><span class="badge b-notstart" style="font-size:10px">시작전</span><span>↳ 강사 리스트업</span></div></div></div></div></div>
   </div>
   <div class="card">
     <div class="card-title">오늘 생산성 만족도</div>
     <div class="range-wrapper">
-      <input type="range" min="1" max="10" value="7" id="satisfaction" oninput="document.getElementById('sat-display').textContent=this.value">
-      <div class="range-val"><span id="sat-display">7</span></div>
+      <input type="range" min="1" max="10" value="7" id="satisfaction" oninput="document.getElementById(&#39;sat-display&#39;).textContent=this.value">
+      <div class="range-val"><span id="sat-display">4</span></div>
     </div>
     <div class="range-labels"><span>1 매우 불만족</span><span>10 매우 만족</span></div>
   </div>
@@ -431,7 +563,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
     <div class="form-group" style="margin-top:8px"><label class="form-label">내일 예정 업무</label><textarea class="form-input" id="retro-tomorrow" style="min-height:56px" placeholder="내일 집중할 주요 업무"></textarea></div>
   </div>
   <div class="btn-row">
-    <button class="btn" onclick="showToast('임시저장되었습니다')">임시저장</button>
+    <button class="btn" onclick="showToast(&#39;임시저장되었습니다&#39;)">임시저장</button>
     <button class="btn btn-primary" onclick="saveRetro()">회고 저장 완료</button>
   </div>
 </div>
@@ -445,42 +577,42 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
     <div class="report-header">
       <div class="report-org">커리어사업부 · CAREER DIVISION</div>
       <div class="report-title">일일 업무 생산성 리포트</div>
-      <div class="report-meta" id="report-meta-line"></div>
+      <div class="report-meta" id="report-meta-line">2026-05-29 · 송진영 · 커리어사업부</div>
     </div>
     <div class="report-section">
       <div class="report-section-title">요약 지표</div>
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
-        <div class="stat-card"><div class="stat-label">프로젝트</div><div class="stat-val" id="r-projects">—</div></div>
-        <div class="stat-card"><div class="stat-label">완료율</div><div class="stat-val" id="r-rate" style="color:var(--accent)">—</div></div>
-        <div class="stat-card"><div class="stat-label">딜레이(개인)</div><div class="stat-val" id="r-delay-per" style="color:var(--warn)">—</div></div>
-        <div class="stat-card"><div class="stat-label">딜레이(외부)</div><div class="stat-val" id="r-delay-ext" style="color:var(--info)">—</div></div>
+        <div class="stat-card"><div class="stat-label">프로젝트</div><div class="stat-val" id="r-projects">2</div></div>
+        <div class="stat-card"><div class="stat-label">완료율</div><div class="stat-val" id="r-rate" style="color:var(--accent)">0%</div></div>
+        <div class="stat-card"><div class="stat-label">딜레이(개인)</div><div class="stat-val" id="r-delay-per" style="color:var(--warn)">1</div></div>
+        <div class="stat-card"><div class="stat-label">딜레이(외부)</div><div class="stat-val" id="r-delay-ext" style="color:var(--info)">0</div></div>
         <div class="stat-card"><div class="stat-label">총 소요시간</div><div class="stat-val" id="r-total-min">—</div><div class="stat-sub">분</div></div>
       </div>
     </div>
     <div class="report-section">
       <div class="report-section-title">프로젝트별 상세</div>
       <table class="rt"><thead><tr><th>프로젝트 / 세부업무</th><th>카테고리</th><th>프로젝트 데드라인</th><th>소요</th><th>상태</th><th>딜레이 사유</th><th>딜레이 목표기한</th></tr></thead>
-      <tbody id="report-task-body"></tbody></table>
+      <tbody id="report-task-body"><tr class="rp-row"><td colspan="7">📁 재물&amp;계정조사 제출 <span style="font-size:11px;color:var(--text-muted);font-weight:400">기타</span> <span style="font-size:11px;color:var(--text-muted);font-weight:400;float:right">0/1 완료</span></td></tr><tr class="rs-row"><td>↳ 재물조사 및 계정조사 시트 업데이트, 텔레 제출</td><td><span class="badge b-pending" style="font-size:10px">기타</span></td><td style="font-size:11px;color:var(--text-muted)">2026-05-29</td><td style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px">—</td><td><span class="badge b-notstart" style="font-size:10px">시작전</span></td><td style="font-size:11px;color:var(--text-muted)">—</td><td style="font-size:11px;color:var(--warn)">—</td></tr><tr class="rp-row"><td colspan="7">📁 사전직무교육 강사섭외 <span style="font-size:11px;color:var(--text-muted);font-weight:400">사업운영</span> <span style="font-size:11px;color:var(--text-muted);font-weight:400;float:right">0/2 완료</span></td></tr><tr class="rs-row"><td>↳ 섭외문안 작성</td><td><span class="badge b-pending" style="font-size:10px">사업운영</span></td><td style="font-size:11px;color:var(--text-muted)">2026-06-02</td><td style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px">오류</td><td><span class="badge b-delay-per" style="font-size:10px">딜레이(개인)</span></td><td style="font-size:11px;color:var(--text-muted)">컨디션 난조로 반반차 사용 </td><td style="font-size:11px;color:var(--warn)">2026-05-30</td></tr><tr class="rs-row"><td>↳ 강사 리스트업</td><td><span class="badge b-pending" style="font-size:10px">사업운영</span></td><td style="font-size:11px;color:var(--text-muted)">2026-06-02</td><td style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px">—</td><td><span class="badge b-notstart" style="font-size:10px">시작전</span></td><td style="font-size:11px;color:var(--text-muted)">—</td><td style="font-size:11px;color:var(--warn)">—</td></tr></tbody></table>
     </div>
     <div class="report-section">
       <div class="report-section-title">데일리 회고</div>
       <div style="margin-bottom:8px;display:flex;align-items:center;gap:8px;font-size:13px">
         <span style="color:var(--text-muted)">생산성 만족도</span>
-        <strong style="font-family:'IBM Plex Mono',monospace;font-size:16px" id="r-satisfaction">—</strong>
+        <strong style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:16px" id="r-satisfaction">4</strong>
         <span style="color:var(--text-muted)">/10</span>
       </div>
       <div class="kpt-grid">
-        <div class="kpt-block"><div class="kpt-label kpt-k">Keep</div><div class="kpt-text" id="r-keep">—</div></div>
-        <div class="kpt-block"><div class="kpt-label kpt-p">Problem</div><div class="kpt-text" id="r-problem">—</div></div>
-        <div class="kpt-block"><div class="kpt-label kpt-t">Try</div><div class="kpt-text" id="r-try">—</div></div>
+        <div class="kpt-block"><div class="kpt-label kpt-k">Keep</div><div class="kpt-text" id="r-keep">강사섭외 절반 끝냄</div></div>
+        <div class="kpt-block"><div class="kpt-label kpt-p">Problem</div><div class="kpt-text" id="r-problem">완전히는 못끝냄</div></div>
+        <div class="kpt-block"><div class="kpt-label kpt-t">Try</div><div class="kpt-text" id="r-try">무조건 끝냄 </div></div>
       </div>
-      <div style="margin-top:8px;font-size:12px;color:var(--text-muted)" id="r-memo-section"></div>
+      <div style="margin-top:8px;font-size:12px;color:var(--text-muted)" id="r-memo-section">메모: 오늘은 강사섭외할 떄 한명이 짜증내서 힘들었다. 좀 더 유연한 소통을 해야짓!</div>
     </div>
-    <div class="report-section"><div class="report-section-title">내일 예정</div><div style="font-size:13px;color:var(--text-muted);line-height:1.7" id="r-tomorrow">—</div></div>
+    <div class="report-section"><div class="report-section-title">내일 예정</div><div style="font-size:13px;color:var(--text-muted);line-height:1.7" id="r-tomorrow">강사섭외 완료하ㅣㄱ!!!! </div></div>
   </div>
   <div class="btn-row">
     <button class="btn" onclick="generateReport()">🔄 새로고침</button>
-    <button class="btn btn-primary" onclick="downloadPDF('daily')">PDF 다운로드</button>
+    <button class="btn btn-primary" onclick="downloadPDF(&#39;daily&#39;)">PDF 다운로드</button>
   </div>
 </div>
 
@@ -495,9 +627,27 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
     </div>
     <button class="btn btn-sm" onclick="generateWeeklyReport()">조회</button>
   </div>
-  <div id="weekly-report-content"></div>
-  <div class="btn-row" id="weekly-pdf-btn" style="display:none">
-    <button class="btn btn-primary" onclick="downloadPDF('weekly')">주간 PDF 다운로드</button>
+  <div id="weekly-report-content"><div class="report-block" id="weekly-report-block">
+    <div class="report-header">
+      <div class="report-org">커리어사업부 · CAREER DIVISION</div>
+      <div class="report-title">주간 업무 생산성 리포트</div>
+      <div class="report-meta">2026-05-25 ~ 2026-05-31 · 송진영</div>
+    </div>
+    <div class="report-section">
+      <div class="report-section-title">주간 요약</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
+        <div class="stat-card"><div class="stat-label">기록 일수</div><div class="stat-val">2</div><div class="stat-sub">일</div></div>
+        <div class="stat-card"><div class="stat-label">완료율</div><div class="stat-val" style="color:var(--accent)">33%</div></div>
+        <div class="stat-card"><div class="stat-label">딜레이(개인)</div><div class="stat-val" style="color:var(--warn)">1</div></div>
+        <div class="stat-card"><div class="stat-label">딜레이(외부)</div><div class="stat-val" style="color:var(--info)">1</div></div>
+        <div class="stat-card"><div class="stat-label">평균 만족도</div><div class="stat-val">—</div><div class="stat-sub">/ 10</div></div>
+      </div>
+    </div>
+    <div class="report-section">
+      <div class="report-section-title">일별 상세</div>
+      <table class="rt"><thead><tr><th>날짜</th><th>프로젝트</th><th>세부업무</th><th>완료율</th><th>딜레이(개인)</th><th>만족도</th></tr></thead><tbody><tr><td style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px">2026-05-28</td><td style="font-size:12px">재물&amp;계정조사 제출, 부서 생산성 관리 시스템 제작, 다과 구매 (독산FLC)</td><td style="font-size:12px;text-align:center">3</td><td><span class="badge b-notstart" style="font-size:10px">67%</span></td><td style="text-align:center;color:var(--warn)">0</td><td style="text-align:center">—</td></tr><tr><td style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px">2026-05-29</td><td style="font-size:12px">재물&amp;계정조사 제출, 사전직무교육 강사섭외</td><td style="font-size:12px;text-align:center">3</td><td><span class="badge b-notstart" style="font-size:10px">0%</span></td><td style="text-align:center;color:var(--warn)">1</td><td style="text-align:center">—</td></tr></tbody></table></div></div></div>
+  <div class="btn-row" id="weekly-pdf-btn" style="display: flex;">
+    <button class="btn btn-primary" onclick="downloadPDF(&#39;weekly&#39;)">주간 PDF 다운로드</button>
   </div>
 </div>
 
@@ -505,14 +655,32 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
 <div id="page-myhistory" class="page-section">
   <div class="page-header"><div class="page-title">나의 기록</div><div class="page-sub">저장된 일일 기록 전체 목록</div></div>
   <div class="stat-grid">
-    <div class="stat-card"><div class="stat-label">누적 기록 일수</div><div class="stat-val" id="ms-days">0</div><div class="stat-sub">일</div></div>
-    <div class="stat-card"><div class="stat-label">평균 완료율</div><div class="stat-val" id="ms-rate">—</div></div>
-    <div class="stat-card"><div class="stat-label">개인딜레이 누적</div><div class="stat-val" id="ms-delay" style="color:var(--warn)">0</div><div class="stat-sub">건</div></div>
+    <div class="stat-card"><div class="stat-label">누적 기록 일수</div><div class="stat-val" id="ms-days">2</div><div class="stat-sub">일</div></div>
+    <div class="stat-card"><div class="stat-label">평균 완료율</div><div class="stat-val" id="ms-rate">34%</div></div>
+    <div class="stat-card"><div class="stat-label">개인딜레이 누적</div><div class="stat-val" id="ms-delay" style="color:var(--warn)">1</div><div class="stat-sub">건</div></div>
     <div class="stat-card"><div class="stat-label">평균 만족도</div><div class="stat-val" id="ms-sat">—</div></div>
   </div>
   <div class="card">
     <div class="card-title">기록 목록 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(클릭 시 해당 일자 리포트 조회)</span></div>
-    <div id="my-history-list"><div style="color:var(--text-muted);font-size:13px;padding:10px 0">저장된 기록이 없습니다.</div></div>
+    <div id="my-history-list"><div class="history-item" style="cursor:pointer" onclick="viewDailyReport(&#39;2026-05-29&#39;,&#39;송진영&#39;)">
+      <span class="h-date">2026-05-29</span>
+      <span class="h-name">재물&amp;계정조사 제출, 사전직무교육 강사섭외</span>
+      <div class="h-stats">
+        <span>2개 프로젝트</span>
+        <span style="color:var(--accent)">완료율 0%</span>
+        <span style="color:var(--text-light)">회고 미작성</span>
+        <span style="color:var(--info);font-size:10px">→ 리포트 보기</span>
+      </div>
+    </div><div class="history-item" style="cursor:pointer" onclick="viewDailyReport(&#39;2026-05-28&#39;,&#39;송진영&#39;)">
+      <span class="h-date">2026-05-28</span>
+      <span class="h-name">재물&amp;계정조사 제출, 부서 생산성 관리 시스템 제작, 다과 구매 (독산FLC)</span>
+      <div class="h-stats">
+        <span>3개 프로젝트</span>
+        <span style="color:var(--accent)">완료율 67%</span>
+        <span style="color:var(--text-light)">회고 미작성</span>
+        <span style="color:var(--info);font-size:10px">→ 리포트 보기</span>
+      </div>
+    </div></div>
   </div>
 </div>
 
@@ -526,20 +694,153 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
 
 <!-- ── 관리자: 대시보드 ── -->
 <div id="page-dashboard" class="page-section">
-  <div class="page-header"><div class="page-title" id="dashboard-title">팀 대시보드</div><div class="page-sub" id="dashboard-date"></div></div>
+  <div class="page-header"><div class="page-title" id="dashboard-title">전체 생산성 대시보드</div><div class="page-sub" id="dashboard-date">2026년 5월 29일  기준</div></div>
   <div class="stat-grid">
-    <div class="stat-card"><div class="stat-label">전체 완료율</div><div class="stat-val" id="d-rate">—</div><div class="stat-sub">세부업무 기준</div></div>
-    <div class="stat-card"><div class="stat-label">딜레이 누적</div><div class="stat-val" id="d-delay" style="color:var(--warn)">0</div><div class="stat-sub" id="d-delay-sub">외부 0 / 개인 0</div></div>
+    <div class="stat-card"><div class="stat-label">전체 완료율</div><div class="stat-val" id="d-rate">33%</div><div class="stat-sub">세부업무 기준</div></div>
+    <div class="stat-card"><div class="stat-label">딜레이 누적</div><div class="stat-val" id="d-delay" style="color:var(--warn)">2</div><div class="stat-sub" id="d-delay-sub">외부 1 / 개인 1</div></div>
     <div class="stat-card"><div class="stat-label">평균 만족도</div><div class="stat-val" id="d-sat">—</div><div class="stat-sub">/ 10</div></div>
-    <div class="stat-card"><div class="stat-label">오늘 미제출</div><div class="stat-val" id="d-missing" style="color:var(--danger)">—</div><div class="stat-sub">명</div></div>
+    <div class="stat-card"><div class="stat-label">오늘 미제출</div><div class="stat-val" id="d-missing" style="color:var(--danger)">6</div><div class="stat-sub">명</div></div>
   </div>
-  <div class="card"><div class="card-title">최근 제출 현황</div><div id="admin-report-list"><div style="color:var(--text-muted);font-size:13px;padding:8px 0">불러오는 중...</div></div></div>
+  <div class="card"><div class="card-title">최근 제출 현황</div><div id="admin-report-list"><div class="history-item"><span class="h-date">2026-05-29</span><span class="h-name" style="font-weight:500">정은지 <span class="badge b-purple" style="font-size:10px">커리어2팀</span></span><div class="h-stats"><span style="color:var(--accent)">완료율 80%</span><span>"dddd…"</span><span class="badge b-delay-ext" style="font-size:10px">PDF</span></div></div><div class="history-item"><span class="h-date">2026-05-29</span><span class="h-name" style="font-weight:500">송진영 <span class="badge b-purple" style="font-size:10px">커리어사업부</span></span><div class="h-stats"><span>재물&amp;계정조사 제출, 사전직무교육 강사섭외</span><span style="color:var(--accent)">완료율 0%</span><span class="badge b-done" style="font-size:10px">저장</span></div></div><div class="history-item"><span class="h-date">2026-05-28</span><span class="h-name" style="font-weight:500">송진영 <span class="badge b-purple" style="font-size:10px">커리어사업부</span></span><div class="h-stats"><span>재물&amp;계정조사 제출, 부서 생산성 관리 시스템 제작, 다과 구매 (독산FLC)</span><span style="color:var(--accent)">완료율 67%</span><span class="badge b-done" style="font-size:10px">저장</span></div></div></div></div>
 </div>
 
 <!-- ── 관리자: 구성원 현황 ── -->
-<div id="page-members" class="page-section">
+<div id="page-members" class="page-section visible">
   <div class="page-header"><div class="page-title">구성원별 생산성 현황</div><div class="page-sub">누적 데이터 기반 자동 집계</div></div>
-  <div class="member-list" id="member-list-container"></div>
+  <div class="member-list" id="member-list-container"><div style="font-size:11px;font-weight:500;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)">커리어1팀</div><div class="member-card">
+    <div class="member-card-header">
+      <div class="avatar" style="background:#E8F2EC;color:#2D5A3D;width:36px;height:36px;font-size:13px;font-weight:700">임</div>
+      <div class="member-meta">
+        <div class="member-name-txt">임혜진 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">팀장</span></div>
+        <div class="member-tag">커리어1팀</div>
+      </div>
+      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
+        <span class="badge b-notstart">오늘 미제출</span>
+        
+      </div>
+    </div>
+    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">—</span></div>
+    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#534AB7"></div></div><span class="progress-num">—</span></div>
+    <div class="detail-row">
+      <span class="badge b-notstart">기록 0일</span>
+      <span class="badge b-done">개인딜레이 0건</span>
+      <span class="badge b-notstart">세부업무 0건</span>
+    </div>
+  </div><div class="member-card">
+    <div class="member-card-header">
+      <div class="avatar" style="background:#FDF0E3;color:#C4701A;width:36px;height:36px;font-size:13px;font-weight:700">박</div>
+      <div class="member-meta">
+        <div class="member-name-txt">박현지 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">팀원</span></div>
+        <div class="member-tag">커리어1팀</div>
+      </div>
+      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
+        <span class="badge b-notstart">오늘 미제출</span>
+        
+      </div>
+    </div>
+    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">—</span></div>
+    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#534AB7"></div></div><span class="progress-num">—</span></div>
+    <div class="detail-row">
+      <span class="badge b-notstart">기록 0일</span>
+      <span class="badge b-done">개인딜레이 0건</span>
+      <span class="badge b-notstart">세부업무 0건</span>
+    </div>
+  </div><div class="member-card">
+    <div class="member-card-header">
+      <div class="avatar" style="background:#E8F0F8;color:#2A5A8A;width:36px;height:36px;font-size:13px;font-weight:700">전</div>
+      <div class="member-meta">
+        <div class="member-name-txt">전율리 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">팀원</span></div>
+        <div class="member-tag">커리어1팀</div>
+      </div>
+      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
+        <span class="badge b-notstart">오늘 미제출</span>
+        
+      </div>
+    </div>
+    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">—</span></div>
+    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#534AB7"></div></div><span class="progress-num">—</span></div>
+    <div class="detail-row">
+      <span class="badge b-notstart">기록 0일</span>
+      <span class="badge b-done">개인딜레이 0건</span>
+      <span class="badge b-notstart">세부업무 0건</span>
+    </div>
+  </div><div style="font-size:11px;font-weight:500;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)">커리어2팀</div><div class="member-card">
+    <div class="member-card-header">
+      <div class="avatar" style="background:#E8F2EC;color:#2D5A3D;width:36px;height:36px;font-size:13px;font-weight:700">정</div>
+      <div class="member-meta">
+        <div class="member-name-txt">정은지 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">팀장</span></div>
+        <div class="member-tag">커리어2팀</div>
+      </div>
+      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
+        <span class="badge b-notstart">오늘 미제출</span>
+        
+      </div>
+    </div>
+    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">—</span></div>
+    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#534AB7"></div></div><span class="progress-num">—</span></div>
+    <div class="detail-row">
+      <span class="badge b-notstart">기록 0일</span>
+      <span class="badge b-done">개인딜레이 0건</span>
+      <span class="badge b-notstart">세부업무 0건</span>
+    </div>
+  </div><div class="member-card">
+    <div class="member-card-header">
+      <div class="avatar" style="background:#FDF0E3;color:#C4701A;width:36px;height:36px;font-size:13px;font-weight:700">정</div>
+      <div class="member-meta">
+        <div class="member-name-txt">정현정 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">팀원</span></div>
+        <div class="member-tag">커리어2팀</div>
+      </div>
+      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
+        <span class="badge b-notstart">오늘 미제출</span>
+        
+      </div>
+    </div>
+    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">—</span></div>
+    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#534AB7"></div></div><span class="progress-num">—</span></div>
+    <div class="detail-row">
+      <span class="badge b-notstart">기록 0일</span>
+      <span class="badge b-done">개인딜레이 0건</span>
+      <span class="badge b-notstart">세부업무 0건</span>
+    </div>
+  </div><div style="font-size:11px;font-weight:500;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)">커리어3팀</div><div class="member-card">
+    <div class="member-card-header">
+      <div class="avatar" style="background:#E8F2EC;color:#2D5A3D;width:36px;height:36px;font-size:13px;font-weight:700">김</div>
+      <div class="member-meta">
+        <div class="member-name-txt">김승현 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">팀장</span></div>
+        <div class="member-tag">커리어3팀</div>
+      </div>
+      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
+        <span class="badge b-notstart">오늘 미제출</span>
+        
+      </div>
+    </div>
+    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">—</span></div>
+    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#534AB7"></div></div><span class="progress-num">—</span></div>
+    <div class="detail-row">
+      <span class="badge b-notstart">기록 0일</span>
+      <span class="badge b-done">개인딜레이 0건</span>
+      <span class="badge b-notstart">세부업무 0건</span>
+    </div>
+  </div><div class="member-card">
+    <div class="member-card-header">
+      <div class="avatar" style="background:#FDF0E3;color:#C4701A;width:36px;height:36px;font-size:13px;font-weight:700">유</div>
+      <div class="member-meta">
+        <div class="member-name-txt">유화경 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">팀원</span></div>
+        <div class="member-tag">커리어3팀</div>
+      </div>
+      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
+        <span class="badge b-notstart">오늘 미제출</span>
+        
+      </div>
+    </div>
+    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">—</span></div>
+    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#534AB7"></div></div><span class="progress-num">—</span></div>
+    <div class="detail-row">
+      <span class="badge b-notstart">기록 0일</span>
+      <span class="badge b-done">개인딜레이 0건</span>
+      <span class="badge b-notstart">세부업무 0건</span>
+    </div>
+  </div></div>
 </div>
 
 <!-- ── 관리자: 피드백 발송 ── -->
@@ -565,28 +866,34 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   </div>
   <div class="card" style="margin-top:12px">
     <div class="card-title">발송 내역</div>
-    <div id="sent-feedback-list"><div style="color:var(--text-muted);font-size:13px;padding:8px 0">발송 내역이 없습니다.</div></div>
+    <div id="sent-feedback-list"><div class="history-item">
+    <span class="h-date">2026-05-29</span>
+    <span class="h-name" style="font-weight:500">→ 김승현</span>
+    <div class="h-stats">
+      <span class="badge b-purple" style="font-size:10px">칭찬 / 긍정 피드백</span>
+      <span>힘내세요</span>
+      <span class="badge b-delay-per" style="font-size:10px">미읽음</span>
+    </div>
+  </div></div>
   </div>
 </div>
 
-<!-- ── 관리자: 리포트 업로드 ── -->
+<!-- ── 관리자: 구성원 리포트 조회 ── -->
 <div id="page-upload" class="page-section">
-  <div class="page-header"><div class="page-title">리포트 업로드</div><div class="page-sub">구성원이 제출한 PDF를 등록합니다</div></div>
-  <div class="card">
-    <div class="card-title">제출 정보</div>
-    <div class="form-row form-row-3">
-      <div class="form-group"><label class="form-label">팀원 이름</label><input class="form-input" id="upload-member" placeholder="이름 입력"></div>
-      <div class="form-group"><label class="form-label">날짜</label><input type="date" class="form-input" id="upload-date"></div>
-      <div class="form-group"><label class="form-label">완료율 (%)</label><input type="number" class="form-input" id="upload-rate" placeholder="예: 80" min="0" max="100"></div>
+  <div class="page-header"><div class="page-title">구성원 리포트 조회</div><div class="page-sub">구성원이 저장한 업무 데이터를 바로 조회합니다</div></div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-title">조회 설정</div>
+    <div class="form-row form-row-2" style="max-width:420px">
+      <div class="form-group"><label class="form-label">구성원 선택</label>
+        <select class="form-input" id="view-member-sel" onchange="loadMemberReport()"><option value="">— 선택 —</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">날짜</label>
+        <input type="date" class="form-input" id="view-report-date" onchange="loadMemberReport()">
+      </div>
     </div>
-    <div class="form-group" style="margin-bottom:10px"><label class="form-label">코멘트</label><textarea class="form-input" id="upload-comment" style="min-height:56px" placeholder="전달 사항"></textarea></div>
-    <div class="upload-area" onclick="fakeUpload()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      <div id="upload-filename">PDF 파일 클릭하여 첨부</div>
-    </div>
-    <div class="btn-row"><button class="btn btn-primary" onclick="registerReport()">등록</button></div>
   </div>
-  <div class="card" style="margin-top:12px"><div class="card-title">등록 목록</div><div id="uploaded-list"><div style="color:var(--text-muted);font-size:13px;padding:8px 0">없습니다.</div></div></div>
+  <div id="member-report-view"><div style="color:var(--text-muted);font-size:13px;padding:16px 0;text-align:center">위에서 구성원과 날짜를 선택하면 해당 일일 리포트가 표시됩니다.</div></div>
+  <div class="btn-row" id="member-report-pdf-btn" style="display:none"><button class="btn btn-primary" onclick="downloadMemberReportPDF()">PDF 출력</button></div>
 </div>
 
 </main>
@@ -600,7 +907,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
     <div class="fb-status warn" id="fb-status"><div class="dot"></div><span id="fb-status-text">미연결</span></div>
     <div class="form-group" style="margin-bottom:10px">
       <label class="form-label">Firebase Config JSON</label>
-      <textarea class="form-input" id="fb-config-input" style="min-height:110px;font-family:'IBM Plex Mono',monospace;font-size:11px" placeholder='{"apiKey":"...","projectId":"..."}'></textarea>
+      <textarea class="form-input" id="fb-config-input" style="min-height:110px;font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px" placeholder="{&quot;apiKey&quot;:&quot;...&quot;,&quot;projectId&quot;:&quot;...&quot;}"></textarea>
     </div>
     <div style="font-size:12px;color:var(--text-muted);line-height:1.7;margin-bottom:12px;background:var(--surface2);padding:9px 11px;border-radius:6px">
       <strong>PIN 변경:</strong> Firestore → 컬렉션 <code>config</code> → 문서 <code>pins</code> → 이름을 필드로, PIN을 값으로 입력<br>
@@ -616,7 +923,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast">✓ 피드백이 발송되었습니다</div>
 
 <script>
 // ═══════════════════════════════════
@@ -725,8 +1032,8 @@ function enterApp(){
   const {name,role,team}=CU;
   document.getElementById('sb-name').textContent=name;
   document.getElementById('sb-avatar').textContent=name.charAt(0);
-  document.getElementById('sel-name').value=name;
-  document.getElementById('sel-team').value=team;
+  const snEl=document.getElementById('sel-name'); if(snEl) snEl.value=name;
+  const stEl=document.getElementById('sel-team'); if(stEl) stEl.value=team;
   const badge=document.getElementById('role-badge');
   const adminNav=document.getElementById('nav-admin');
   if(role==='director'){
@@ -751,7 +1058,7 @@ function enterApp(){
   const today=new Date();
   document.getElementById('today-date-label').textContent=today.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
   document.getElementById('input-date').value=today.toISOString().split('T')[0];
-  document.getElementById('upload-date').value=today.toISOString().split('T')[0];
+  const uploadDateEl=document.getElementById('upload-date'); if(uploadDateEl) uploadDateEl.value=today.toISOString().split('T')[0];
   document.getElementById('fb-date').value=today.toISOString().split('T')[0];
   document.getElementById('dashboard-date').textContent=today.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'})+'  기준';
   setDefaultWeek();
@@ -770,13 +1077,22 @@ let projCount=0, subCount=0;
 const STATUS_LABELS={'시작전':'시작전','진행중':'진행중','완료':'완료','딜레이-외부':'딜레이(외부)','딜레이-개인':'딜레이(개인)'};
 const STATUS_BADGE={'시작전':'b-notstart','진행중':'b-progress','완료':'b-done','딜레이-외부':'b-delay-ext','딜레이-개인':'b-delay-per'};
 
-function addProject(name='',category='사업운영',deadline='',isDeadlineToday=false){
+function addProject(name='',category='사업운영',deadline='',isDeadlineToday=false,projStatus='',projDelayDeadline='',projDelayReason=''){
   projCount++; const pid=projCount;
   const div=document.createElement('div'); div.className='project-block'; div.id='proj-'+pid;
+  const todayBadge=isDeadlineToday?'<span class="deadline-today-badge">! 금일 데드라인</span>':'';
+  const delayRowHtml = projStatus==='딜레이'
+    ? '<div class="proj-delay-row" id="proj-delay-row-'+pid+'">'
+        + '<label>📌 딜레이 사유</label>'
+        + '<input type="text" id="proj-delay-reason-'+pid+'" value="'+esc(projDelayReason)+'" placeholder="딜레이 사유 입력" style="flex:1;min-width:120px">'
+        + '<label>목표 데드라인</label>'
+        + '<input type="date" id="proj-delay-dl-'+pid+'" value="'+esc(projDelayDeadline)+'">'
+        + '</div>'
+    : '<div class="proj-delay-row" id="proj-delay-row-'+pid+'" style="display:none"><label>📌 딜레이 사유</label><input type="text" id="proj-delay-reason-'+pid+'" placeholder="딜레이 사유 입력" style="flex:1;min-width:120px"><label>목표 데드라인</label><input type="date" id="proj-delay-dl-'+pid+'"></div>';;
   div.innerHTML=`
     <div class="project-header">
       <input class="proj-name-input" style="width:100%" type="text" placeholder="프로젝트명" value="${esc(name)}" oninput="updateProjProgress(${pid});updateSummary()">
-      ${isDeadlineToday?'<span class="deadline-today-badge">! 금일 데드라인</span>':''}
+      ${todayBadge}
       <select class="proj-cat-sel" id="proj-cat-${pid}">
         <option${category==='사업운영'?' selected':''}>사업운영</option>
         <option${category==='사업제안'?' selected':''}>사업제안</option>
@@ -784,9 +1100,16 @@ function addProject(name='',category='사업운영',deadline='',isDeadlineToday=
       </select>
       <span style="font-size:11px;color:var(--text-muted);white-space:nowrap">데드라인</span>
       <input type="date" class="dl-input" id="proj-dl-${pid}" value="${esc(deadline)}" onchange="updateProjProgress(${pid})">
+      <select class="proj-status-sel proj-status-${projStatus||'미완료'}" id="proj-status-${pid}" onchange="onProjStatusChange(${pid},this.value)">
+        <option value="미완료"${(!projStatus||projStatus==='미완료')?' selected':''}>미완료</option>
+        <option value="부분완료"${projStatus==='부분완료'?' selected':''}>부분완료</option>
+        <option value="완료"${projStatus==='완료'?' selected':''}>완료</option>
+        <option value="딜레이"${projStatus==='딜레이'?' selected':''}>딜레이</option>
+      </select>
       <span class="proj-prog-text" id="proj-prog-${pid}">0/0</span>
       <button class="del-proj-btn" onclick="document.getElementById('proj-${pid}').remove();updateSummary()">×</button>
     </div>
+    ${delayRowHtml}
     <div class="dl-bar dl-none" id="proj-dlbar-${pid}">
       <span id="proj-dltext-${pid}">데드라인 미설정</span>
       <div class="dl-bar-track"><div class="dl-bar-fill" id="proj-bar-${pid}" style="width:0%"></div></div>
@@ -809,6 +1132,14 @@ function addProject(name='',category='사업운영',deadline='',isDeadlineToday=
   `;
   document.getElementById('project-list').appendChild(div);
   // subtasks are optional — not auto-created
+}
+
+function onProjStatusChange(pid, val){
+  const sel=document.getElementById('proj-status-'+pid);
+  if(sel){ sel.className='proj-status-sel proj-status-'+val; }
+  const delayRow=document.getElementById('proj-delay-row-'+pid);
+  if(delayRow) delayRow.style.display=val==='딜레이'?'flex':'none';
+  updateSummary();
 }
 
 function addSubTask(pid, data={}){
@@ -918,18 +1249,63 @@ function updateProjProgress(pid){
   const pg=document.getElementById('proj-prog-'+pid), bar=document.getElementById('proj-bar-'+pid);
   if(pg) pg.textContent=done+'/'+total;
   if(bar) bar.style.width=(total?Math.round(done/total*100):0)+'%';
+
+  // Auto-update project status (only if not manually set to 딜레이)
+  const pSel=document.getElementById('proj-status-'+pid);
+  if(pSel && pSel.value!=='딜레이'){
+    let autoStatus='미완료';
+    if(total>0&&done===total) autoStatus='완료';
+    else if(done>0) autoStatus='부분완료';
+    pSel.value=autoStatus;
+    pSel.className='proj-status-sel proj-status-'+autoStatus;
+  }
+
+  // Check subtask deadlines for today alert
+  const todayStr=new Date().toISOString().split('T')[0];
+  rows.forEach(r=>{
+    const sid=r.id.replace('sub-','');
+    const sddEl=document.getElementById('sdd-'+sid);
+    const nameCell=r.querySelector('input[type="text"]');
+    if(!sddEl||!nameCell) return;
+    const existingBadge=nameCell.parentNode.querySelector('.sub-dl-badge');
+    if(sddEl.value===todayStr && (document.getElementById('ssel-'+sid)||{}).value!=='완료'){
+      if(!existingBadge){
+        const badge=document.createElement('span');
+        badge.className='sub-dl-badge'; badge.textContent='! 금일 데드라인';
+        nameCell.parentNode.appendChild(badge);
+      }
+    } else {
+      if(existingBadge) existingBadge.remove();
+    }
+  });
+
   const dl=document.getElementById('proj-dl-'+pid), dlbar=document.getElementById('proj-dlbar-'+pid), dltext=document.getElementById('proj-dltext-'+pid);
   if(!dl||!dlbar||!dltext)return;
+
+  // Also check if any subtask has delay_deadline === today
+  const todayDate=new Date(); todayDate.setHours(0,0,0,0);
+  let subDlToday=false;
+  rows.forEach(r=>{
+    const sid=r.id.replace('sub-','');
+    const sddEl=document.getElementById('sdd-'+sid);
+    if(sddEl&&sddEl.value===todayStr&&(document.getElementById('ssel-'+sid)||{}).value!=='완료') subDlToday=true;
+  });
+
   const dlVal=dl.value;
-  if(!dlVal){dlbar.className='dl-bar dl-none';dltext.textContent='데드라인 미설정';return;}
-  const today=new Date();today.setHours(0,0,0,0);
+  if(!dlVal){
+    dlbar.className='dl-bar dl-none';
+    dltext.textContent=subDlToday?'⚡ 세부업무 금일 데드라인 있음':'데드라인 미설정';
+    if(subDlToday) dlbar.className='dl-bar dl-over';
+    return;
+  }
   const dlDate=new Date(dlVal);dlDate.setHours(0,0,0,0);
-  const diff=Math.round((dlDate-today)/86400000);
+  const diff=Math.round((dlDate-todayDate)/86400000);
   const allDone=total>0&&done===total;
   if(allDone){dlbar.className='dl-bar dl-ok';dltext.textContent='✓ 전체 완료 (데드라인 '+dlVal+')';}
+  else if(diff===0){dlbar.className='dl-bar dl-over';dltext.textContent='❗ 금일 데드라인! — 미완료 '+(total-done)+'건';}
   else if(diff<0){dlbar.className='dl-bar dl-over';dltext.textContent='⚠ 데드라인 초과 '+Math.abs(diff)+'일 ('+dlVal+') — 미완료 '+(total-done)+'건';}
-  else if(diff<=3){dlbar.className='dl-bar dl-warn';dltext.textContent='⏰ D-'+diff+' ('+dlVal+') — 미완료 '+(total-done)+'건';}
-  else{dlbar.className='dl-bar dl-ok';dltext.textContent='📅 D-'+diff+' ('+dlVal+') — 미완료 '+(total-done)+'건';}
+  else if(diff<=3){dlbar.className='dl-bar dl-warn';dltext.textContent='⏰ D-'+diff+' ('+dlVal+') — 미완료 '+(total-done)+'건'+(subDlToday?' ⚡세부업무 금일 데드라인':'')}
+  else{dlbar.className='dl-bar dl-ok';dltext.textContent='📅 D-'+diff+' ('+dlVal+') — 미완료 '+(total-done)+'건'+(subDlToday?' ⚡세부업무 금일 데드라인':'');}
 }
 
 function updateSummary(){
@@ -974,7 +1350,18 @@ function getProjectsData(){
         delay_deadline:(document.getElementById('sdd-'+sid)||{}).value||''
       });
     });
-    if(name||subs.length) projs.push({name,category:catEl?catEl.value:'기타',deadline:dlEl?dlEl.value:'',subtasks:subs});
+    const pStatusEl=document.getElementById('proj-status-'+pid);
+    const pDelayDlEl=document.getElementById('proj-delay-dl-'+pid);
+    const pDelayRsEl=document.getElementById('proj-delay-reason-'+pid);
+    if(name||subs.length) projs.push({
+      name,
+      category:catEl?catEl.value:'기타',
+      deadline:dlEl?dlEl.value:'',
+      proj_status:pStatusEl?pStatusEl.value:'미완료',
+      proj_delay_deadline:pDelayDlEl?pDelayDlEl.value:'',
+      proj_delay_reason:pDelayRsEl?pDelayRsEl.value:'',
+      subtasks:subs
+    });
   });
   return projs;
 }
@@ -1028,8 +1415,8 @@ async function loadTodayIntoForm(){
   projCount=0; subCount=0;
 
   projects.forEach(p=>{
-    const isDeadlineToday=p.deadline===date;
-    addProject(p.name||'', p.category||'사업운영', p.deadline||'', isDeadlineToday);
+    const isToday=p.deadline===date;
+    addProject(p.name||'', p.category||'사업운영', p.deadline||'', isToday, p.proj_status||'', p.proj_delay_deadline||'', p.proj_delay_reason||'');
     const pid=projCount;
     if(p.subtasks&&p.subtasks.length){
       p.subtasks.forEach(t=>addSubTask(pid,t));
@@ -1079,7 +1466,9 @@ async function loadRetroSummary(){
       <div class="retro-proj-name">📁 ${p.name||'(이름 없음)'} <span style="font-size:11px;color:var(--text-muted);font-weight:400">${pd}/${subs.length} 완료${p.deadline?' · D/L '+p.deadline:''}</span></div>`;
     subs.forEach(t=>{
       const bc=STATUS_BADGE[t.status]||'b-notstart';
-      html+=`<div class="retro-sub-row"><span class="badge ${bc}" style="font-size:10px">${STATUS_LABELS[t.status]||t.status}</span><span>↳ ${t.name}</span>${t.duration&&t.duration!=='—'?`<span style="font-family:'IBM Plex Mono',monospace;font-size:11px">${t.duration}</span>`:''}${t.delay_reason?`<span style="color:var(--warn);font-size:11px">⚠ ${t.delay_reason}${t.delay_deadline?' (목표기한: '+t.delay_deadline+')':''}</span>`:''}`;
+      const durPart = (t.duration&&t.duration!=='—') ? '<span style="font-family:IBM Plex Mono,monospace;font-size:11px">'+t.duration+'</span>' : '';
+      const dlRsPart = t.delay_reason ? '<span style="color:var(--warn);font-size:11px">⚠ '+t.delay_reason+(t.delay_deadline?' (목표기한: '+t.delay_deadline+')':'')+'</span>' : '';
+      html+=`<div class="retro-sub-row"><span class="badge ${bc}" style="font-size:10px">${STATUS_LABELS[t.status]||t.status}</span><span>↳ ${t.name}</span>${durPart}${dlRsPart}`;
     });
     html+='</div>';
   });
@@ -1109,13 +1498,15 @@ async function generateReport(dateOverride, nameOverride){
   const tbody=document.getElementById('report-task-body'); tbody.innerHTML='';
   projects.forEach(p=>{
     const ps=p.subtasks||[], pd=ps.filter(t=>t.status==='완료').length;
-    tbody.innerHTML+=`<tr class="rp-row"><td colspan="7">📁 ${p.name||'(이름 없음)'} <span style="font-size:11px;color:var(--text-muted);font-weight:400">${p.category}</span> <span style="font-size:11px;color:var(--text-muted);font-weight:400;float:right">${pd}/${ps.length} 완료</span></td></tr>`;
+    const pSB={'완료':'b-done','부분완료':'b-delay-per','미완료':'b-notstart','딜레이':'b-danger'}[p.proj_status||'미완료']||'b-notstart';
+    const delayDlPart = (p.proj_status==='딜레이'&&p.proj_delay_deadline) ? ' <span style="font-size:10px;color:var(--danger)">목표기한: '+p.proj_delay_deadline+'</span>' : '';
+    const delayRsPart = p.proj_delay_reason ? ' <span style="font-size:10px;color:var(--text-muted)">사유: '+p.proj_delay_reason+'</span>' : '';
+    tbody.innerHTML+=`<tr class="rp-row"><td colspan="7">📁 ${p.name||'(이름 없음)'} <span style="font-size:11px;color:var(--text-muted);font-weight:400">${p.category}</span> <span class="badge ${pSB}" style="font-size:10px;margin-left:4px">${p.proj_status||'미완료'}</span>${delayDlPart}${delayRsPart}<span style="float:right;font-size:11px;color:var(--text-muted);font-weight:400">${pd}/${ps.length} 완료</span></td></tr>`;
     ps.forEach(t=>{
       const bc=STATUS_BADGE[t.status]||'b-notstart';
       tbody.innerHTML+=`<tr class="rs-row"><td>↳ ${t.name}</td><td><span class="badge b-pending" style="font-size:10px">${p.category}</span></td><td style="font-size:11px;color:var(--text-muted)">${p.deadline||'—'}</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px">${t.duration||'—'}</td><td><span class="badge ${bc}" style="font-size:10px">${STATUS_LABELS[t.status]||t.status}</span></td><td style="font-size:11px;color:var(--text-muted)">${t.delay_reason||'—'}</td><td style="font-size:11px;color:var(--warn)">${t.delay_deadline||'—'}</td></tr>`;
     });
   });
-  if(!projects.length) tbody.innerHTML='<tr><td colspan="7" style="color:var(--text-muted);font-size:12px;padding:10px 0">저장된 데이터가 없습니다.</td></tr>';
   const r=retroEntry||{};
   document.getElementById('r-satisfaction').textContent=r.satisfaction||document.getElementById('satisfaction').value;
   document.getElementById('r-keep').textContent=r.keep||document.getElementById('retro-keep').value||'—';
@@ -1238,7 +1629,7 @@ function openPrintWin(content){
   .b-done{background:#E8F2EC;color:#2D5A3D}.b-progress{background:#E8F0F8;color:#2A5A8A}.b-delay-per{background:#FDF0E3;color:#C4701A}.b-delay-ext{background:#E8F0F8;color:#2A5A8A}.b-notstart,.b-pending{background:#F5F4F0;color:#8A8880}
   .kpt-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.kpt-block{background:#F5F4F0;border-radius:4px;padding:8px}.kpt-label{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px}.kpt-k{color:#2D5A3D}.kpt-p{color:#C4701A}.kpt-t{color:#2A5A8A}.kpt-text{font-size:11px;color:#8A8880;line-height:1.6}
   @media print{body{padding:16px}}</style>
-  </head><body>${content}<script>window.print();<\/script></body></html>`);
+  </head><body>${content}<scr'+'ipt>window.print();<\/scr'+'ipt></body></html>`);
   w.document.close();
 }
 
@@ -1272,7 +1663,7 @@ async function renderMyHistory(){
       <div class="h-stats">
         <span>${(e.projects||[]).length}개 프로젝트</span>
         <span style="color:var(--accent)">완료율 ${rate}%</span>
-        ${retro?`<span style="color:var(--info)">만족도 ${retro.satisfaction}/10</span>`:'<span style="color:var(--text-light)">회고 미작성</span>'}
+        ${retro?'<span style="color:var(--info)">만족도 '+retro.satisfaction+'/10</span>':'<span style="color:var(--text-light)">회고 미작성</span>'}
         <span style="color:var(--info);font-size:10px">→ 리포트 보기</span>
       </div>
     </div>`;
@@ -1292,8 +1683,10 @@ async function sendFeedback(){
   const type=document.getElementById('fb-type').value;
   const content=document.getElementById('fb-content').value.trim();
   if(!to||!content){showToast('받는 사람과 내용을 입력해 주세요');return;}
-  const id=Date.now()+'__'+eKey(to)+'__'+date;
-  await dbSet('feedbacks',id,{id,to,date,type,content,from:CU.name,read:false,sent_at:new Date().toISOString()});
+  // Use unique id that includes timestamp so multiple feedbacks to same person work
+  const id='fb__'+Date.now()+'__'+eKey(to);
+  const entry={id,to,date,type,content,from:CU.name,read:false,sent_at:new Date().toISOString()};
+  await dbSet('feedbacks',id,entry);
   document.getElementById('fb-content').value='';
   await renderSentFeedbacks();
   showToast('✓ 피드백이 발송되었습니다');
@@ -1320,11 +1713,16 @@ async function renderInbox(){
   const cont=document.getElementById('inbox-list');
   if(!mine.length){cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:10px 0">받은 피드백이 없습니다.</div>';return;}
   cont.innerHTML=mine.map(f=>`<div class="feedback-box${f.read?'':' feedback-unread'}" style="margin-bottom:10px">
-    <div class="feedback-title">💬 ${f.type} <span style="margin-left:auto;font-weight:400;font-size:10px">from ${f.from} · ${f.date}</span></div>
-    <div class="feedback-msg">${f.content}</div>
-    <div class="feedback-meta">${f.sent_at?f.sent_at.slice(0,16).replace('T',' '):''}</div>
+    <div class="feedback-title">💬 ${f.type||'피드백'} &nbsp;<span style="font-weight:400;font-size:10px;color:var(--text-muted)">from ${f.from||'—'} · ${f.date||''}</span></div>
+    <div class="feedback-msg" style="margin-top:4px">${f.content||''}</div>
+    <div class="feedback-meta" style="margin-top:4px">${f.sent_at?f.sent_at.slice(0,16).replace('T',' '):''}</div>
   </div>`).join('');
-  for(const f of mine){ if(!f.read){ await dbSet('feedbacks',f.id,{...f,read:true}); } }
+  // Mark all as read
+  const unread=mine.filter(f=>!f.read);
+  for(const f of unread){
+    const updated={...f,read:true};
+    await dbSet('feedbacks',f.id,updated);
+  }
   await checkInbox();
 }
 async function checkInbox(){
@@ -1342,7 +1740,7 @@ async function checkInbox(){
 async function renderAdminDashboard(){
   const all=await dbGetAll('tasks');
   const retros=await dbGetAll('retros');
-  const pdf=await dbGetAll('pdf_reports');
+  const pdf=[]; // PDF upload removed — data from tasks directly
   const visibleNames=new Set(getAdminVisibleNames());
   const filtered=all.filter(e=>visibleNames.has(e.name));
   const allSubs=filtered.flatMap(e=>(e.projects||[]).flatMap(p=>p.subtasks||[]));
@@ -1356,9 +1754,9 @@ async function renderAdminDashboard(){
   if(filtRet.length) document.getElementById('d-sat').textContent=(filtRet.reduce((s,e)=>s+Number(e.satisfaction),0)/filtRet.length).toFixed(1);
   const today=document.getElementById('input-date').value;
   const expectedNames=[...visibleNames];
-  const submitted=new Set([...filtered.filter(e=>e.date===today).map(e=>e.name),...pdf.filter(r=>r.date===today&&visibleNames.has(r.member)).map(r=>r.member)]);
+  const submitted=new Set(filtered.filter(e=>e.date===today).map(e=>e.name));
   document.getElementById('d-missing').textContent=Math.max(0,expectedNames.filter(n=>!submitted.has(n)).length);
-  const combined=[...filtered.map(e=>({type:'task',date:e.date,member:e.name,projects:e.projects,saved_at:e.saved_at})),...pdf.filter(r=>visibleNames.has(r.member)).map(r=>({type:'pdf',...r}))].sort((a,b)=>new Date(b.saved_at)-new Date(a.saved_at));
+  const combined=filtered.map(e=>({type:'task',date:e.date,member:e.name,projects:e.projects,saved_at:e.saved_at})).sort((a,b)=>new Date(b.saved_at)-new Date(a.saved_at));
   const cont=document.getElementById('admin-report-list');
   if(!combined.length){cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:8px 0">제출된 데이터가 없습니다.</div>';return;}
   cont.innerHTML=combined.slice(0,15).map(r=>{
@@ -1369,7 +1767,8 @@ async function renderAdminDashboard(){
       const rt=subs.length?Math.round(d/subs.length*100):0;
       return `<div class="history-item"><span class="h-date">${r.date}</span><span class="h-name" style="font-weight:500">${r.member} ${teamTag}</span><div class="h-stats"><span>${(r.projects||[]).map(p=>p.name).filter(Boolean).join(', ')||'—'}</span><span style="color:var(--accent)">완료율 ${rt}%</span><span class="badge b-done" style="font-size:10px">저장</span></div></div>`;
     }else{
-      return `<div class="history-item"><span class="h-date">${r.date}</span><span class="h-name" style="font-weight:500">${r.member} ${teamTag}</span><div class="h-stats"><span style="color:var(--accent)">완료율 ${r.rate}%</span>${r.comment?`<span>"${r.comment.slice(0,25)}…"</span>`:''}<span class="badge b-delay-ext" style="font-size:10px">PDF</span></div></div>`;
+      const commentPart = r.comment ? '<span>"'+r.comment.slice(0,25)+(r.comment.length>25?'…':'')+'"</span>' : '';
+      return `<div class="history-item"><span class="h-date">${r.date}</span><span class="h-name" style="font-weight:500">${r.member} ${teamTag}</span><div class="h-stats"><span style="color:var(--accent)">완료율 ${r.rate}%</span>${commentPart}<span class="badge b-delay-ext" style="font-size:10px">PDF</span></div></div>`;
     }
   }).join('');
 }
@@ -1445,24 +1844,109 @@ function buildMemberCard(name,i,all,retros,today,colors){
     </div>
   </div>`;
 }
-async function renderUploadedList(){
-  const reports=await dbGetAll('pdf_reports');
-  const cont=document.getElementById('uploaded-list');
-  if(!reports.length){cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:8px 0">없습니다.</div>';return;}
-  cont.innerHTML=reports.slice().sort((a,b)=>new Date(b.saved_at)-new Date(a.saved_at)).map(r=>`<div class="history-item"><span class="h-date">${r.date}</span><span class="h-name" style="font-weight:500">${r.member}</span><div class="h-stats"><span style="color:var(--accent)">완료율 ${r.rate}%</span>${r.comment?`<span>"${r.comment.slice(0,28)}${r.comment.length>28?'…':''}"</span>`:''}<span class="badge b-delay-ext">PDF</span></div></div>`).join('');
+// ── Member Report Viewer (replaces PDF upload) ──────────────────────────────
+async function initMemberReportViewer(){
+  // Populate member select from MEMBERS definition
+  const sel=document.getElementById('view-member-sel');
+  if(!sel)return;
+  const visNames=getAdminVisibleNames();
+  sel.innerHTML='<option value="">— 선택 —</option>'+visNames.map(n=>`<option value="${n}">${n}</option>`).join('');
+  // Default to today
+  const dateEl=document.getElementById('view-report-date');
+  if(dateEl&&!dateEl.value) dateEl.value=new Date().toISOString().split('T')[0];
 }
-async function registerReport(){
-  const member=document.getElementById('upload-member').value.trim();
-  const date=document.getElementById('upload-date').value;
-  const rate=document.getElementById('upload-rate').value;
-  const comment=document.getElementById('upload-comment').value;
-  if(!member||!rate){showToast('이름과 완료율을 입력해 주세요');return;}
-  await dbSet('pdf_reports',date+'__'+eKey(member),{member,date,rate:Number(rate),comment,saved_at:new Date().toISOString()});
-  document.getElementById('upload-rate').value=''; document.getElementById('upload-comment').value='';
-  document.getElementById('upload-filename').textContent='PDF 파일 클릭하여 첨부';
-  await renderUploadedList(); showToast('✓ 리포트가 등록되었습니다');
+
+async function loadMemberReport(){
+  const memberName=document.getElementById('view-member-sel').value;
+  const date=document.getElementById('view-report-date').value;
+  const cont=document.getElementById('member-report-view');
+  const pdfBtn=document.getElementById('member-report-pdf-btn');
+  if(!memberName||!date){
+    cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:16px 0;text-align:center">구성원과 날짜를 선택해 주세요.</div>';
+    if(pdfBtn)pdfBtn.style.display='none';
+    return;
+  }
+  const taskEntry=await dbGetDoc('tasks',date+'__'+eKey(memberName));
+  const retroEntry=await dbGetDoc('retros',date+'__'+eKey(memberName));
+  const feedbacks=(await dbGetAll('feedbacks')).filter(f=>f.to===memberName&&f.date===date);
+
+  if(!taskEntry){
+    cont.innerHTML=`<div style="color:var(--text-muted);font-size:13px;padding:16px 0;text-align:center">${memberName}님의 ${date} 데이터가 없습니다.</div>`;
+    if(pdfBtn)pdfBtn.style.display='none';
+    return;
+  }
+  const projects=taskEntry.projects||[];
+  const allSubs=projects.flatMap(p=>p.subtasks||[]);
+  const total=allSubs.length, done=allSubs.filter(t=>t.status==='완료').length;
+  const dPer=allSubs.filter(t=>t.status==='딜레이-개인').length;
+  const dExt=allSubs.filter(t=>t.status==='딜레이-외부').length;
+  const totalMin=allSubs.reduce((s,t)=>{const m=parseInt(t.duration);return s+(isNaN(m)?0:m);},0);
+  const r=retroEntry||{};
+  const STATUS_B={'시작전':'b-notstart','진행중':'b-progress','완료':'b-done','딜레이-외부':'b-delay-ext','딜레이-개인':'b-delay-per'};
+  const STATUS_L={'시작전':'시작전','진행중':'진행중','완료':'완료','딜레이-외부':'딜레이(외부)','딜레이-개인':'딜레이(개인)'};
+
+  let html=`<div class="report-block" id="member-report-content">
+    <div class="report-header">
+      <div class="report-org">커리어사업부 · CAREER DIVISION</div>
+      <div class="report-title">일일 업무 생산성 리포트</div>
+      <div class="report-meta">${date} · ${memberName} · ${taskEntry.team||''}</div>
+    </div>
+    <div class="report-section">
+      <div class="report-section-title">요약 지표</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
+        <div class="stat-card"><div class="stat-label">프로젝트</div><div class="stat-val">${projects.length||'—'}</div></div>
+        <div class="stat-card"><div class="stat-label">완료율</div><div class="stat-val" style="color:var(--accent)">${total?Math.round(done/total*100)+'%':'—'}</div></div>
+        <div class="stat-card"><div class="stat-label">딜레이(개인)</div><div class="stat-val" style="color:var(--warn)">${dPer}</div></div>
+        <div class="stat-card"><div class="stat-label">딜레이(외부)</div><div class="stat-val" style="color:var(--info)">${dExt}</div></div>
+        <div class="stat-card"><div class="stat-label">총 소요시간</div><div class="stat-val">${totalMin||'—'}</div><div class="stat-sub">분</div></div>
+      </div>
+    </div>
+    <div class="report-section">
+      <div class="report-section-title">프로젝트별 상세</div>
+      <table class="rt"><thead><tr><th>프로젝트 / 세부업무</th><th>카테고리</th><th>데드라인</th><th>프로젝트 상태</th><th>소요</th><th>상태</th><th>딜레이 사유</th><th>딜레이 목표기한</th></tr></thead><tbody>`;
+  projects.forEach(p=>{
+    const ps=p.subtasks||[], pd=ps.filter(t=>t.status==='완료').length;
+    const pStatusBadge={'완료':'b-done','부분완료':'b-delay-per','미완료':'b-notstart','딜레이':'b-danger'}[p.proj_status||'미완료']||'b-notstart';
+    html+=`<tr class="rp-row"><td colspan="8">📁 ${p.name||'(이름 없음)'} <span style="font-size:11px;color:var(--text-muted);font-weight:400">${p.category}</span>
+      <span class="badge ${pStatusBadge}" style="font-size:10px;margin-left:6px">${p.proj_status||'미완료'}</span>
+${p.proj_status==='딜레이'&&p.proj_delay_deadline?' <span style="font-size:10px;color:var(--danger);margin-left:4px">목표기한: '+p.proj_delay_deadline+'</span>':''}
+${p.proj_delay_reason?' <span style="font-size:10px;color:var(--text-muted);margin-left:4px">사유: '+p.proj_delay_reason+'</span>':''}
+      <span style="float:right;font-size:11px;color:var(--text-muted);font-weight:400">${pd}/${ps.length} 완료</span></td></tr>`;
+    ps.forEach(t=>{
+      html+=`<tr class="rs-row"><td>↳ ${t.name}</td><td><span class="badge b-pending" style="font-size:10px">${p.category}</span></td><td style="font-size:11px;color:var(--text-muted)">${p.deadline||'—'}</td><td>—</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px">${t.duration||'—'}</td><td><span class="badge ${STATUS_B[t.status]||'b-notstart'}" style="font-size:10px">${STATUS_L[t.status]||t.status}</span></td><td style="font-size:11px;color:var(--text-muted)">${t.delay_reason||'—'}</td><td style="font-size:11px;color:var(--warn)">${t.delay_deadline||'—'}</td></tr>`;
+    });
+  });
+  html+=`</tbody></table></div>`;
+  html+=`<div class="report-section">
+    <div class="report-section-title">데일리 회고</div>
+    <div style="margin-bottom:8px;font-size:13px">생산성 만족도 <strong style="font-family:'IBM Plex Mono',monospace;font-size:16px">${r.satisfaction||'—'}</strong> /10</div>
+    <div class="kpt-grid">
+      <div class="kpt-block"><div class="kpt-label kpt-k">Keep</div><div class="kpt-text">${r.keep||'—'}</div></div>
+      <div class="kpt-block"><div class="kpt-label kpt-p">Problem</div><div class="kpt-text">${r.problem||'—'}</div></div>
+      <div class="kpt-block"><div class="kpt-label kpt-t">Try</div><div class="kpt-text">${r.try_text||'—'}</div></div>
+    </div>
+${r.memo?'<div style="margin-top:8px;font-size:12px;color:var(--text-muted)">메모: '+r.memo+'</div>':''}
+  </div>
+  <div class="report-section"><div class="report-section-title">내일 예정</div><div style="font-size:13px;color:var(--text-muted);line-height:1.7">${r.tomorrow||'—'}</div></div>`;
+  // Feedbacks from admin
+  if(feedbacks.length){
+    html+=`<div class="report-section"><div class="report-section-title">관리자 피드백</div>`;
+    feedbacks.forEach(f=>{
+      html+=`<div class="feedback-box" style="margin-bottom:8px"><div class="feedback-title">💬 ${f.type} — from ${f.from}</div><div class="feedback-msg">${f.content}</div><div class="feedback-meta">${f.sent_at?f.sent_at.slice(0,16).replace('T',' '):''}</div></div>`;
+    });
+    html+='</div>';
+  }
+  html+='</div>'; // close report-block
+  cont.innerHTML=html;
+  if(pdfBtn)pdfBtn.style.display='flex';
 }
-function fakeUpload(){ document.getElementById('upload-filename').textContent='📎 일일리포트_'+document.getElementById('upload-date').value+'.pdf'; showToast('파일 첨부되었습니다'); }
+
+function downloadMemberReportPDF(){
+  const content=document.getElementById('member-report-content');
+  if(!content){showToast('리포트를 먼저 조회해 주세요');return;}
+  openPrintWin(content.innerHTML);
+  showToast('PDF 출력 창이 열렸습니다');
+}
 
 // ═══════════════════════════════════
 //  NAV
@@ -1479,7 +1963,7 @@ function showPage(id, btn){
   if(id==='weekly'){ setDefaultWeek(); }
   if(id==='dashboard') renderAdminDashboard();
   if(id==='members') renderMemberList();
-  if(id==='upload') renderUploadedList();
+  if(id==='upload'){ initMemberReportViewer(); }
   if(id==='feedback') renderSentFeedbacks();
   if(id==='inbox') renderInbox();
 }
@@ -1503,5 +1987,6 @@ document.addEventListener('DOMContentLoaded', function(){
   if(apb) apb.addEventListener('click', function(){ addProject(); });
 });
 </script>
-</body>
-</html>
+
+
+</body></html>
