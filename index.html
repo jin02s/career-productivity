@@ -529,15 +529,9 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   <!-- 오늘 달성 요약 (저장된 데이터 기반) -->
   <div class="retro-summary" id="retro-today-summary">
     <div class="retro-summary-title">오늘 업무 달성 현황</div>
-    <div id="retro-summary-body" style="color:var(--text-muted);font-size:13px"><div style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap">
-    <span>총 세부업무 <strong>3</strong>건</span>
-    <span style="color:var(--accent)">완료 <strong>0</strong>건 (0%)</span>
-    <span style="color:var(--warn)">딜레이 <strong>1</strong>건</span>
-  </div><div class="retro-proj-item">
-      <div class="retro-proj-name">📁 재물&amp;계정조사 제출 <span style="font-size:11px;color:var(--text-muted);font-weight:400">0/1 완료 · D/L 2026-05-29</span></div><div class="retro-sub-row"><span class="badge b-notstart" style="font-size:10px">시작전</span><span>↳ 재물조사 및 계정조사 시트 업데이트, 텔레 제출</span></div><div class="retro-proj-item">
-      <div class="retro-proj-name">📁 사전직무교육 강사섭외 <span style="font-size:11px;color:var(--text-muted);font-weight:400">0/2 완료 · D/L 2026-06-02</span></div><div class="retro-sub-row"><span class="badge b-delay-per" style="font-size:10px">딜레이(개인)</span><span>↳ 섭외문안 작성</span><span style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px">오류</span><span style="color:var(--warn);font-size:11px">⚠ 컨디션 난조로 반반차 사용  (목표기한: 2026-05-30)</span><div class="retro-sub-row"><span class="badge b-notstart" style="font-size:10px">시작전</span><span>↳ 강사 리스트업</span></div></div></div></div></div>
-  </div>
-  <div class="card">
+    <div id="retro-summary-body" style="color:var(--text-muted);font-size:13px">로그인 후 표시됩니다.</div>
+</div>
+<div class="card">
     <div class="card-title">오늘 생산성 만족도</div>
     <div class="range-wrapper">
       <input type="range" min="1" max="10" value="7" id="satisfaction" oninput="document.getElementById(&#39;sat-display&#39;).textContent=this.value">
@@ -672,148 +666,12 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
     <div class="stat-card"><div class="stat-label">평균 만족도</div><div class="stat-val" id="d-sat">—</div><div class="stat-sub">/ 10</div></div>
     <div class="stat-card"><div class="stat-label">오늘 미제출</div><div class="stat-val" id="d-missing" style="color:var(--danger)">—</div><div class="stat-sub">명</div></div>
   </div>
-  <div class="card"><div class="card-title">최근 제출 현황</div><div id="admin-report-list"><div style="color:var(--text-muted);font-size:13px;padding:8px 0">데이터가 없습니다.</div></div></div><div class="history-item"><span class="h-date">2026-05-29</span><span class="h-name" style="font-weight:500">송진영 <span class="badge b-purple" style="font-size:10px">커리어사업부</span></span><div class="h-stats"><span>재물&amp;계정조사 제출, 사전직무교육 강사섭외</span><span style="color:var(--accent)">완료율 0%</span><span class="badge b-done" style="font-size:10px">저장</span></div></div><div class="history-item"><span class="h-date">2026-05-28</span><span class="h-name" style="font-weight:500">송진영 <span class="badge b-purple" style="font-size:10px">커리어사업부</span></span><div class="h-stats"><span>재물&amp;계정조사 제출, 부서 생산성 관리 시스템 제작, 다과 구매 (독산FLC)</span><span style="color:var(--accent)">완료율 67%</span><span class="badge b-done" style="font-size:10px">저장</span></div></div></div></div>
-</div>
-
+  <div class="card"><div class="card-title">최근 제출 현황</div><div id="admin-report-list"><div style="color:var(--text-muted);font-size:13px;padding:8px 0">로그인 후 표시됩니다.</div></div></div></div>
 <!-- ── 관리자: 구성원 현황 ── -->
-<div id="page-members" class="page-section visible">
+<div id="page-members" class="page-section">
   <div class="page-header"><div class="page-title">구성원별 생산성 현황</div><div class="page-sub">누적 데이터 기반 자동 집계</div></div>
-  <div class="member-list" id="member-list-container"><div style="font-size:11px;font-weight:500;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)">커리어1팀</div><div class="member-card">
-    <div class="member-card-header">
-      <div class="avatar" style="background:#E8F2EC;color:#2D5A3D;width:36px;height:36px;font-size:13px;font-weight:700">임</div>
-      <div class="member-meta">
-        <div class="member-name-txt">임혜진 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">팀장</span></div>
-        <div class="member-tag">커리어1팀</div>
-      </div>
-      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
-        <span class="badge b-notstart">오늘 미제출</span>
-        
-      </div>
-    </div>
-    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">—</span></div>
-    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#534AB7"></div></div><span class="progress-num">—</span></div>
-    <div class="detail-row">
-      <span class="badge b-notstart">기록 0일</span>
-      <span class="badge b-done">개인딜레이 0건</span>
-      <span class="badge b-notstart">세부업무 0건</span>
-    </div>
-  </div><div class="member-card">
-    <div class="member-card-header">
-      <div class="avatar" style="background:#FDF0E3;color:#C4701A;width:36px;height:36px;font-size:13px;font-weight:700">박</div>
-      <div class="member-meta">
-        <div class="member-name-txt">박현지 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">팀원</span></div>
-        <div class="member-tag">커리어1팀</div>
-      </div>
-      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
-        <span class="badge b-notstart">오늘 미제출</span>
-        
-      </div>
-    </div>
-    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">—</span></div>
-    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#534AB7"></div></div><span class="progress-num">—</span></div>
-    <div class="detail-row">
-      <span class="badge b-notstart">기록 0일</span>
-      <span class="badge b-done">개인딜레이 0건</span>
-      <span class="badge b-notstart">세부업무 0건</span>
-    </div>
-  </div><div class="member-card">
-    <div class="member-card-header">
-      <div class="avatar" style="background:#E8F0F8;color:#2A5A8A;width:36px;height:36px;font-size:13px;font-weight:700">전</div>
-      <div class="member-meta">
-        <div class="member-name-txt">전율리 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">팀원</span></div>
-        <div class="member-tag">커리어1팀</div>
-      </div>
-      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
-        <span class="badge b-notstart">오늘 미제출</span>
-        
-      </div>
-    </div>
-    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">—</span></div>
-    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#534AB7"></div></div><span class="progress-num">—</span></div>
-    <div class="detail-row">
-      <span class="badge b-notstart">기록 0일</span>
-      <span class="badge b-done">개인딜레이 0건</span>
-      <span class="badge b-notstart">세부업무 0건</span>
-    </div>
-  </div><div style="font-size:11px;font-weight:500;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)">커리어2팀</div><div class="member-card">
-    <div class="member-card-header">
-      <div class="avatar" style="background:#E8F2EC;color:#2D5A3D;width:36px;height:36px;font-size:13px;font-weight:700">정</div>
-      <div class="member-meta">
-        <div class="member-name-txt">정은지 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">팀장</span></div>
-        <div class="member-tag">커리어2팀</div>
-      </div>
-      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
-        <span class="badge b-notstart">오늘 미제출</span>
-        
-      </div>
-    </div>
-    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">—</span></div>
-    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#534AB7"></div></div><span class="progress-num">—</span></div>
-    <div class="detail-row">
-      <span class="badge b-notstart">기록 0일</span>
-      <span class="badge b-done">개인딜레이 0건</span>
-      <span class="badge b-notstart">세부업무 0건</span>
-    </div>
-  </div><div class="member-card">
-    <div class="member-card-header">
-      <div class="avatar" style="background:#FDF0E3;color:#C4701A;width:36px;height:36px;font-size:13px;font-weight:700">정</div>
-      <div class="member-meta">
-        <div class="member-name-txt">정현정 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">팀원</span></div>
-        <div class="member-tag">커리어2팀</div>
-      </div>
-      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
-        <span class="badge b-notstart">오늘 미제출</span>
-        
-      </div>
-    </div>
-    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">—</span></div>
-    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#534AB7"></div></div><span class="progress-num">—</span></div>
-    <div class="detail-row">
-      <span class="badge b-notstart">기록 0일</span>
-      <span class="badge b-done">개인딜레이 0건</span>
-      <span class="badge b-notstart">세부업무 0건</span>
-    </div>
-  </div><div style="font-size:11px;font-weight:500;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)">커리어3팀</div><div class="member-card">
-    <div class="member-card-header">
-      <div class="avatar" style="background:#E8F2EC;color:#2D5A3D;width:36px;height:36px;font-size:13px;font-weight:700">김</div>
-      <div class="member-meta">
-        <div class="member-name-txt">김승현 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">팀장</span></div>
-        <div class="member-tag">커리어3팀</div>
-      </div>
-      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
-        <span class="badge b-notstart">오늘 미제출</span>
-        
-      </div>
-    </div>
-    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">—</span></div>
-    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#534AB7"></div></div><span class="progress-num">—</span></div>
-    <div class="detail-row">
-      <span class="badge b-notstart">기록 0일</span>
-      <span class="badge b-done">개인딜레이 0건</span>
-      <span class="badge b-notstart">세부업무 0건</span>
-    </div>
-  </div><div class="member-card">
-    <div class="member-card-header">
-      <div class="avatar" style="background:#FDF0E3;color:#C4701A;width:36px;height:36px;font-size:13px;font-weight:700">유</div>
-      <div class="member-meta">
-        <div class="member-name-txt">유화경 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">팀원</span></div>
-        <div class="member-tag">커리어3팀</div>
-      </div>
-      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
-        <span class="badge b-notstart">오늘 미제출</span>
-        
-      </div>
-    </div>
-    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">—</span></div>
-    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#534AB7"></div></div><span class="progress-num">—</span></div>
-    <div class="detail-row">
-      <span class="badge b-notstart">기록 0일</span>
-      <span class="badge b-done">개인딜레이 0건</span>
-      <span class="badge b-notstart">세부업무 0건</span>
-    </div>
-  </div></div>
+  <div class="member-list" id="member-list-container"><div style="color:var(--text-muted);font-size:13px">로그인 후 표시됩니다.</div></div>
 </div>
-
 <!-- ── 관리자: 피드백 발송 ── -->
 <div id="page-feedback" class="page-section">
   <div class="page-header"><div class="page-title">피드백 발송</div><div class="page-sub">구성원 리포트에 대한 피드백을 남깁니다</div></div>
@@ -837,18 +695,9 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   </div>
   <div class="card" style="margin-top:12px">
     <div class="card-title">발송 내역</div>
-    <div id="sent-feedback-list"><div class="history-item">
-    <span class="h-date">2026-05-29</span>
-    <span class="h-name" style="font-weight:500">→ 김승현</span>
-    <div class="h-stats">
-      <span class="badge b-purple" style="font-size:10px">칭찬 / 긍정 피드백</span>
-      <span>힘내세요</span>
-      <span class="badge b-delay-per" style="font-size:10px">미읽음</span>
-    </div>
-  </div></div>
-  </div>
+    <div id="sent-feedback-list"><div style="color:var(--text-muted);font-size:13px;padding:8px 0">발송 내역이 없습니다.</div></div>
 </div>
-
+</div>
 <!-- ── 관리자: 구성원 리포트 조회 ── -->
 <div id="page-upload" class="page-section">
   <div class="page-header"><div class="page-title">구성원 리포트 조회</div><div class="page-sub">구성원이 저장한 업무 데이터를 바로 조회합니다</div></div>
@@ -1041,6 +890,9 @@ function enterApp(){
   // 30초마다 수신함 자동 새로고침
   if(window._inboxInterval) clearInterval(window._inboxInterval);
   window._inboxInterval = setInterval(()=>{ checkInbox(); }, 30000);
+  // 로그인 후 항상 오늘 업무 입력 페이지를 기본으로 표시
+  const firstNavBtn = document.querySelector('#nav-member .nav-item');
+  showPage('input', firstNavBtn);
 }
 
 
@@ -1255,6 +1107,8 @@ function updateProjProgress(pid){
 
   const dl=document.getElementById('proj-dl-'+pid), dlbar=document.getElementById('proj-dlbar-'+pid), dltext=document.getElementById('proj-dltext-'+pid);
   if(!dl||!dlbar||!dltext)return;
+  // 프로젝트 완료 시 데드라인 알림 표시 안 함
+  if(pSel&&pSel.value==='완료'){dlbar.className='dl-bar dl-ok';dltext.textContent='✓ 완료';return;}
 
   // Also check if any subtask has delay_deadline === today
   const todayDate=new Date(); todayDate.setHours(0,0,0,0);
@@ -1275,7 +1129,7 @@ function updateProjProgress(pid){
   const dlDate=new Date(dlVal);dlDate.setHours(0,0,0,0);
   const diff=Math.round((dlDate-todayDate)/86400000);
   const allDone=total>0&&done===total;
-  if(allDone){dlbar.className='dl-bar dl-ok';dltext.textContent='✓ 전체 완료 (데드라인 '+dlVal+')';}
+  if(allDone){dlbar.className='dl-bar dl-ok';dltext.textContent='✓ 전체 완료 (데드라인 '+dlVal+')'; return;} // 완료 시 데드라인 알림 없음
   else if(diff===0){dlbar.className='dl-bar dl-over';dltext.textContent='❗ 금일 데드라인! — 미완료 '+(total-done)+'건';}
   else if(diff<0){dlbar.className='dl-bar dl-over';dltext.textContent='⚠ 데드라인 초과 '+Math.abs(diff)+'일 ('+dlVal+') — 미완료 '+(total-done)+'건';}
   else if(diff<=3){dlbar.className='dl-bar dl-warn';dltext.textContent='⏰ D-'+diff+' ('+dlVal+') — 미완료 '+(total-done)+'건'+(subDlToday?' ⚡세부업무 금일 데드라인':'')}
@@ -1376,8 +1230,8 @@ async function loadTodayIntoForm(){
     myEntries.forEach(entry=>{
       (entry.projects||[]).forEach(p=>{
         if(!p.deadline||p.deadline<date) return; // skip expired
+        if((p.proj_status||'미완료')==='완료') return; // skip completed projects
         if(seen.has(p.name)) return;
-        seen.add(p.name);
         // Carry over project but reset subtask statuses for new day
         const freshSubs=(p.subtasks||[]).map(t=>({...t, status:'시작전', start:'', end:'', duration:'—', delay_reason:'', delay_deadline:''}));
         projects.push({...p, subtasks:freshSubs});
@@ -1731,7 +1585,7 @@ async function renderAdminDashboard(){
   const expectedNames=[...visibleNames];
   const submitted=new Set(filtered.filter(e=>e.date===today).map(e=>e.name));
   document.getElementById('d-missing').textContent=Math.max(0,expectedNames.filter(n=>!submitted.has(n)).length);
-  const combined=filtered.map(e=>({type:'task',date:e.date,member:e.name,projects:e.projects,saved_at:e.saved_at})).sort((a,b)=>new Date(b.saved_at)-new Date(a.saved_at));
+  const combined=Object.values(filtered.reduce((acc,e)=>{ const k=e.date+'__'+(e.name||''); if(!acc[k]||new Date(e.saved_at)>new Date(acc[k].saved_at)) acc[k]={type:'task',date:e.date,member:e.name,projects:e.projects,saved_at:e.saved_at}; return acc; },{})).sort((a,b)=>new Date(b.saved_at)-new Date(a.saved_at));
   const cont=document.getElementById('admin-report-list');
   if(!combined.length){cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:8px 0">제출된 데이터가 없습니다.</div>';return;}
   cont.innerHTML=combined.slice(0,15).map(r=>{
