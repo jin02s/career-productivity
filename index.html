@@ -293,7 +293,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   <div class="sidebar-logo">
     <div class="org">CAREER DIVISION</div>
     <div class="title">생산성 관리 시스템</div>
-    <div class="role-badge role-director" id="role-badge">부장</div>
+    <div class="role-badge" id="role-badge"></div>
   </div>
   <div class="sidebar-nav" id="nav-member">
     <div class="nav-section">내 업무</div>
@@ -316,7 +316,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>피드백 수신함 <span id="inbox-badge" style="display:none;background:var(--danger);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:4px">N</span>
     </button>
   </div>
-  <div class="sidebar-nav" id="nav-admin" style="">
+  <div class="sidebar-nav" id="nav-admin" style="display:none">
     <div class="nav-section" id="admin-nav-label">전체 관리 (부장)</div>
     <button class="nav-item" onclick="showPage(&#39;dashboard&#39;,this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg><span id="dash-nav-label">전체 대시보드</span>
@@ -336,8 +336,8 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   </div>
   <div class="sidebar-user">
     <div class="user-info">
-      <div class="avatar" id="sb-avatar" style="background:#E8F2EC;color:var(--accent)">송</div>
-      <div><div class="user-name" id="sb-name">송진영</div><div class="user-role-text" id="sb-role">커리어사업부 · 부장</div></div>
+      <div class="avatar" id="sb-avatar" style="background:#E8F2EC;color:var(--accent)">?</div>
+      <div><div class="user-name" id="sb-name">—</div><div class="user-role-text" id="sb-role">—</div></div>
     </div>
   </div>
   <button class="logout-btn" onclick="doLogout()">
@@ -351,28 +351,28 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
 <div id="page-input" class="page-section">
   <div class="page-header">
     <div class="page-title">오늘 업무 입력</div>
-    <div class="page-sub" id="today-date-label">2026년 5월 29일 금요일</div>
+    <div class="page-sub" id="today-date-label"></div>
   </div>
   <!-- 목표 업무 요약 배너 -->
   <div class="today-summary" id="today-summary">
-    <div class="ts-item"><div class="ts-val" id="ts-proj">2</div><div class="ts-label">프로젝트</div></div>
+    <div class="ts-item"><div class="ts-val" id="ts-proj">—</div><div class="ts-label">프로젝트</div></div>
     <div class="ts-divider"></div>
-    <div class="ts-item"><div class="ts-val" id="ts-total">3</div><div class="ts-label">총 세부업무</div></div>
+    <div class="ts-item"><div class="ts-val" id="ts-total">—</div><div class="ts-label">총 세부업무</div></div>
     <div class="ts-divider"></div>
-    <div class="ts-item" style="color:var(--accent)"><div class="ts-val" id="ts-done">0</div><div class="ts-label">완료</div></div>
+    <div class="ts-item" style="color:var(--accent)"><div class="ts-val" id="ts-done">—</div><div class="ts-label">완료</div></div>
     <div class="ts-divider"></div>
-    <div class="ts-item" style="color:var(--info)"><div class="ts-val" id="ts-prog">0</div><div class="ts-label">진행중</div></div>
+    <div class="ts-item" style="color:var(--info)"><div class="ts-val" id="ts-prog">—</div><div class="ts-label">진행중</div></div>
     <div class="ts-divider"></div>
-    <div class="ts-item" style="color:var(--warn)"><div class="ts-val" id="ts-delay">1</div><div class="ts-label">딜레이</div></div>
+    <div class="ts-item" style="color:var(--warn)"><div class="ts-val" id="ts-delay">—</div><div class="ts-label">딜레이</div></div>
     <div class="ts-divider"></div>
-    <div class="ts-item" style="color:var(--text-muted)"><div class="ts-val" id="ts-rate">0%</div><div class="ts-label">완료율</div></div>
+    <div class="ts-item" style="color:var(--text-muted)"><div class="ts-val" id="ts-rate">—</div><div class="ts-label">완료율</div></div>
     <div class="ts-divider"></div>
-    <div class="ts-projects" id="ts-proj-names" style="font-size:12px;color:var(--text-muted)">📁 재물&amp;계정조사 제출  ·  사전직무교육 강사섭외</div>
+    <div class="ts-projects" id="ts-proj-names" style="font-size:12px;color:var(--text-muted)">프로젝트를 추가해 주세요</div>
   </div>
   <div class="card">
     <div class="card-title">기본 정보</div>
     <div class="form-row form-row-3">
-      <div class="form-group"><label class="form-label">이름</label><input class="form-input" id="sel-name" placeholder="이름 입력"></div>
+      <div class="form-group"><label class="form-label">이름</label><input class="form-input" id="sel-name" placeholder="이름 입력" readonly></div>
       <div class="form-group"><label class="form-label">소속 팀</label>
         <select class="form-input" id="sel-team">
           <option>커리어1팀</option>
@@ -582,22 +582,22 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
     <div class="report-header">
       <div class="report-org">커리어사업부 · CAREER DIVISION</div>
       <div class="report-title">일일 업무 생산성 리포트</div>
-      <div class="report-meta" id="report-meta-line">2026-05-29 · 송진영 · 커리어사업부</div>
+      <div class="report-meta" id="report-meta-line"></div>
     </div>
     <div class="report-section">
       <div class="report-section-title">요약 지표</div>
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
-        <div class="stat-card"><div class="stat-label">프로젝트</div><div class="stat-val" id="r-projects">2</div></div>
-        <div class="stat-card"><div class="stat-label">완료율</div><div class="stat-val" id="r-rate" style="color:var(--accent)">0%</div></div>
-        <div class="stat-card"><div class="stat-label">딜레이(개인)</div><div class="stat-val" id="r-delay-per" style="color:var(--warn)">1</div></div>
-        <div class="stat-card"><div class="stat-label">딜레이(외부)</div><div class="stat-val" id="r-delay-ext" style="color:var(--info)">0</div></div>
+        <div class="stat-card"><div class="stat-label">프로젝트</div><div class="stat-val" id="r-projects">—</div></div>
+        <div class="stat-card"><div class="stat-label">완료율</div><div class="stat-val" id="r-rate" style="color:var(--accent)">—</div></div>
+        <div class="stat-card"><div class="stat-label">딜레이(개인)</div><div class="stat-val" id="r-delay-per" style="color:var(--warn)">—</div></div>
+        <div class="stat-card"><div class="stat-label">딜레이(외부)</div><div class="stat-val" id="r-delay-ext" style="color:var(--info)">—</div></div>
         <div class="stat-card"><div class="stat-label">총 소요시간</div><div class="stat-val" id="r-total-min">—</div><div class="stat-sub">분</div></div>
       </div>
     </div>
     <div class="report-section">
       <div class="report-section-title">프로젝트별 상세</div>
       <table class="rt"><thead><tr><th>프로젝트 / 세부업무</th><th>카테고리</th><th>프로젝트 데드라인</th><th>소요</th><th>상태</th><th>딜레이 사유</th><th>딜레이 목표기한</th></tr></thead>
-      <tbody id="report-task-body"><tr class="rp-row"><td colspan="7">📁 재물&amp;계정조사 제출 <span style="font-size:11px;color:var(--text-muted);font-weight:400">기타</span> <span style="font-size:11px;color:var(--text-muted);font-weight:400;float:right">0/1 완료</span></td></tr><tr class="rs-row"><td>↳ 재물조사 및 계정조사 시트 업데이트, 텔레 제출</td><td><span class="badge b-pending" style="font-size:10px">기타</span></td><td style="font-size:11px;color:var(--text-muted)">2026-05-29</td><td style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px">—</td><td><span class="badge b-notstart" style="font-size:10px">시작전</span></td><td style="font-size:11px;color:var(--text-muted)">—</td><td style="font-size:11px;color:var(--warn)">—</td></tr><tr class="rp-row"><td colspan="7">📁 사전직무교육 강사섭외 <span style="font-size:11px;color:var(--text-muted);font-weight:400">사업운영</span> <span style="font-size:11px;color:var(--text-muted);font-weight:400;float:right">0/2 완료</span></td></tr><tr class="rs-row"><td>↳ 섭외문안 작성</td><td><span class="badge b-pending" style="font-size:10px">사업운영</span></td><td style="font-size:11px;color:var(--text-muted)">2026-06-02</td><td style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px">오류</td><td><span class="badge b-delay-per" style="font-size:10px">딜레이(개인)</span></td><td style="font-size:11px;color:var(--text-muted)">컨디션 난조로 반반차 사용 </td><td style="font-size:11px;color:var(--warn)">2026-05-30</td></tr><tr class="rs-row"><td>↳ 강사 리스트업</td><td><span class="badge b-pending" style="font-size:10px">사업운영</span></td><td style="font-size:11px;color:var(--text-muted)">2026-06-02</td><td style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px">—</td><td><span class="badge b-notstart" style="font-size:10px">시작전</span></td><td style="font-size:11px;color:var(--text-muted)">—</td><td style="font-size:11px;color:var(--warn)">—</td></tr></tbody></table>
+      <tbody id="report-task-body"></tbody></table>
     </div>
     <div class="report-section">
       <div class="report-section-title">데일리 회고</div>
@@ -607,13 +607,13 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
         <span style="color:var(--text-muted)">/10</span>
       </div>
       <div class="kpt-grid">
-        <div class="kpt-block"><div class="kpt-label kpt-k">Keep</div><div class="kpt-text" id="r-keep">강사섭외 절반 끝냄</div></div>
-        <div class="kpt-block"><div class="kpt-label kpt-p">Problem</div><div class="kpt-text" id="r-problem">완전히는 못끝냄</div></div>
-        <div class="kpt-block"><div class="kpt-label kpt-t">Try</div><div class="kpt-text" id="r-try">무조건 끝냄 </div></div>
+        <div class="kpt-block"><div class="kpt-label kpt-k">Keep</div><div class="kpt-text" id="r-keep">—</div></div>
+        <div class="kpt-block"><div class="kpt-label kpt-p">Problem</div><div class="kpt-text" id="r-problem">—</div></div>
+        <div class="kpt-block"><div class="kpt-label kpt-t">Try</div><div class="kpt-text" id="r-try">—</div></div>
       </div>
       <div style="margin-top:8px;font-size:12px;color:var(--text-muted)" id="r-memo-section">메모: 오늘은 강사섭외할 떄 한명이 짜증내서 힘들었다. 좀 더 유연한 소통을 해야짓!</div>
     </div>
-    <div class="report-section"><div class="report-section-title">내일 예정</div><div style="font-size:13px;color:var(--text-muted);line-height:1.7" id="r-tomorrow">강사섭외 완료하ㅣㄱ!!!! </div></div>
+    <div class="report-section"><div class="report-section-title">내일 예정</div><div style="font-size:13px;color:var(--text-muted);line-height:1.7" id="r-tomorrow">—</div></div>
   </div>
   <div class="btn-row">
     <button class="btn" onclick="generateReport()">🔄 새로고침</button>
@@ -633,25 +633,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
     </div>
     <button class="btn btn-sm" onclick="generateWeeklyReport()">조회</button>
   </div>
-  <div id="weekly-report-content"><div class="report-block" id="weekly-report-block">
-    <div class="report-header">
-      <div class="report-org">커리어사업부 · CAREER DIVISION</div>
-      <div class="report-title">주간 업무 생산성 리포트</div>
-      <div class="report-meta">2026-05-25 ~ 2026-05-31 · 송진영</div>
-    </div>
-    <div class="report-section">
-      <div class="report-section-title">주간 요약</div>
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
-        <div class="stat-card"><div class="stat-label">기록 일수</div><div class="stat-val">2</div><div class="stat-sub">일</div></div>
-        <div class="stat-card"><div class="stat-label">완료율</div><div class="stat-val" style="color:var(--accent)">33%</div></div>
-        <div class="stat-card"><div class="stat-label">딜레이(개인)</div><div class="stat-val" style="color:var(--warn)">1</div></div>
-        <div class="stat-card"><div class="stat-label">딜레이(외부)</div><div class="stat-val" style="color:var(--info)">1</div></div>
-        <div class="stat-card"><div class="stat-label">평균 만족도</div><div class="stat-val">—</div><div class="stat-sub">/ 10</div></div>
-      </div>
-    </div>
-    <div class="report-section">
-      <div class="report-section-title">일별 상세</div>
-      <table class="rt"><thead><tr><th>날짜</th><th>프로젝트</th><th>세부업무</th><th>완료율</th><th>딜레이(개인)</th><th>만족도</th></tr></thead><tbody><tr><td style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px">2026-05-28</td><td style="font-size:12px">재물&amp;계정조사 제출, 부서 생산성 관리 시스템 제작, 다과 구매 (독산FLC)</td><td style="font-size:12px;text-align:center">3</td><td><span class="badge b-notstart" style="font-size:10px">67%</span></td><td style="text-align:center;color:var(--warn)">0</td><td style="text-align:center">—</td></tr><tr><td style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px">2026-05-29</td><td style="font-size:12px">재물&amp;계정조사 제출, 사전직무교육 강사섭외</td><td style="font-size:12px;text-align:center">3</td><td><span class="badge b-notstart" style="font-size:10px">0%</span></td><td style="text-align:center;color:var(--warn)">1</td><td style="text-align:center">—</td></tr></tbody></table></div></div></div>
+  <div id="weekly-report-content"></div>
   <div class="btn-row" id="weekly-pdf-btn" style="display: flex;">
     <button class="btn" onclick="downloadHallygalli('weekly')">📋 주간 할리갈리 다운</button>
     <button class="btn btn-primary" onclick="downloadPDF(&#39;weekly&#39;)">주간 PDF 다운로드</button>
@@ -662,36 +644,14 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
 <div id="page-myhistory" class="page-section">
   <div class="page-header"><div class="page-title">나의 기록</div><div class="page-sub">저장된 일일 기록 전체 목록</div></div>
   <div class="stat-grid">
-    <div class="stat-card"><div class="stat-label">누적 기록 일수</div><div class="stat-val" id="ms-days">2</div><div class="stat-sub">일</div></div>
-    <div class="stat-card"><div class="stat-label">평균 완료율</div><div class="stat-val" id="ms-rate">34%</div></div>
-    <div class="stat-card"><div class="stat-label">개인딜레이 누적</div><div class="stat-val" id="ms-delay" style="color:var(--warn)">1</div><div class="stat-sub">건</div></div>
+    <div class="stat-card"><div class="stat-label">누적 기록 일수</div><div class="stat-val" id="ms-days">—</div><div class="stat-sub">일</div></div>
+    <div class="stat-card"><div class="stat-label">평균 완료율</div><div class="stat-val" id="ms-rate">—</div></div>
+    <div class="stat-card"><div class="stat-label">개인딜레이 누적</div><div class="stat-val" id="ms-delay" style="color:var(--warn)">—</div><div class="stat-sub">건</div></div>
     <div class="stat-card"><div class="stat-label">평균 만족도</div><div class="stat-val" id="ms-sat">—</div></div>
   </div>
   <div class="card">
     <div class="card-title">기록 목록 <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(클릭 시 해당 일자 리포트 조회)</span></div>
-    <div id="my-history-list"><div class="history-item" style="cursor:pointer" onclick="viewDailyReport(&#39;2026-05-29&#39;,&#39;송진영&#39;)">
-      <span class="h-date">2026-05-29</span>
-      <span class="h-name">재물&amp;계정조사 제출, 사전직무교육 강사섭외</span>
-      <div class="h-stats">
-        <span>2개 프로젝트</span>
-        <span style="color:var(--accent)">완료율 0%</span>
-        <span style="color:var(--text-light)">회고 미작성</span>
-        <span style="color:var(--info);font-size:10px">→ 리포트 보기</span>
-      </div>
-    </div><div class="history-item" style="cursor:pointer" onclick="viewDailyReport(&#39;2026-05-28&#39;,&#39;송진영&#39;)">
-      <span class="h-date">2026-05-28</span>
-      <span class="h-name">재물&amp;계정조사 제출, 부서 생산성 관리 시스템 제작, 다과 구매 (독산FLC)</span>
-      <div class="h-stats">
-        <span>3개 프로젝트</span>
-        <span style="color:var(--accent)">완료율 67%</span>
-        <span style="color:var(--text-light)">회고 미작성</span>
-        <span style="color:var(--info);font-size:10px">→ 리포트 보기</span>
-      </div>
-    </div></div>
-  </div>
-</div>
-
-<!-- ── 피드백 수신함 ── -->
+    <div id="my-history-list"><div style="color:var(--text-muted);font-size:13px;padding:10px 0">저장된 기록이 없습니다.</div></div></div></div><!-- ── 피드백 수신함 ── -->
 <div id="page-inbox" class="page-section">
   <div class="page-header"><div class="page-title">피드백 수신함</div><div class="page-sub">관리자로부터 받은 피드백 메시지</div></div>
   <div class="card">
@@ -705,14 +665,14 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
 
 <!-- ── 관리자: 대시보드 ── -->
 <div id="page-dashboard" class="page-section">
-  <div class="page-header"><div class="page-title" id="dashboard-title">전체 생산성 대시보드</div><div class="page-sub" id="dashboard-date">2026년 5월 29일  기준</div></div>
+  <div class="page-header"><div class="page-title" id="dashboard-title">전체 생산성 대시보드</div><div class="page-sub" id="dashboard-date"></div></div>
   <div class="stat-grid">
-    <div class="stat-card"><div class="stat-label">전체 완료율</div><div class="stat-val" id="d-rate">33%</div><div class="stat-sub">세부업무 기준</div></div>
-    <div class="stat-card"><div class="stat-label">딜레이 누적</div><div class="stat-val" id="d-delay" style="color:var(--warn)">2</div><div class="stat-sub" id="d-delay-sub">외부 1 / 개인 1</div></div>
+    <div class="stat-card"><div class="stat-label">전체 완료율</div><div class="stat-val" id="d-rate">—</div><div class="stat-sub">세부업무 기준</div></div>
+    <div class="stat-card"><div class="stat-label">딜레이 누적</div><div class="stat-val" id="d-delay" style="color:var(--warn)">—</div><div class="stat-sub" id="d-delay-sub">외부 1 / 개인 1</div></div>
     <div class="stat-card"><div class="stat-label">평균 만족도</div><div class="stat-val" id="d-sat">—</div><div class="stat-sub">/ 10</div></div>
-    <div class="stat-card"><div class="stat-label">오늘 미제출</div><div class="stat-val" id="d-missing" style="color:var(--danger)">6</div><div class="stat-sub">명</div></div>
+    <div class="stat-card"><div class="stat-label">오늘 미제출</div><div class="stat-val" id="d-missing" style="color:var(--danger)">—</div><div class="stat-sub">명</div></div>
   </div>
-  <div class="card"><div class="card-title">최근 제출 현황</div><div id="admin-report-list"><div class="history-item"><span class="h-date">2026-05-29</span><span class="h-name" style="font-weight:500">정은지 <span class="badge b-purple" style="font-size:10px">커리어2팀</span></span><div class="h-stats"><span style="color:var(--accent)">완료율 80%</span><span>"dddd…"</span><span class="badge b-delay-ext" style="font-size:10px">PDF</span></div></div><div class="history-item"><span class="h-date">2026-05-29</span><span class="h-name" style="font-weight:500">송진영 <span class="badge b-purple" style="font-size:10px">커리어사업부</span></span><div class="h-stats"><span>재물&amp;계정조사 제출, 사전직무교육 강사섭외</span><span style="color:var(--accent)">완료율 0%</span><span class="badge b-done" style="font-size:10px">저장</span></div></div><div class="history-item"><span class="h-date">2026-05-28</span><span class="h-name" style="font-weight:500">송진영 <span class="badge b-purple" style="font-size:10px">커리어사업부</span></span><div class="h-stats"><span>재물&amp;계정조사 제출, 부서 생산성 관리 시스템 제작, 다과 구매 (독산FLC)</span><span style="color:var(--accent)">완료율 67%</span><span class="badge b-done" style="font-size:10px">저장</span></div></div></div></div>
+  <div class="card"><div class="card-title">최근 제출 현황</div><div id="admin-report-list"><div style="color:var(--text-muted);font-size:13px;padding:8px 0">데이터가 없습니다.</div></div></div><div class="history-item"><span class="h-date">2026-05-29</span><span class="h-name" style="font-weight:500">송진영 <span class="badge b-purple" style="font-size:10px">커리어사업부</span></span><div class="h-stats"><span>재물&amp;계정조사 제출, 사전직무교육 강사섭외</span><span style="color:var(--accent)">완료율 0%</span><span class="badge b-done" style="font-size:10px">저장</span></div></div><div class="history-item"><span class="h-date">2026-05-28</span><span class="h-name" style="font-weight:500">송진영 <span class="badge b-purple" style="font-size:10px">커리어사업부</span></span><div class="h-stats"><span>재물&amp;계정조사 제출, 부서 생산성 관리 시스템 제작, 다과 구매 (독산FLC)</span><span style="color:var(--accent)">완료율 67%</span><span class="badge b-done" style="font-size:10px">저장</span></div></div></div></div>
 </div>
 
 <!-- ── 관리자: 구성원 현황 ── -->
@@ -1034,9 +994,9 @@ async function doLogin(){
   if(!member){err.textContent='등록되지 않은 이름입니다';return;}
   if(pin!==member.pin){err.textContent='PIN이 올바르지 않습니다';return;}
   CU={name, role:member.role, team:member.team};
-  localStorage.setItem('career_session',JSON.stringify(CU)); enterApp();
+  enterApp(); // 세션 저장 안함 - 매번 로그인 필요
 }
-function doLogout(){ CU=null; localStorage.removeItem('career_session'); document.getElementById('main-app').style.display='none'; document.getElementById('login-screen').style.display='flex'; document.getElementById('login-pin').value=''; document.getElementById('login-error').textContent=''; }
+function doLogout(){ CU=null; if(window._inboxInterval) clearInterval(window._inboxInterval); document.getElementById('main-app').style.display='none'; document.getElementById('login-screen').style.display='flex'; document.getElementById('login-pin').value=''; document.getElementById('login-name').value=''; document.getElementById('login-error').textContent=''; }
 function enterApp(){
   document.getElementById('login-screen').style.display='none';
   document.getElementById('main-app').style.display='flex';
@@ -2144,11 +2104,8 @@ function showToast(msg){ const t=document.getElementById('toast'); t.textContent
   // 버튼 바인딩
   var apb = document.getElementById('add-project-btn');
   if(apb) apb.addEventListener('click', function(){ addProject(); });
-
-  // 세션 복원 (모든 함수가 정의된 후)
-  var saved = localStorage.getItem('career_session');
-  if(saved){ try{ CU = JSON.parse(saved); }catch(e){ CU = null; } }
-  if(CU){ enterApp(); }
+  // 세션 자동복원 제거 - 항상 로그인 화면부터 시작
+  // (로그인 화면은 HTML 기본값으로 표시됨)
 })();
 
 // Fix: bind add-project button after DOM is ready
