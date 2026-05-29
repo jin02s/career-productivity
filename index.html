@@ -381,7 +381,12 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
           <option>커리어사업부</option>
         </select>
       </div>
-      <div class="form-group"><label class="form-label">오늘 날짜</label><input type="date" class="form-input" id="input-date"></div>
+      <div class="form-group"><label class="form-label">오늘 날짜</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <button class="btn btn-sm" onclick="changeDateBy(-1)" title="전날" style="padding:6px 10px">◀</button>
+          <input type="date" class="form-input" id="input-date" onchange="loadTodayIntoForm().then(()=>{if(document.getElementById('project-list').children.length===0)addProject();})" style="flex:1">
+          <button class="btn btn-sm" onclick="changeDateBy(1)" title="다음날" style="padding:6px 10px">▶</button>
+        </div></div>
     </div>
   </div>
   <div class="card" style="margin-top:12px">
@@ -1385,7 +1390,7 @@ async function saveToday(isDraft){
   const projects=getProjectsData();
   if(!isDraft&&!projects.length){showToast('프로젝트를 추가해 주세요');return;}
   const date=document.getElementById('input-date').value;
-  const name=document.getElementById('sel-name').value||CU.name;
+  const name=CU.name;  // 항상 본인으로 저장
   await dbSet('tasks',date+'__'+eKey(name),{date,name,team:document.getElementById('sel-team').value,projects,is_draft:isDraft,saved_at:new Date().toISOString()});
   showToast(isDraft?'임시저장되었습니다':'✓ 저장되었습니다. 계속 편집 가능합니다');
   updateSummary();
@@ -1435,7 +1440,7 @@ async function loadTodayIntoForm(){
 }
 async function saveRetro(){
   const date=document.getElementById('input-date').value;
-  const name=document.getElementById('sel-name').value||CU.name;
+  const name=CU.name;  // 항상 본인으로 저장
   await dbSet('retros',date+'__'+eKey(name),{
     date,name,
     satisfaction:document.getElementById('satisfaction').value,
@@ -1455,7 +1460,7 @@ async function saveRetro(){
 // ═══════════════════════════════════
 async function loadRetroSummary(){
   const date=document.getElementById('input-date').value;
-  const name=document.getElementById('sel-name').value||CU.name;
+  const name=CU.name;
   const taskEntry=await dbGetDoc('tasks',date+'__'+eKey(name));
   const projects=taskEntry?taskEntry.projects:getProjectsData();
   const body=document.getElementById('retro-summary-body');
@@ -1559,7 +1564,7 @@ async function generateWeeklyReport(){
   const ws=document.getElementById('week-start').value;
   const we=document.getElementById('week-end').value;
   if(!ws||!we){showToast('기간을 선택해 주세요');return;}
-  const name=document.getElementById('sel-name').value||CU.name;
+  const name=CU.name;  // 항상 본인 데이터만 (sel-name 무시)
   const all=await dbGetAll('tasks');
   const retros=await dbGetAll('retros');
   const mine=all.filter(e=>e.name===name&&e.date>=ws&&e.date<=we);
@@ -1646,7 +1651,7 @@ function openPrintWin(content){
 //  MY HISTORY
 // ═══════════════════════════════════
 async function renderMyHistory(){
-  const name=document.getElementById('sel-name').value||CU.name;
+  const name=CU.name;  // 항상 본인 데이터만
   const all=await dbGetAll('tasks');
   const retros=await dbGetAll('retros');
   const mine=all.filter(e=>e.name===name);
@@ -2114,6 +2119,22 @@ function downloadTextFile(text, filename){
   document.body.appendChild(a); a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+
+function changeDateBy(days){
+  const el=document.getElementById('input-date');
+  if(!el)return;
+  const d=new Date(el.value||new Date().toISOString().split('T')[0]);
+  d.setDate(d.getDate()+days);
+  el.value=d.toISOString().split('T')[0];
+  // Reload data for the new date
+  document.getElementById('project-list').innerHTML='';
+  projCount=0; subCount=0;
+  loadTodayIntoForm().then(()=>{
+    if(document.getElementById('project-list').children.length===0) addProject();
+    showToast(el.value+' 업무를 불러왔습니다');
+  });
 }
 
 function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); }
