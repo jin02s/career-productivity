@@ -259,7 +259,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
 <body>
 
 <!-- LOGIN -->
-<div class="login-screen" id="login-screen" style="display: none;">
+<div class="login-screen" id="login-screen">
   <div class="login-box">
     <div class="login-logo">CAREER DIVISION</div>
     <div class="login-title">생산성 관리 시스템</div>
@@ -287,7 +287,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   </div>
 </div>
 
-<div class="app" id="main-app" style="display: flex;">
+<div class="app" id="main-app" style="display:none">
 <!-- SIDEBAR -->
 <nav class="sidebar">
   <div class="sidebar-logo">
@@ -690,6 +690,10 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
 <div id="page-inbox" class="page-section">
   <div class="page-header"><div class="page-title">피드백 수신함</div><div class="page-sub">관리자로부터 받은 피드백 메시지</div></div>
   <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="card-title" style="margin-bottom:0">받은 피드백</div>
+      <button class="btn btn-sm" onclick="renderInbox();showToast('새로고침했습니다')">🔄 새로고침</button>
+    </div>
     <div id="inbox-list"><div style="color:var(--text-muted);font-size:13px;padding:10px 0">받은 피드백이 없습니다.</div></div>
   </div>
 </div>
@@ -1069,6 +1073,9 @@ function enterApp(){
     if(document.getElementById('project-list').children.length===0) addProject();
   });
   checkInbox();
+  // 30초마다 수신함 자동 새로고침
+  if(window._inboxInterval) clearInterval(window._inboxInterval);
+  window._inboxInterval = setInterval(()=>{ checkInbox(); }, 30000);
 }
 
 
@@ -1680,7 +1687,7 @@ async function viewDailyReport(date, name){
 //  FEEDBACK
 // ═══════════════════════════════════
 async function sendFeedback(){
-  const to=document.getElementById('fb-to').value.trim();
+  const to=document.getElementById('fb-to').value.trim().replace(/\s+/g,' ');
   const date=document.getElementById('fb-date').value;
   const type=document.getElementById('fb-type').value;
   const content=document.getElementById('fb-content').value.trim();
@@ -1711,7 +1718,8 @@ async function renderSentFeedbacks(){
 async function renderInbox(){
   const all=await dbGetAll('feedbacks');
   const name=CU?CU.name:'';
-  const mine=all.filter(f=>f.to===name).sort((a,b)=>new Date(b.sent_at)-new Date(a.sent_at));
+  // Trim both sides to handle any whitespace issues
+  const mine=all.filter(f=>String(f.to||'').trim()===String(name).trim()).sort((a,b)=>new Date(b.sent_at)-new Date(a.sent_at));
   const cont=document.getElementById('inbox-list');
   if(!mine.length){cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:10px 0">받은 피드백이 없습니다.</div>';return;}
   cont.innerHTML=mine.map(f=>`<div class="feedback-box${f.read?'':' feedback-unread'}" style="margin-bottom:10px">
@@ -1730,7 +1738,7 @@ async function renderInbox(){
 async function checkInbox(){
   if(!CU)return;
   const all=await dbGetAll('feedbacks');
-  const unread=all.filter(f=>f.to===CU.name&&!f.read).length;
+  const unread=all.filter(f=>String(f.to||'').trim()===String(CU.name).trim()&&!f.read).length;
   const badge=document.getElementById('inbox-badge');
   if(!badge)return;
   if(unread>0){badge.style.display='inline';badge.textContent=unread;}else{badge.style.display='none';}
