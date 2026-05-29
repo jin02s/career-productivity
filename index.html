@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0045)https://jin02s.github.io/career-productivity/ -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>커리어사업부 생산성 관리</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<link href="./커리어사업부 생산성 관리_files/css2" rel="stylesheet">
+<script src="./커리어사업부 생산성 관리_files/firebase-app-compat.js.다운로드"></script>
+<script src="./커리어사업부 생산성 관리_files/firebase-firestore-compat.js.다운로드"></script>
 <style>
 :root{
   --bg:#F5F4F0;--surface:#fff;--surface2:#F0EFE9;--border:#E0DDD5;--border-strong:#C8C5BB;
@@ -612,6 +612,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   </div>
   <div class="btn-row">
     <button class="btn" onclick="generateReport()">🔄 새로고침</button>
+    <button class="btn" onclick="downloadHallygalli('daily')">📋 할리갈리 양식 다운</button>
     <button class="btn btn-primary" onclick="downloadPDF(&#39;daily&#39;)">PDF 다운로드</button>
   </div>
 </div>
@@ -647,6 +648,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
       <div class="report-section-title">일별 상세</div>
       <table class="rt"><thead><tr><th>날짜</th><th>프로젝트</th><th>세부업무</th><th>완료율</th><th>딜레이(개인)</th><th>만족도</th></tr></thead><tbody><tr><td style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px">2026-05-28</td><td style="font-size:12px">재물&amp;계정조사 제출, 부서 생산성 관리 시스템 제작, 다과 구매 (독산FLC)</td><td style="font-size:12px;text-align:center">3</td><td><span class="badge b-notstart" style="font-size:10px">67%</span></td><td style="text-align:center;color:var(--warn)">0</td><td style="text-align:center">—</td></tr><tr><td style="font-family:&#39;IBM Plex Mono&#39;,monospace;font-size:11px">2026-05-29</td><td style="font-size:12px">재물&amp;계정조사 제출, 사전직무교육 강사섭외</td><td style="font-size:12px;text-align:center">3</td><td><span class="badge b-notstart" style="font-size:10px">0%</span></td><td style="text-align:center;color:var(--warn)">1</td><td style="text-align:center">—</td></tr></tbody></table></div></div></div>
   <div class="btn-row" id="weekly-pdf-btn" style="display: flex;">
+    <button class="btn" onclick="downloadHallygalli('weekly')">📋 주간 할리갈리 다운</button>
     <button class="btn btn-primary" onclick="downloadPDF(&#39;weekly&#39;)">주간 PDF 다운로드</button>
   </div>
 </div>
@@ -1967,6 +1969,145 @@ function showPage(id, btn){
   if(id==='feedback') renderSentFeedbacks();
   if(id==='inbox') renderInbox();
 }
+
+// ═══════════════════════════════════
+//  할리갈리 양식 다운로드
+// ═══════════════════════════════════
+async function downloadHallygalli(type){
+  const name = (document.getElementById('sel-name')||{}).value || CU.name;
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+
+  if(type==='daily'){
+    // 오늘 업무 데이터 가져오기
+    const date = document.getElementById('input-date').value;
+    const taskEntry = await dbGetDoc('tasks', date+'__'+eKey(name));
+    const projects = taskEntry ? taskEntry.projects : getProjectsData();
+
+    // 텍스트 생성: * + 팀명 / #사업운영 or #사업제안 / - 프로젝트명
+    let text = buildHallygalliText(name, projects);
+    downloadTextFile(text, '할리갈리_'+name+'_'+date+'.txt');
+
+  } else {
+    // 주간: 이번 주 월~금 데이터
+    const ws = document.getElementById('week-start').value;
+    const we = document.getElementById('week-end').value;
+    if(!ws||!we){showToast('주간 리포트를 먼저 조회해 주세요');return;}
+
+    const all = await dbGetAll('tasks');
+    const mine = all.filter(e=>e.name===name&&e.date>=ws&&e.date<=we)
+                    .sort((a,b)=>a.date.localeCompare(b.date));
+
+    if(!mine.length){showToast('해당 기간 데이터가 없습니다');return;}
+
+    // 지난주 한 일 / 이번주 할 일 구분
+    // 지난주 = ws~we 중 앞 3일(월화수), 이번주 할 일 = 오늘 기준 미완료 프로젝트
+    // 실제로는: 저장된 모든 날짜의 프로젝트를 "지난주 한 일"로, 오늘 기준 미완료를 "이번주 할 일"로
+    const doneProjects = collectWeeklyProjects(mine);
+    const todayEntry = await dbGetDoc('tasks', todayStr+'__'+eKey(name));
+    const todayProjs = todayEntry ? todayEntry.projects : getProjectsData();
+    const todoProjs = todayProjs.filter(p=>(p.proj_status||'미완료')!=='완료');
+
+    let text = name+'\n';
+
+    text += '*커리어\n\n';
+
+
+    text += buildCategoryBlock(doneProjects, '지난주 한 일');
+    text += '\n';
+
+
+    text += buildCategoryBlock(todoProjs, '이번주 할 일');
+    downloadTextFile(text, '주간할리갈리_'+name+'_'+ws+'~'+we+'.txt');
+  }
+  showToast('📋 할리갈리 양식이 다운로드되었습니다');
+}
+
+function buildHallygalliText(name, projects){
+  // 카테고리별로 그룹핑
+  const groups = {};
+  projects.forEach(p=>{
+    const cat = p.category||'기타';
+    if(!groups[cat]) groups[cat]=[];
+    groups[cat].push(p.name);
+  });
+
+  let text = name+'\n';
+
+  text += '*커리어\n\n';
+
+
+
+  // 사업운영, 사업제안, 기타 순서
+  const catOrder = ['사업운영','사업제안','기타'];
+  catOrder.forEach(cat=>{
+    if(!groups[cat]||!groups[cat].length) return;
+    const catPrefix = (cat==='기타') ? '*' : '#';
+    text += catPrefix+cat+'\n';
+
+    groups[cat].forEach(projName=>{
+      if(projName) text += '- '+projName+'\n';
+
+    });
+    text += '\n';
+
+  });
+  return text.trim();
+}
+
+function collectWeeklyProjects(entries){
+  // 주중 모든 프로젝트 중복 제거해서 모으기
+  const seen = new Set();
+  const result = [];
+  entries.forEach(e=>{
+    (e.projects||[]).forEach(p=>{
+      if(p.name&&!seen.has(p.name)){
+        seen.add(p.name);
+        result.push(p);
+      }
+    });
+  });
+  return result;
+}
+
+function buildCategoryBlock(projects, label){
+  const groups = {};
+  projects.forEach(p=>{
+    const cat = p.category||'기타';
+    if(!groups[cat]) groups[cat]=[];
+    if(p.name) groups[cat].push(p.name);
+  });
+
+  let text = '';
+  const catOrder = ['사업운영','사업제안','기타'];
+  let hasContent = false;
+  catOrder.forEach(cat=>{
+    if(!groups[cat]||!groups[cat].length) return;
+    if(!hasContent){ text += '【'+label+'】\n'; hasContent=true; }
+
+    const catPrefix = (cat==='기타') ? '*' : '#';
+    text += catPrefix+cat+'\n';
+
+    groups[cat].forEach(projName=>{
+      text += '- '+projName+'\n';
+
+    });
+    text += '\n';
+
+  });
+  return text;
+}
+
+function downloadTextFile(text, filename){
+  const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); }
 
 // ── 모든 함수/변수 선언 후 실행 ──
