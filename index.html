@@ -372,7 +372,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   <div class="card">
     <div class="card-title">기본 정보</div>
     <div class="form-row form-row-3">
-      <div class="form-group"><label class="form-label">이름</label><input class="form-input" id="sel-name" placeholder="이름 입력"></div>
+      <div class="form-group"><label class="form-label">이름</label><div class="form-input" id="sel-name" style="background:var(--surface2);color:var(--text);cursor:default;display:flex;align-items:center">—</div></div>
       <div class="form-group"><label class="form-label">소속 팀</label>
         <select class="form-input" id="sel-team">
           <option>커리어1팀</option>
@@ -575,7 +575,8 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   <div class="card">
     <div class="card-title">피드백 작성</div>
     <div class="form-row form-row-3">
-      <div class="form-group"><label class="form-label">받는 사람</label><input class="form-input" id="fb-to" placeholder="이름 입력"></div>
+      <div class="form-group"><label class="form-label">받는 사람</label><input class="form-input" id="fb-to" placeholder="이름 입력" list="fb-member-list" autocomplete="off">
+        <datalist id="fb-member-list"></datalist></div>
       <div class="form-group"><label class="form-label">해당 날짜</label><input type="date" class="form-input" id="fb-date"></div>
       <div class="form-group"><label class="form-label">유형</label>
         <select class="form-input" id="fb-type">
@@ -633,14 +634,11 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
     </div>
     <div style="display:flex;gap:8px;justify-content:flex-end">
       <button class="btn" onclick="closeFirebaseModal()">닫기</button>
-      <button class="btn btn-primary" onclick="applyFirebaseConfig()">저장 및 연결</button>
-    </div>
-  </div>
-</div>
 
-<div class="toast" id="toast">✓ 피드백이 발송되었습니다</div>
 
-<script>// ═══════════════════════════════════════════════════════════════════════
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
 //  커리어사업부 생산성 관리 시스템 — JS (완전 재작성 v3)
 // ═══════════════════════════════════════════════════════════════════════
 
@@ -800,6 +798,8 @@ function enterApp() {
 
   // 사이드바 사용자 정보
   document.getElementById('sb-name').textContent = name;
+  const snEl = document.getElementById('sel-name');
+  if (snEl) { if (snEl.tagName === 'INPUT') snEl.value = name; else snEl.textContent = name; }
   document.getElementById('sb-avatar').textContent = name.charAt(0);
   document.getElementById('sb-role').textContent = team + ' · ' + (role === 'director' ? '부장' : role === 'leader' ? '팀장' : '팀원');
 
@@ -838,6 +838,14 @@ function enterApp() {
   if (window._inboxInterval) clearInterval(window._inboxInterval);
   window._inboxInterval = setInterval(() => checkInbox(), 30000);
 
+  // 피드백 수신자 datalist 채우기 (오타 방지)
+  const fbList = document.getElementById('fb-member-list');
+  if (fbList) {
+    const targets = role === 'director' ? Object.keys(MEMBERS) :
+                    role === 'leader'   ? Object.keys(MEMBERS).filter(n => MEMBERS[n].team === (LEADER_TEAMS[name]||team)) :
+                    [];
+    fbList.innerHTML = targets.filter(n => n !== name).map(n => `<option value="${n}">`).join('');
+  }
   // 항상 오늘 업무 입력 화면부터 시작
   showPage('input', document.querySelector('#nav-member .nav-item'));
 }
@@ -1624,7 +1632,7 @@ async function renderSentFeedbacks() {
 async function renderInbox() {
   const all  = await dbGetAll('feedbacks');
   const name = CU ? CU.name : '';
-  const mine = all.filter(f => f.to === name).sort((a,b) => new Date(b.sent_at) - new Date(a.sent_at));
+  const mine = all.filter(f => (f.to||'').trim() === name.trim()).sort((a,b) => new Date(b.sent_at) - new Date(a.sent_at));
   const cont = document.getElementById('inbox-list');
   if (!mine.length) { cont.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:10px 0">받은 피드백이 없습니다.</div>'; return; }
   cont.innerHTML = mine.map(f => `<div class="feedback-box${f.read?'':' feedback-unread'}" style="margin-bottom:10px">
@@ -1643,7 +1651,7 @@ async function renderInbox() {
 async function checkInbox() {
   if (!CU) return;
   const all    = await dbGetAll('feedbacks');
-  const unread = all.filter(f => f.to === CU.name && !f.read).length;
+  const unread = all.filter(f => (f.to||'').trim() === CU.name.trim() && !f.read).length;
   const badge  = document.getElementById('inbox-badge');
   if (!badge) return;
   if (unread > 0) { badge.style.display = 'inline'; badge.textContent = unread; }
@@ -2096,6 +2104,4 @@ function showToast(msg) {
 })();
 
 </script>
-
-
 </body></html>
