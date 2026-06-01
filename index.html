@@ -372,7 +372,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   <div class="card">
     <div class="card-title">기본 정보</div>
     <div class="form-row form-row-3">
-      <div class="form-group"><label class="form-label">이름</label><input class="form-input" id="sel-name" placeholder="이름 입력" readonly></div>
+      <div class="form-group"><label class="form-label">이름</label><input class="form-input" id="sel-name" placeholder="이름 입력"></div>
       <div class="form-group"><label class="form-label">소속 팀</label>
         <select class="form-input" id="sel-team">
           <option>커리어1팀</option>
@@ -394,124 +394,8 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
     <div style="font-size:12px;color:var(--text-muted);background:var(--surface2);padding:7px 11px;border-radius:6px;margin-bottom:12px">
       💡 시작 버튼 → 자동으로 '진행중' / 완료 버튼 → '완료' 로 변경됩니다. 잘못 누른 경우 '수동편집'으로 수정하세요.
     </div>
-    <div id="project-list"><div class="project-block" id="proj-1">
-    <div class="project-header">
-      <input class="proj-name-input" style="width:100%" type="text" placeholder="프로젝트명" value="재물&amp;계정조사 제출" oninput="updateProjProgress(1);updateSummary()">
-      <span class="deadline-today-badge">! 금일 데드라인</span>
-      <select class="proj-cat-sel" id="proj-cat-1">
-        <option>사업운영</option>
-        <option>사업제안</option>
-        <option selected="">기타</option>
-      </select>
-      <span style="font-size:11px;color:var(--text-muted);white-space:nowrap">데드라인</span>
-      <input type="date" class="dl-input" id="proj-dl-1" value="2026-05-29" onchange="updateProjProgress(1)">
-      <span class="proj-prog-text" id="proj-prog-1">0/1</span>
-      <button class="del-proj-btn" onclick="document.getElementById(&#39;proj-1&#39;).remove();updateSummary()">×</button>
+    <div id="project-list">
     </div>
-    <div class="dl-bar dl-warn" id="proj-dlbar-1">
-      <span id="proj-dltext-1">⏰ D-0 (2026-05-29) — 미완료 1건</span>
-      <div class="dl-bar-track"><div class="dl-bar-fill" id="proj-bar-1" style="width:0%"></div></div>
-    </div>
-    <div style="overflow-x:auto">
-      <table class="sub-table">
-        <thead><tr>
-          <th style="padding-left:14px;min-width:170px">세부업무</th>
-          <th style="min-width:80px">시작 타각</th>
-          <th style="min-width:80px">완료 타각</th>
-          <th style="text-align:center;min-width:44px">소요</th>
-          <th style="min-width:90px">상태</th>
-          <th style="min-width:130px">딜레이 정보</th>
-          <th style="width:26px"></th>
-        </tr></thead>
-        <tbody id="sub-body-1"><tr id="sub-1" data-pid="1">
-    <td style="padding-left:14px"><input class="sub-input" type="text" placeholder="세부업무 입력" value="재물조사 및 계정조사 시트 업데이트, 텔레 제출" oninput="updateSummary()"></td>
-    <td>
-      <button class="time-btn" id="sbtn-s-1" onclick="stampTime(1,&#39;start&#39;,1)">▶ 시작</button>
-      <input class="time-edit" type="time" id="sedit-s-1" value="" onchange="onTimeEdit(1,&#39;start&#39;,1)">
-      <span class="edit-link" onclick="toggleEdit(1,&#39;start&#39;)">수동편집</span>
-    </td>
-    <td>
-      <button class="time-btn" id="sbtn-e-1" onclick="stampTime(1,&#39;end&#39;,1)">■ 완료</button>
-      <input class="time-edit" type="time" id="sedit-e-1" value="" onchange="onTimeEdit(1,&#39;end&#39;,1)">
-      <span class="edit-link" onclick="toggleEdit(1,&#39;end&#39;)">수동편집</span>
-    </td>
-    <td class="dur-cell" id="sdur-1">—</td>
-    <td><select class="status-sel" id="ssel-1" onchange="onStatusSelChange(1,1,this.value)"><option value="시작전" selected="">시작전</option><option value="진행중">진행중</option><option value="완료">완료</option><option value="딜레이-외부">딜레이(외부)</option><option value="딜레이-개인">딜레이(개인)</option></select></td>
-    <td id="sdelay-cell-1"><span style="color:var(--text-light);font-size:11px">—</span></td>
-    <td><button class="del-btn" onclick="removeSubTask(1,1)">×</button></td>
-  </tr></tbody>
-      </table>
-    </div>
-    <button class="add-sub-btn" onclick="addSubTask(1)">+ 세부업무 추가</button>
-  </div><div class="project-block" id="proj-2">
-    <div class="project-header">
-      <input class="proj-name-input" style="width:100%" type="text" placeholder="프로젝트명" value="사전직무교육 강사섭외" oninput="updateProjProgress(2);updateSummary()">
-      
-      <select class="proj-cat-sel" id="proj-cat-2">
-        <option selected="">사업운영</option>
-        <option>사업제안</option>
-        <option>기타</option>
-      </select>
-      <span style="font-size:11px;color:var(--text-muted);white-space:nowrap">데드라인</span>
-      <input type="date" class="dl-input" id="proj-dl-2" value="2026-06-02" onchange="updateProjProgress(2)">
-      <span class="proj-prog-text" id="proj-prog-2">0/2</span>
-      <button class="del-proj-btn" onclick="document.getElementById(&#39;proj-2&#39;).remove();updateSummary()">×</button>
-    </div>
-    <div class="dl-bar dl-ok" id="proj-dlbar-2">
-      <span id="proj-dltext-2">📅 D-4 (2026-06-02) — 미완료 2건</span>
-      <div class="dl-bar-track"><div class="dl-bar-fill" id="proj-bar-2" style="width:0%"></div></div>
-    </div>
-    <div style="overflow-x:auto">
-      <table class="sub-table">
-        <thead><tr>
-          <th style="padding-left:14px;min-width:170px">세부업무</th>
-          <th style="min-width:80px">시작 타각</th>
-          <th style="min-width:80px">완료 타각</th>
-          <th style="text-align:center;min-width:44px">소요</th>
-          <th style="min-width:90px">상태</th>
-          <th style="min-width:130px">딜레이 정보</th>
-          <th style="width:26px"></th>
-        </tr></thead>
-        <tbody id="sub-body-2"><tr id="sub-2" data-pid="2">
-    <td style="padding-left:14px"><input class="sub-input" type="text" placeholder="세부업무 입력" value="섭외문안 작성" oninput="updateSummary()"></td>
-    <td>
-      <button class="time-btn stamped" id="sbtn-s-2" onclick="stampTime(2,&#39;start&#39;,2)">11:11</button>
-      <input class="time-edit" type="time" id="sedit-s-2" value="11:11" onchange="onTimeEdit(2,&#39;start&#39;,2)">
-      <span class="edit-link" onclick="toggleEdit(2,&#39;start&#39;)">수동편집</span>
-    </td>
-    <td>
-      <button class="time-btn stamped" id="sbtn-e-2" onclick="stampTime(2,&#39;end&#39;,2)">11:11</button>
-      <input class="time-edit" type="time" id="sedit-e-2" value="11:11" onchange="onTimeEdit(2,&#39;end&#39;,2)">
-      <span class="edit-link" onclick="toggleEdit(2,&#39;end&#39;)">수동편집</span>
-    </td>
-    <td class="dur-cell" id="sdur-2" style="color: var(--danger);">오류</td>
-    <td><select class="status-sel" id="ssel-2" onchange="onStatusSelChange(2,2,this.value)"><option value="시작전">시작전</option><option value="진행중">진행중</option><option value="완료">완료</option><option value="딜레이-외부">딜레이(외부)</option><option value="딜레이-개인" selected="">딜레이(개인)</option></select></td>
-    <td id="sdelay-cell-2"><div class="delay-fields">
-    <label>사유</label><input type="text" id="sdr-2" value="컨디션 난조로 반반차 사용 " placeholder="딜레이 사유" style="flex:1;min-width:80px">
-    <label>목표기한</label><input type="date" id="sdd-2" value="2026-05-30" style="width:110px">
-  </div></td>
-    <td><button class="del-btn" onclick="removeSubTask(2,2)">×</button></td>
-  </tr><tr id="sub-3" data-pid="2">
-    <td style="padding-left:14px"><input class="sub-input" type="text" placeholder="세부업무 입력" value="강사 리스트업" oninput="updateSummary()"></td>
-    <td>
-      <button class="time-btn" id="sbtn-s-3" onclick="stampTime(3,&#39;start&#39;,2)">▶ 시작</button>
-      <input class="time-edit" type="time" id="sedit-s-3" value="" onchange="onTimeEdit(3,&#39;start&#39;,2)">
-      <span class="edit-link" onclick="toggleEdit(3,&#39;start&#39;)">수동편집</span>
-    </td>
-    <td>
-      <button class="time-btn" id="sbtn-e-3" onclick="stampTime(3,&#39;end&#39;,2)">■ 완료</button>
-      <input class="time-edit" type="time" id="sedit-e-3" value="" onchange="onTimeEdit(3,&#39;end&#39;,2)">
-      <span class="edit-link" onclick="toggleEdit(3,&#39;end&#39;)">수동편집</span>
-    </td>
-    <td class="dur-cell" id="sdur-3">—</td>
-    <td><select class="status-sel" id="ssel-3" onchange="onStatusSelChange(3,2,this.value)"><option value="시작전" selected="">시작전</option><option value="진행중">진행중</option><option value="완료">완료</option><option value="딜레이-외부">딜레이(외부)</option><option value="딜레이-개인">딜레이(개인)</option></select></td>
-    <td id="sdelay-cell-3"><span style="color:var(--text-light);font-size:11px">—</span></td>
-    <td><button class="del-btn" onclick="removeSubTask(3,2)">×</button></td>
-  </tr></tbody>
-      </table>
-    </div>
-    <button class="add-sub-btn" onclick="addSubTask(2)">+ 세부업무 추가</button>
-  </div></div>
     <button class="btn btn-sm" style="margin-top:4px" id="add-project-btn">+ 프로젝트 추가</button>
   </div>
   <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:12px">
@@ -529,13 +413,13 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   <!-- 오늘 달성 요약 (저장된 데이터 기반) -->
   <div class="retro-summary" id="retro-today-summary">
     <div class="retro-summary-title">오늘 업무 달성 현황</div>
-    <div id="retro-summary-body" style="color:var(--text-muted);font-size:13px">로그인 후 표시됩니다.</div>
+    <div id="retro-summary-body" style="color:var(--text-muted);font-size:13px"></div>
 </div>
 <div class="card">
     <div class="card-title">오늘 생산성 만족도</div>
     <div class="range-wrapper">
       <input type="range" min="1" max="10" value="7" id="satisfaction" oninput="document.getElementById(&#39;sat-display&#39;).textContent=this.value">
-      <div class="range-val"><span id="sat-display">4</span></div>
+      <div class="range-val"><span id="sat-display">7</span></div>
     </div>
     <div class="range-labels"><span>1 매우 불만족</span><span>10 매우 만족</span></div>
   </div>
@@ -666,11 +550,24 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
     <div class="stat-card"><div class="stat-label">평균 만족도</div><div class="stat-val" id="d-sat">—</div><div class="stat-sub">/ 10</div></div>
     <div class="stat-card"><div class="stat-label">오늘 미제출</div><div class="stat-val" id="d-missing" style="color:var(--danger)">—</div><div class="stat-sub">명</div></div>
   </div>
-  <div class="card"><div class="card-title">최근 제출 현황</div><div id="admin-report-list"><div style="color:var(--text-muted);font-size:13px;padding:8px 0">로그인 후 표시됩니다.</div></div></div></div>
+  <div class="card"><div class="card-title">최근 제출 현황</div><div id="admin-report-list"></div></div></div>
 <!-- ── 관리자: 구성원 현황 ── -->
 <div id="page-members" class="page-section">
   <div class="page-header"><div class="page-title">구성원별 생산성 현황</div><div class="page-sub">누적 데이터 기반 자동 집계</div></div>
-  <div class="member-list" id="member-list-container"><div style="color:var(--text-muted);font-size:13px">로그인 후 표시됩니다.</div></div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title">조회 기간 설정</div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <div class="form-group"><label class="form-label">시작일</label><input type="date" class="form-input" id="member-from" style="width:150px"></div>
+      <div class="form-group"><label class="form-label">종료일</label><input type="date" class="form-input" id="member-to" style="width:150px"></div>
+      <div style="display:flex;gap:6px;align-items:flex-end;padding-bottom:2px">
+        <button class="btn btn-sm" onclick="setMemberPeriod('week')">이번 주</button>
+        <button class="btn btn-sm" onclick="setMemberPeriod('month')">이번 달</button>
+        <button class="btn btn-sm" onclick="setMemberPeriod('all')">전체</button>
+        <button class="btn btn-sm btn-primary" onclick="renderMemberList()">조회</button>
+      </div>
+    </div>
+  </div>
+  <div class="member-list" id="member-list-container"></div>
 </div>
 <!-- ── 관리자: 피드백 발송 ── -->
 <div id="page-feedback" class="page-section">
@@ -695,9 +592,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   </div>
   <div class="card" style="margin-top:12px">
     <div class="card-title">발송 내역</div>
-    <div id="sent-feedback-list"><div style="color:var(--text-muted);font-size:13px;padding:8px 0">발송 내역이 없습니다.</div></div>
-</div>
-</div>
+    <div id="sent-feedback-list"></div></div></div>
 <!-- ── 관리자: 구성원 리포트 조회 ── -->
 <div id="page-upload" class="page-section">
   <div class="page-header"><div class="page-title">구성원 리포트 조회</div><div class="page-sub">구성원이 저장한 업무 데이터를 바로 조회합니다</div></div>
@@ -745,179 +640,235 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
 
 <div class="toast" id="toast">✓ 피드백이 발송되었습니다</div>
 
-<script>
-// ═══════════════════════════════════
-//  FIREBASE
-// ═══════════════════════════════════
-let db=null, useFirebase=false;
-function initFirebase(cfg){
-  try{
-    if(firebase.apps.length) firebase.apps.forEach(a=>a.delete());
-    firebase.initializeApp(cfg); db=firebase.firestore(); useFirebase=true; updFbStatus(true); return true;
-  }catch(e){showToast('Firebase 오류: '+e.message);return false;}
+<script>// ═══════════════════════════════════════════════════════════════════════
+//  커리어사업부 생산성 관리 시스템 — JS (완전 재작성 v3)
+// ═══════════════════════════════════════════════════════════════════════
+
+// ── Firebase / DB ────────────────────────────────────────────────────────────
+let db = null, useFirebase = false;
+
+function initFirebase(cfg) {
+  try {
+    if (firebase.apps.length) firebase.apps.forEach(a => a.delete());
+    firebase.initializeApp(cfg);
+    db = firebase.firestore();
+    useFirebase = true;
+    updFbStatus(true);
+    return true;
+  } catch(e) { showToast('Firebase 오류: ' + e.message); return false; }
 }
-function updFbStatus(ok){
-  const el=document.getElementById('fb-status'),tx=document.getElementById('fb-status-text');
-  if(!el)return;
-  el.className='fb-status '+(ok?'ok':'warn');
-  tx.textContent=ok?'연결됨 — Firestore 실시간 동기화 중':'미연결 — 로컬 저장 사용 중';
+function updFbStatus(ok) {
+  const el = document.getElementById('fb-status');
+  const tx = document.getElementById('fb-status-text');
+  if (!el) return;
+  el.className = 'fb-status ' + (ok ? 'ok' : 'warn');
+  tx.textContent = ok ? '연결됨 — Firestore 실시간 동기화 중' : '미연결 — 로컬 저장 사용 중';
 }
-async function dbSet(col,id,data){ if(useFirebase&&db){await db.collection(col).doc(id).set(data,{merge:true});}else{const a=JSON.parse(localStorage.getItem(col)||'{}');a[id]=data;localStorage.setItem(col,JSON.stringify(a));} }
-async function dbGetAll(col){ if(useFirebase&&db){const s=await db.collection(col).get();return s.docs.map(d=>({id:d.id,...d.data()}));}else{const a=JSON.parse(localStorage.getItem(col)||'{}');return Object.entries(a).map(([id,v])=>({id,...v}));} }
-async function dbGetDoc(col,id){ if(useFirebase&&db){const s=await db.collection(col).doc(id).get();return s.exists?s.data():null;}else{const a=JSON.parse(localStorage.getItem(col)||'{}');return a[id]||null;} }
-async function dbDelete(col,id){ if(useFirebase&&db){await db.collection(col).doc(id).delete();}else{const a=JSON.parse(localStorage.getItem(col)||'{}');delete a[id];localStorage.setItem(col,JSON.stringify(a));} }
-// ── Team-aware data helpers ──────────────────────────────────────────────────
-function getVisibleNames(){
-  // Returns array of names this user can see (excluding self for admin views)
-  if(!CU) return [];
-  if(CU.role==='director'){
-    // Director sees everyone
-    return Object.keys(MEMBERS);
-  } else if(CU.role==='leader'){
-    // Leader sees own team members only (not other leaders, not director)
-    const myTeam=LEADER_TEAMS[CU.name]||CU.team;
-    return Object.keys(MEMBERS).filter(n=>MEMBERS[n].team===myTeam && MEMBERS[n].role==='member');
+
+async function dbSet(col, id, data) {
+  if (useFirebase && db) {
+    await db.collection(col).doc(id).set(data, { merge: true });
   } else {
-    // Member sees only themselves
-    return [CU.name];
+    const a = JSON.parse(localStorage.getItem(col) || '{}');
+    a[id] = data;
+    localStorage.setItem(col, JSON.stringify(a));
   }
 }
-function getAdminVisibleNames(){
-  // For admin dashboard/member list - excludes self for leader
-  if(!CU) return [];
-  if(CU.role==='director') return Object.keys(MEMBERS);
-  if(CU.role==='leader'){
-    const myTeam=LEADER_TEAMS[CU.name]||CU.team;
-    return Object.keys(MEMBERS).filter(n=>MEMBERS[n].team===myTeam && n!==CU.name);
+async function dbGetAll(col) {
+  if (useFirebase && db) {
+    const s = await db.collection(col).get();
+    return s.docs.map(d => ({ id: d.id, ...d.data() }));
+  } else {
+    const a = JSON.parse(localStorage.getItem(col) || '{}');
+    return Object.entries(a).map(([id, v]) => ({ id, ...v }));
+  }
+}
+async function dbGetDoc(col, id) {
+  if (useFirebase && db) {
+    const s = await db.collection(col).doc(id).get();
+    return s.exists ? s.data() : null;
+  } else {
+    const a = JSON.parse(localStorage.getItem(col) || '{}');
+    return a[id] || null;
+  }
+}
+async function dbDelete(col, id) {
+  if (useFirebase && db) {
+    await db.collection(col).doc(id).delete();
+  } else {
+    const a = JSON.parse(localStorage.getItem(col) || '{}');
+    delete a[id];
+    localStorage.setItem(col, JSON.stringify(a));
+  }
+}
+
+// ── Firebase 설정 저장 자동 로드 ─────────────────────────────────────────────
+(function() {
+  const s = localStorage.getItem('fb_config');
+  if (s) { try { initFirebase(JSON.parse(s)); } catch(e) {} }
+})();
+function openFirebaseModal() {
+  const s = localStorage.getItem('fb_config');
+  if (s) document.getElementById('fb-config-input').value = s;
+  updFbStatus(useFirebase);
+  document.getElementById('firebase-overlay').classList.add('open');
+}
+function closeFirebaseModal() { document.getElementById('firebase-overlay').classList.remove('open'); }
+function applyFirebaseConfig() {
+  const raw = document.getElementById('fb-config-input').value.trim();
+  try {
+    const cfg = JSON.parse(raw);
+    if (!cfg.apiKey || !cfg.projectId) throw new Error('필수 항목 누락');
+    localStorage.setItem('fb_config', raw);
+    if (initFirebase(cfg)) { closeFirebaseModal(); showToast('✓ Firebase 연결 성공!'); }
+  } catch(e) { showToast('JSON 오류: ' + e.message); }
+}
+
+// ── 구성원 / 권한 ─────────────────────────────────────────────────────────────
+const MEMBERS = {
+  '송진영': { role: 'director', team: '커리어사업부', pin: '1000' },
+  '임혜진': { role: 'leader',   team: '커리어1팀',   pin: '2100' },
+  '박현지': { role: 'member',   team: '커리어1팀',   pin: '3110' },
+  '전율리': { role: 'member',   team: '커리어1팀',   pin: '3120' },
+  '정은지': { role: 'leader',   team: '커리어2팀',   pin: '2200' },
+  '정현정': { role: 'member',   team: '커리어2팀',   pin: '3210' },
+  '김승현': { role: 'leader',   team: '커리어3팀',   pin: '2300' },
+  '유화경': { role: 'member',   team: '커리어3팀',   pin: '3310' },
+};
+const LEADER_TEAMS = { '임혜진': '커리어1팀', '정은지': '커리어2팀', '김승현': '커리어3팀' };
+
+let CU = null; // { name, role, team }
+
+// 본인 포함 볼 수 있는 이름 목록 (내 업무용)
+function getVisibleNames() {
+  if (!CU) return [];
+  if (CU.role === 'director') return Object.keys(MEMBERS);
+  if (CU.role === 'leader') {
+    const myTeam = LEADER_TEAMS[CU.name] || CU.team;
+    return Object.keys(MEMBERS).filter(n => MEMBERS[n].team === myTeam && MEMBERS[n].role === 'member');
+  }
+  return [CU.name];
+}
+// 관리자가 볼 수 있는 팀원 목록 (대시보드/구성원현황용 — 본인 포함 여부 역할별 상이)
+function getAdminVisibleNames() {
+  if (!CU) return [];
+  if (CU.role === 'director') return Object.keys(MEMBERS); // 부장: 전체
+  if (CU.role === 'leader') {
+    const myTeam = LEADER_TEAMS[CU.name] || CU.team;
+    // 팀장: 본인 팀의 팀원만 (본인 제외)
+    return Object.keys(MEMBERS).filter(n => MEMBERS[n].team === myTeam && n !== CU.name);
   }
   return [];
 }
 
-(function(){const s=localStorage.getItem('fb_config');if(s){try{initFirebase(JSON.parse(s));}catch(e){}}})();
-function openFirebaseModal(){const s=localStorage.getItem('fb_config');if(s)document.getElementById('fb-config-input').value=s;updFbStatus(useFirebase);document.getElementById('firebase-overlay').classList.add('open');}
-function closeFirebaseModal(){document.getElementById('firebase-overlay').classList.remove('open');}
-function applyFirebaseConfig(){
-  const raw=document.getElementById('fb-config-input').value.trim();
-  try{const cfg=JSON.parse(raw);if(!cfg.apiKey||!cfg.projectId)throw new Error('필수 항목 누락');localStorage.setItem('fb_config',raw);if(initFirebase(cfg)){closeFirebaseModal();showToast('✓ Firebase 연결 성공!');}}
-  catch(e){showToast('JSON 오류: '+e.message);}
+async function loadPinsOverride() {
+  try {
+    const d = await dbGetDoc('config', 'pins');
+    if (d) { Object.keys(d).forEach(name => { if (MEMBERS[name]) MEMBERS[name].pin = String(d[name]); }); }
+  } catch(e) {}
 }
 
-// ═══════════════════════════════════
-//  AUTH
-// ═══════════════════════════════════
-// ── 구성원 정보 (PIN은 Firebase config/pins 에서 override 가능) ──
-const MEMBERS = {
-  '송진영': { role:'director', team:'커리어사업부',  pin:'1000' },
-  '임혜진': { role:'leader',   team:'커리어1팀',    pin:'2100' },
-  '박현지': { role:'member',   team:'커리어1팀',    pin:'3110' },
-  '전율리': { role:'member',   team:'커리어1팀',    pin:'3120' },
-  '정은지': { role:'leader',   team:'커리어2팀',    pin:'2200' },
-  '정현정': { role:'member',   team:'커리어2팀',    pin:'3210' },
-  '김승현': { role:'leader',   team:'커리어3팀',    pin:'2300' },
-  '유화경': { role:'member',   team:'커리어3팀',    pin:'3310' },
-};
-// team hierarchy: which teams each leader can see
-const LEADER_TEAMS = {
-  '임혜진': '커리어1팀',
-  '정은지': '커리어2팀',
-  '김승현': '커리어3팀',
-};
-let CU=null; // {name, role, team}
-
-async function loadPinsOverride(){
-  // Allow overriding PINs from Firestore config/pins (field = name, value = pin)
-  try{
-    const d=await dbGetDoc('config','pins');
-    if(d){ Object.keys(d).forEach(name=>{ if(MEMBERS[name]) MEMBERS[name].pin=String(d[name]); }); }
-  }catch(e){}
-}
-
-async function doLogin(){
-  const name=document.getElementById('login-name').value.trim();
-  const pin=document.getElementById('login-pin').value.trim();
-  const err=document.getElementById('login-error');
-  if(!name){err.textContent='이름을 입력해 주세요';return;}
-  if(!pin){err.textContent='PIN을 입력해 주세요';return;}
+// ── 로그인/로그아웃 ───────────────────────────────────────────────────────────
+async function doLogin() {
+  const name = document.getElementById('login-name').value.trim();
+  const pin  = document.getElementById('login-pin').value.trim();
+  const err  = document.getElementById('login-error');
+  if (!name) { err.textContent = '이름을 입력해 주세요'; return; }
+  if (!pin)  { err.textContent = 'PIN을 입력해 주세요'; return; }
   await loadPinsOverride();
-  const member=MEMBERS[name];
-  if(!member){err.textContent='등록되지 않은 이름입니다';return;}
-  if(pin!==member.pin){err.textContent='PIN이 올바르지 않습니다';return;}
-  CU={name, role:member.role, team:member.team};
-  enterApp(); // 세션 저장 안함 - 매번 로그인 필요
+  const member = MEMBERS[name];
+  if (!member) { err.textContent = '등록되지 않은 이름입니다'; return; }
+  if (pin !== member.pin) { err.textContent = 'PIN이 올바르지 않습니다'; return; }
+  CU = { name, role: member.role, team: member.team };
+  enterApp();
 }
-function doLogout(){ CU=null; if(window._inboxInterval) clearInterval(window._inboxInterval); document.getElementById('main-app').style.display='none'; document.getElementById('login-screen').style.display='flex'; document.getElementById('login-pin').value=''; document.getElementById('login-name').value=''; document.getElementById('login-error').textContent=''; }
-function enterApp(){
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('main-app').style.display='flex';
-  const {name,role,team}=CU;
-  document.getElementById('sb-name').textContent=name;
-  document.getElementById('sb-avatar').textContent=name.charAt(0);
-  const snEl=document.getElementById('sel-name'); if(snEl) snEl.value=name;
-  const stEl=document.getElementById('sel-team'); if(stEl) stEl.value=team;
-  const badge=document.getElementById('role-badge');
-  const adminNav=document.getElementById('nav-admin');
-  if(role==='director'){
-    badge.textContent='부장';badge.className='role-badge role-director';
-    document.getElementById('sb-role').textContent=team+' · 부장';
-    document.getElementById('admin-nav-label').textContent='전체 관리 (부장)';
-    document.getElementById('dash-nav-label').textContent='전체 대시보드';
-    document.getElementById('dashboard-title').textContent='전체 생산성 대시보드';
-    adminNav.style.display='';
-  } else if(role==='leader'){
-    badge.textContent='팀장';badge.className='role-badge role-leader';
-    document.getElementById('sb-role').textContent=team+' · 팀장';
-    document.getElementById('admin-nav-label').textContent=team+' 관리';
-    document.getElementById('dash-nav-label').textContent=team+' 대시보드';
-    document.getElementById('dashboard-title').textContent=team+' 생산성 대시보드';
-    adminNav.style.display='';
-  } else{
-    badge.textContent='팀원';badge.className='role-badge role-member';
-    document.getElementById('sb-role').textContent=team+' · 팀원';
-    adminNav.style.display='none';
+
+function doLogout() {
+  CU = null;
+  if (window._inboxInterval) clearInterval(window._inboxInterval);
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-pin').value = '';
+  document.getElementById('login-name').value = '';
+  document.getElementById('login-error').textContent = '';
+}
+
+function enterApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'flex';
+  const { name, role, team } = CU;
+
+  // 사이드바 사용자 정보
+  document.getElementById('sb-name').textContent = name;
+  document.getElementById('sb-avatar').textContent = name.charAt(0);
+  document.getElementById('sb-role').textContent = team + ' · ' + (role === 'director' ? '부장' : role === 'leader' ? '팀장' : '팀원');
+
+  const badge    = document.getElementById('role-badge');
+  const adminNav = document.getElementById('nav-admin');
+
+  if (role === 'director') {
+    badge.textContent = '부장'; badge.className = 'role-badge role-director';
+    document.getElementById('admin-nav-label').textContent = '전체 관리 (부장)';
+    document.getElementById('dash-nav-label').textContent  = '전체 대시보드';
+    document.getElementById('dashboard-title').textContent = '전체 생산성 대시보드';
+    adminNav.style.display = '';
+  } else if (role === 'leader') {
+    badge.textContent = '팀장'; badge.className = 'role-badge role-leader';
+    document.getElementById('admin-nav-label').textContent = team + ' 관리';
+    document.getElementById('dash-nav-label').textContent  = team + ' 대시보드';
+    document.getElementById('dashboard-title').textContent = team + ' 생산성 대시보드';
+    adminNav.style.display = '';
+  } else {
+    badge.textContent = '팀원'; badge.className = 'role-badge role-member';
+    adminNav.style.display = 'none';
   }
-  const today=new Date();
-  document.getElementById('today-date-label').textContent=today.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
-  document.getElementById('input-date').value=today.toISOString().split('T')[0];
-  const uploadDateEl=document.getElementById('upload-date'); if(uploadDateEl) uploadDateEl.value=today.toISOString().split('T')[0];
-  document.getElementById('fb-date').value=today.toISOString().split('T')[0];
-  document.getElementById('dashboard-date').textContent=today.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'})+'  기준';
+
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+  document.getElementById('today-date-label').textContent =
+    today.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+  document.getElementById('input-date').value = todayStr;
+  const fbDateEl = document.getElementById('fb-date');
+  if (fbDateEl) fbDateEl.value = todayStr;
+  document.getElementById('dashboard-date').textContent =
+    today.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }) + '  기준';
+
   setDefaultWeek();
-  // Load today's saved data into form (so user can continue editing)
-  loadTodayIntoForm().then(()=>{
-    if(document.getElementById('project-list').children.length===0) addProject();
-  });
   checkInbox();
-  // 30초마다 수신함 자동 새로고침
-  if(window._inboxInterval) clearInterval(window._inboxInterval);
-  window._inboxInterval = setInterval(()=>{ checkInbox(); }, 30000);
-  // 로그인 후 항상 오늘 업무 입력 페이지를 기본으로 표시
-  const firstNavBtn = document.querySelector('#nav-member .nav-item');
-  showPage('input', firstNavBtn);
+  if (window._inboxInterval) clearInterval(window._inboxInterval);
+  window._inboxInterval = setInterval(() => checkInbox(), 30000);
+
+  // 항상 오늘 업무 입력 화면부터 시작
+  showPage('input', document.querySelector('#nav-member .nav-item'));
 }
 
+// ── 프로젝트 / 세부업무 ───────────────────────────────────────────────────────
+let projCount = 0, subCount = 0;
 
-// ═══════════════════════════════════
-//  PROJECT / SUBTASK
-// ═══════════════════════════════════
-let projCount=0, subCount=0;
-const STATUS_LABELS={'시작전':'시작전','진행중':'진행중','완료':'완료','딜레이-외부':'딜레이(외부)','딜레이-개인':'딜레이(개인)'};
-const STATUS_BADGE={'시작전':'b-notstart','진행중':'b-progress','완료':'b-done','딜레이-외부':'b-delay-ext','딜레이-개인':'b-delay-per'};
+const STATUS_LABELS = {
+  '시작전': '시작전', '진행중': '진행중', '완료': '완료',
+  '딜레이-외부': '딜레이(외부)', '딜레이-개인': '딜레이(개인)'
+};
+const STATUS_BADGE = {
+  '시작전': 'b-notstart', '진행중': 'b-progress', '완료': 'b-done',
+  '딜레이-외부': 'b-delay-ext', '딜레이-개인': 'b-delay-per'
+};
 
-function addProject(name='',category='사업운영',deadline='',isDeadlineToday=false,projStatus='',projDelayDeadline='',projDelayReason=''){
-  projCount++; const pid=projCount;
-  const div=document.createElement('div'); div.className='project-block'; div.id='proj-'+pid;
-  const todayBadge=isDeadlineToday?'<span class="deadline-today-badge">! 금일 데드라인</span>':'';
-  const delayRowHtml = projStatus==='딜레이'
-    ? '<div class="proj-delay-row" id="proj-delay-row-'+pid+'">'
-        + '<label>📌 딜레이 사유</label>'
-        + '<input type="text" id="proj-delay-reason-'+pid+'" value="'+esc(projDelayReason)+'" placeholder="딜레이 사유 입력" style="flex:1;min-width:120px">'
-        + '<label>목표 데드라인</label>'
-        + '<input type="date" id="proj-delay-dl-'+pid+'" value="'+esc(projDelayDeadline)+'">'
-        + '</div>'
-    : '<div class="proj-delay-row" id="proj-delay-row-'+pid+'" style="display:none"><label>📌 딜레이 사유</label><input type="text" id="proj-delay-reason-'+pid+'" placeholder="딜레이 사유 입력" style="flex:1;min-width:120px"><label>목표 데드라인</label><input type="date" id="proj-delay-dl-'+pid+'"></div>';;
-  div.innerHTML=`
+function addProject(name='', category='사업운영', deadline='', isDeadlineToday=false,
+                    projStatus='', projDelayDeadline='', projDelayReason='') {
+  projCount++;
+  const pid = projCount;
+  const div = document.createElement('div');
+  div.className = 'project-block';
+  div.id = 'proj-' + pid;
+
+  const todayBadge = isDeadlineToday ? '<span class="deadline-today-badge">! 금일 데드라인</span>' : '';
+  const delayRowDisplay = projStatus === '딜레이' ? 'flex' : 'none';
+
+  div.innerHTML = `
     <div class="project-header">
-      <input class="proj-name-input" style="width:100%" type="text" placeholder="프로젝트명" value="${esc(name)}" oninput="updateProjProgress(${pid});updateSummary()">
+      <input class="proj-name-input" style="width:100%" type="text" placeholder="프로젝트명"
+        value="${esc(name)}" oninput="updateProjProgress(${pid});updateSummary()">
       ${todayBadge}
       <select class="proj-cat-sel" id="proj-cat-${pid}">
         <option${category==='사업운영'?' selected':''}>사업운영</option>
@@ -925,8 +876,10 @@ function addProject(name='',category='사업운영',deadline='',isDeadlineToday=
         <option${category==='기타'?' selected':''}>기타</option>
       </select>
       <span style="font-size:11px;color:var(--text-muted);white-space:nowrap">데드라인</span>
-      <input type="date" class="dl-input" id="proj-dl-${pid}" value="${esc(deadline)}" onchange="updateProjProgress(${pid})">
-      <select class="proj-status-sel proj-status-${projStatus||'미완료'}" id="proj-status-${pid}" onchange="onProjStatusChange(${pid},this.value)">
+      <input type="date" class="dl-input" id="proj-dl-${pid}" value="${esc(deadline)}"
+        onchange="updateProjProgress(${pid})">
+      <select class="proj-status-sel proj-status-${projStatus||'미완료'}" id="proj-status-${pid}"
+        onchange="onProjStatusChange(${pid},this.value)">
         <option value="미완료"${(!projStatus||projStatus==='미완료')?' selected':''}>미완료</option>
         <option value="부분완료"${projStatus==='부분완료'?' selected':''}>부분완료</option>
         <option value="완료"${projStatus==='완료'?' selected':''}>완료</option>
@@ -935,7 +888,13 @@ function addProject(name='',category='사업운영',deadline='',isDeadlineToday=
       <span class="proj-prog-text" id="proj-prog-${pid}">0/0</span>
       <button class="del-proj-btn" onclick="document.getElementById('proj-${pid}').remove();updateSummary()">×</button>
     </div>
-    ${delayRowHtml}
+    <div class="proj-delay-row" id="proj-delay-row-${pid}" style="display:${delayRowDisplay}">
+      <label>📌 딜레이 사유</label>
+      <input type="text" id="proj-delay-reason-${pid}" value="${esc(projDelayReason)}"
+        placeholder="딜레이 사유 입력" style="flex:1;min-width:120px">
+      <label>목표 데드라인</label>
+      <input type="date" id="proj-delay-dl-${pid}" value="${esc(projDelayDeadline)}">
+    </div>
     <div class="dl-bar dl-none" id="proj-dlbar-${pid}">
       <span id="proj-dltext-${pid}">데드라인 미설정</span>
       <div class="dl-bar-track"><div class="dl-bar-fill" id="proj-bar-${pid}" style="width:0%"></div></div>
@@ -947,7 +906,7 @@ function addProject(name='',category='사업운영',deadline='',isDeadlineToday=
           <th style="min-width:80px">시작 타각</th>
           <th style="min-width:80px">완료 타각</th>
           <th style="text-align:center;min-width:44px">소요</th>
-          <th style="min-width:90px">상태</th>
+          <th style="min-width:100px">상태</th>
           <th style="min-width:130px">딜레이 정보</th>
           <th style="width:26px"></th>
         </tr></thead>
@@ -957,439 +916,546 @@ function addProject(name='',category='사업운영',deadline='',isDeadlineToday=
     <button class="add-sub-btn" onclick="addSubTask(${pid})">+ 세부업무 추가</button>
   `;
   document.getElementById('project-list').appendChild(div);
-  // subtasks are optional — not auto-created
 }
 
-function onProjStatusChange(pid, val){
-  const sel=document.getElementById('proj-status-'+pid);
-  if(sel){ sel.className='proj-status-sel proj-status-'+val; }
-  const delayRow=document.getElementById('proj-delay-row-'+pid);
-  if(delayRow) delayRow.style.display=val==='딜레이'?'flex':'none';
+function onProjStatusChange(pid, val) {
+  const sel = document.getElementById('proj-status-' + pid);
+  if (sel) sel.className = 'proj-status-sel proj-status-' + val;
+  const row = document.getElementById('proj-delay-row-' + pid);
+  if (row) row.style.display = val === '딜레이' ? 'flex' : 'none';
   updateSummary();
 }
 
-function addSubTask(pid, data={}){
-  subCount++; const sid=subCount;
-  const tbody=document.getElementById('sub-body-'+pid);
-  if(!tbody)return;
-  const status=data.status||'시작전';
-  const startVal=data.start||'', endVal=data.end||'';
-  const tr=document.createElement('tr'); tr.id='sub-'+sid; tr.dataset.pid=pid;
-  tr.innerHTML=`
-    <td style="padding-left:14px"><input class="sub-input" type="text" placeholder="세부업무 입력" value="${esc(data.name||'')}" oninput="updateSummary()"></td>
+function addSubTask(pid, data={}) {
+  subCount++;
+  const sid = subCount;
+  const tbody = document.getElementById('sub-body-' + pid);
+  if (!tbody) return;
+  const status   = data.status || '시작전';
+  const startVal = data.start  || '';
+  const endVal   = data.end    || '';
+  const tr = document.createElement('tr');
+  tr.id = 'sub-' + sid;
+  tr.dataset.pid    = pid;
+  tr.dataset.status = status;
+  tr.innerHTML = `
+    <td style="padding-left:14px">
+      <input class="sub-input" type="text" placeholder="세부업무 입력"
+        value="${esc(data.name||'')}" oninput="updateSummary()">
+    </td>
     <td>
-      <button class="time-btn${startVal?' stamped':''}" id="sbtn-s-${sid}" onclick="stampTime(${sid},'start',${pid})">${startVal||'▶ 시작'}</button>
-      <input class="time-edit" type="time" id="sedit-s-${sid}" value="${startVal}" onchange="onTimeEdit(${sid},'start',${pid})">
+      <button class="time-btn${startVal?' stamped':''}" id="sbtn-s-${sid}"
+        onclick="stampTime(${sid},'start',${pid})">${startVal||'▶ 시작'}</button>
+      <input class="time-edit" type="time" id="sedit-s-${sid}" value="${startVal}"
+        onchange="onTimeEdit(${sid},'start',${pid})">
       <span class="edit-link" onclick="toggleEdit(${sid},'start')">수동편집</span>
     </td>
     <td>
-      <button class="time-btn${endVal?' stamped':''}" id="sbtn-e-${sid}" onclick="stampTime(${sid},'end',${pid})">${endVal||'■ 완료'}</button>
-      <input class="time-edit" type="time" id="sedit-e-${sid}" value="${endVal}" onchange="onTimeEdit(${sid},'end',${pid})">
+      <button class="time-btn${endVal?' stamped':''}" id="sbtn-e-${sid}"
+        onclick="stampTime(${sid},'end',${pid})">${endVal||'■ 완료'}</button>
+      <input class="time-edit" type="time" id="sedit-e-${sid}" value="${endVal}"
+        onchange="onTimeEdit(${sid},'end',${pid})">
       <span class="edit-link" onclick="toggleEdit(${sid},'end')">수동편집</span>
     </td>
     <td class="dur-cell" id="sdur-${sid}">${data.duration||'—'}</td>
-    <td><select class="status-sel" id="ssel-${sid}" onchange="onStatusSelChange(${sid},${pid},this.value)"><option value="시작전"${status==='시작전'?' selected':''}>시작전</option><option value="진행중"${status==='진행중'?' selected':''}>진행중</option><option value="완료"${status==='완료'?' selected':''}>완료</option><option value="딜레이-외부"${status==='딜레이-외부'?' selected':''}>딜레이(외부)</option><option value="딜레이-개인"${status==='딜레이-개인'?' selected':''}>딜레이(개인)</option></select></td>
+    <td>
+      <select class="status-sel" id="ssel-${sid}"
+        onchange="onStatusSelChange(${sid},${pid},this.value)">
+        <option value="시작전"${status==='시작전'?' selected':''}>시작전</option>
+        <option value="진행중"${status==='진행중'?' selected':''}>진행중</option>
+        <option value="완료"${status==='완료'?' selected':''}>완료</option>
+        <option value="딜레이-외부"${status==='딜레이-외부'?' selected':''}>딜레이(외부)</option>
+        <option value="딜레이-개인"${status==='딜레이-개인'?' selected':''}>딜레이(개인)</option>
+      </select>
+    </td>
     <td id="sdelay-cell-${sid}">${buildDelayCell(sid, status, data.delay_reason||'', data.delay_deadline||'')}</td>
     <td><button class="del-btn" onclick="removeSubTask(${sid},${pid})">×</button></td>
   `;
   tbody.appendChild(tr);
-  if(startVal&&endVal) recalcDur(sid,pid);
-  updateProjProgress(pid); updateSummary();
+  if (startVal && endVal) recalcDur(sid, pid);
+  updateProjProgress(pid);
+  updateSummary();
 }
 
-function buildDelayCell(sid, status, reason, deadline){
-  if(!status.includes('딜레이')) return '<span style="color:var(--text-light);font-size:11px">—</span>';
+function buildDelayCell(sid, status, reason, deadline) {
+  if (!status.includes('딜레이')) return '<span style="color:var(--text-light);font-size:11px">—</span>';
   return `<div class="delay-fields">
-    <label>사유</label><input type="text" id="sdr-${sid}" value="${esc(reason)}" placeholder="딜레이 사유" style="flex:1;min-width:80px">
-    <label>목표기한</label><input type="date" id="sdd-${sid}" value="${esc(deadline)}" style="width:110px">
+    <label>사유</label>
+    <input type="text" id="sdr-${sid}" value="${esc(reason)}" placeholder="딜레이 사유" style="flex:1;min-width:80px">
+    <label>목표기한</label>
+    <input type="date" id="sdd-${sid}" value="${esc(deadline)}" style="width:110px">
   </div>`;
 }
 
-function stampTime(sid, type, pid){
-  const now=new Date();
-  const ts=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-  const btn=document.getElementById('sbtn-'+type[0]+'-'+sid);
-  const edit=document.getElementById('sedit-'+type[0]+'-'+sid);
-  btn.textContent=ts; btn.classList.add('stamped'); edit.value=ts;
-  // Auto status
-  const row=document.getElementById('sub-'+sid);
-  if(row){
-    const curStatus=row.dataset.status||'시작전';
-    if(type==='start' && (curStatus==='시작전'||!curStatus)) setSubStatus(sid,pid,'진행중');
-    if(type==='end') setSubStatus(sid,pid,'완료');
+function stampTime(sid, type, pid) {
+  const now = new Date();
+  const ts  = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  const btn  = document.getElementById('sbtn-' + type[0] + '-' + sid);
+  const edit = document.getElementById('sedit-' + type[0] + '-' + sid);
+  if (btn)  { btn.textContent = ts; btn.classList.add('stamped'); }
+  if (edit)   edit.value = ts;
+  const row = document.getElementById('sub-' + sid);
+  if (row) {
+    if (type === 'start' && (row.dataset.status === '시작전' || !row.dataset.status))
+      setSubStatus(sid, pid, '진행중');
+    if (type === 'end') setSubStatus(sid, pid, '완료');
   }
-  recalcDur(sid,pid); updateProjProgress(pid); updateSummary();
+  recalcDur(sid, pid);
+  updateProjProgress(pid);
+  updateSummary();
 }
-
-function setSubStatus(sid, pid, status){
-  const row=document.getElementById('sub-'+sid);
-  if(!row) return;
-  row.dataset.status=status;
-  // sync select if exists
-  const sel=document.getElementById('ssel-'+sid);
-  if(sel) sel.value=status;
-  const cell=document.getElementById('sdelay-cell-'+sid);
-  if(cell){ cell.innerHTML=buildDelayCell(sid,status,'',''); }
-  updateProjProgress(pid); updateSummary();
+function toggleEdit(sid, type) {
+  const e = document.getElementById('sedit-' + type[0] + '-' + sid);
+  if (e) e.style.display = (e.style.display === 'block') ? 'none' : 'block';
 }
-function onStatusSelChange(sid, pid, status){
-  const row=document.getElementById('sub-'+sid);
-  if(row) row.dataset.status=status;
-  const cell=document.getElementById('sdelay-cell-'+sid);
-  if(cell){ cell.innerHTML=buildDelayCell(sid,status,'',''); }
-  updateProjProgress(pid); updateSummary();
-}
-
-function toggleEdit(sid, type){
-  const edit=document.getElementById('sedit-'+type[0]+'-'+sid);
-  if(edit) edit.style.display=edit.style.display==='none'||!edit.style.display?'block':'none';
-}
-function onTimeEdit(sid, type, pid){
-  const edit=document.getElementById('sedit-'+type[0]+'-'+sid);
-  const btn=document.getElementById('sbtn-'+type[0]+'-'+sid);
-  if(edit&&btn){ if(edit.value){btn.textContent=edit.value;btn.classList.add('stamped');}else{btn.textContent=type==='start'?'▶ 시작':'■ 완료';btn.classList.remove('stamped');} }
-  // Auto status on manual edit too
-  const row=document.getElementById('sub-'+sid);
-  if(row){
-    const curStatus=row.dataset.status||'시작전';
-    if(type==='start'&&edit.value&&(curStatus==='시작전'||!curStatus)) setSubStatus(sid,pid,'진행중');
-    if(type==='end'&&edit.value) setSubStatus(sid,pid,'완료');
+function onTimeEdit(sid, type, pid) {
+  const edit = document.getElementById('sedit-' + type[0] + '-' + sid);
+  const btn  = document.getElementById('sbtn-'  + type[0] + '-' + sid);
+  if (edit && btn) {
+    if (edit.value) { btn.textContent = edit.value; btn.classList.add('stamped'); }
+    else { btn.textContent = type === 'start' ? '▶ 시작' : '■ 완료'; btn.classList.remove('stamped'); }
   }
-  recalcDur(sid,pid); updateProjProgress(pid); updateSummary();
+  const row = document.getElementById('sub-' + sid);
+  if (row && edit) {
+    if (type === 'start' && edit.value && (row.dataset.status === '시작전' || !row.dataset.status))
+      setSubStatus(sid, pid, '진행중');
+    if (type === 'end' && edit.value) setSubStatus(sid, pid, '완료');
+  }
+  recalcDur(sid, pid);
+  updateProjProgress(pid);
+  updateSummary();
 }
-function recalcDur(sid,pid){
-  const s=document.getElementById('sedit-s-'+sid), e=document.getElementById('sedit-e-'+sid), c=document.getElementById('sdur-'+sid);
-  if(!s||!e||!c)return;
-  if(s.value&&e.value){
-    const diff=(parseInt(e.value.split(':')[0])*60+parseInt(e.value.split(':')[1]))-(parseInt(s.value.split(':')[0])*60+parseInt(s.value.split(':')[1]));
-    if(diff>0){c.textContent=diff+'분';c.style.color='var(--accent)';}else{c.textContent='오류';c.style.color='var(--danger)';}
-  }else{c.textContent='—';c.style.color='';}
+function recalcDur(sid, pid) {
+  const s = document.getElementById('sedit-s-' + sid);
+  const e = document.getElementById('sedit-e-' + sid);
+  const c = document.getElementById('sdur-' + sid);
+  if (!s || !e || !c) return;
+  if (s.value && e.value) {
+    const diff = (parseInt(e.value.split(':')[0])*60 + parseInt(e.value.split(':')[1]))
+               - (parseInt(s.value.split(':')[0])*60 + parseInt(s.value.split(':')[1]));
+    if (diff > 0) { c.textContent = diff + '분'; c.style.color = 'var(--accent)'; }
+    else           { c.textContent = '오류';     c.style.color = 'var(--danger)'; }
+  } else { c.textContent = '—'; c.style.color = ''; }
 }
-function removeSubTask(sid,pid){ const el=document.getElementById('sub-'+sid);if(el)el.remove();updateProjProgress(pid);updateSummary(); }
+function setSubStatus(sid, pid, status) {
+  const row = document.getElementById('sub-' + sid);
+  if (!row) return;
+  row.dataset.status = status;
+  const sel  = document.getElementById('ssel-' + sid);
+  if (sel) sel.value = status;
+  const cell = document.getElementById('sdelay-cell-' + sid);
+  if (cell) cell.innerHTML = buildDelayCell(sid, status, '', '');
+  updateProjProgress(pid);
+  updateSummary();
+}
+function onStatusSelChange(sid, pid, status) {
+  const row = document.getElementById('sub-' + sid);
+  if (row) row.dataset.status = status;
+  const cell = document.getElementById('sdelay-cell-' + sid);
+  if (cell) cell.innerHTML = buildDelayCell(sid, status, '', '');
+  updateProjProgress(pid);
+  updateSummary();
+}
+function removeSubTask(sid, pid) {
+  const el = document.getElementById('sub-' + sid);
+  if (el) el.remove();
+  updateProjProgress(pid);
+  updateSummary();
+}
 
-function updateProjProgress(pid){
-  const tbody=document.getElementById('sub-body-'+pid); if(!tbody)return;
-  const rows=[...tbody.querySelectorAll('tr')];
-  const total=rows.length;
-  const done=rows.filter(r=>{ const s=document.getElementById('ssel-'+r.id.replace('sub-','')); return s?s.value==='완료':r.dataset.status==='완료'; }).length;
-  const pg=document.getElementById('proj-prog-'+pid), bar=document.getElementById('proj-bar-'+pid);
-  if(pg) pg.textContent=done+'/'+total;
-  if(bar) bar.style.width=(total?Math.round(done/total*100):0)+'%';
+function updateProjProgress(pid) {
+  const tbody = document.getElementById('sub-body-' + pid);
+  if (!tbody) return;
+  const rows  = [...tbody.querySelectorAll('tr')];
+  const total = rows.length;
+  const done  = rows.filter(r => {
+    const s = document.getElementById('ssel-' + r.id.replace('sub-',''));
+    return s ? s.value === '완료' : r.dataset.status === '완료';
+  }).length;
 
-  // Auto-update project status (only if not manually set to 딜레이)
-  const pSel=document.getElementById('proj-status-'+pid);
-  if(pSel && pSel.value!=='딜레이'){
-    let autoStatus='미완료';
-    if(total>0&&done===total) autoStatus='완료';
-    else if(done>0) autoStatus='부분완료';
-    pSel.value=autoStatus;
-    pSel.className='proj-status-sel proj-status-'+autoStatus;
+  const pg  = document.getElementById('proj-prog-' + pid);
+  const bar = document.getElementById('proj-bar-' + pid);
+  if (pg)  pg.textContent = done + '/' + total;
+  if (bar) bar.style.width = (total ? Math.round(done/total*100) : 0) + '%';
+
+  // 프로젝트 상태 자동 업데이트 (딜레이 수동 설정 제외)
+  const pSel = document.getElementById('proj-status-' + pid);
+  if (pSel && pSel.value !== '딜레이') {
+    let auto = '미완료';
+    if (total > 0 && done === total) auto = '완료';
+    else if (done > 0)               auto = '부분완료';
+    pSel.value     = auto;
+    pSel.className = 'proj-status-sel proj-status-' + auto;
   }
 
-  // Check subtask deadlines for today alert
-  const todayStr=new Date().toISOString().split('T')[0];
-  rows.forEach(r=>{
-    const sid=r.id.replace('sub-','');
-    const sddEl=document.getElementById('sdd-'+sid);
-    const nameCell=r.querySelector('input[type="text"]');
-    if(!sddEl||!nameCell) return;
-    const existingBadge=nameCell.parentNode.querySelector('.sub-dl-badge');
-    if(sddEl.value===todayStr && (document.getElementById('ssel-'+sid)||{}).value!=='완료'){
-      if(!existingBadge){
-        const badge=document.createElement('span');
-        badge.className='sub-dl-badge'; badge.textContent='! 금일 데드라인';
-        nameCell.parentNode.appendChild(badge);
+  const dl     = document.getElementById('proj-dl-'    + pid);
+  const dlbar  = document.getElementById('proj-dlbar-' + pid);
+  const dltext = document.getElementById('proj-dltext-' + pid);
+  if (!dl || !dlbar || !dltext) return;
+
+  // 완료된 프로젝트: 데드라인 알림 없음
+  if (pSel && pSel.value === '완료') {
+    dlbar.className = 'dl-bar dl-ok';
+    dltext.textContent = '✓ 완료';
+    return;
+  }
+
+  const todayStr  = new Date().toISOString().split('T')[0];
+  const todayDate = new Date(); todayDate.setHours(0,0,0,0);
+
+  // 세부업무 중 금일 딜레이 목표기한 체크
+  let subDlToday = false;
+  rows.forEach(r => {
+    const sid    = r.id.replace('sub-','');
+    const sddEl  = document.getElementById('sdd-' + sid);
+    const sselEl = document.getElementById('ssel-' + sid);
+    if (sddEl && sddEl.value === todayStr && sselEl && sselEl.value !== '완료') {
+      subDlToday = true;
+      // 세부업무 이름 옆에 금일 데드라인 배지
+      const nameInput = r.querySelector('input[type="text"]');
+      if (nameInput && !nameInput.parentNode.querySelector('.sub-dl-badge')) {
+        const badge = document.createElement('span');
+        badge.className   = 'sub-dl-badge';
+        badge.textContent = '! 금일 데드라인';
+        nameInput.parentNode.appendChild(badge);
       }
     } else {
-      if(existingBadge) existingBadge.remove();
+      // 완료됐거나 기한 지난 배지 제거
+      const nameInput = r.querySelector('input[type="text"]');
+      if (nameInput) {
+        const existing = nameInput.parentNode.querySelector('.sub-dl-badge');
+        if (existing) existing.remove();
+      }
     }
   });
 
-  const dl=document.getElementById('proj-dl-'+pid), dlbar=document.getElementById('proj-dlbar-'+pid), dltext=document.getElementById('proj-dltext-'+pid);
-  if(!dl||!dlbar||!dltext)return;
-  // 프로젝트 완료 시 데드라인 알림 표시 안 함
-  if(pSel&&pSel.value==='완료'){dlbar.className='dl-bar dl-ok';dltext.textContent='✓ 완료';return;}
-
-  // Also check if any subtask has delay_deadline === today
-  const todayDate=new Date(); todayDate.setHours(0,0,0,0);
-  let subDlToday=false;
-  rows.forEach(r=>{
-    const sid=r.id.replace('sub-','');
-    const sddEl=document.getElementById('sdd-'+sid);
-    if(sddEl&&sddEl.value===todayStr&&(document.getElementById('ssel-'+sid)||{}).value!=='완료') subDlToday=true;
-  });
-
-  const dlVal=dl.value;
-  if(!dlVal){
-    dlbar.className='dl-bar dl-none';
-    dltext.textContent=subDlToday?'⚡ 세부업무 금일 데드라인 있음':'데드라인 미설정';
-    if(subDlToday) dlbar.className='dl-bar dl-over';
+  const dlVal = dl.value;
+  if (!dlVal) {
+    dlbar.className   = subDlToday ? 'dl-bar dl-over' : 'dl-bar dl-none';
+    dltext.textContent = subDlToday ? '⚡ 세부업무 금일 데드라인 있음' : '데드라인 미설정';
     return;
   }
-  const dlDate=new Date(dlVal);dlDate.setHours(0,0,0,0);
-  const diff=Math.round((dlDate-todayDate)/86400000);
-  const allDone=total>0&&done===total;
-  if(allDone){dlbar.className='dl-bar dl-ok';dltext.textContent='✓ 전체 완료 (데드라인 '+dlVal+')'; return;} // 완료 시 데드라인 알림 없음
-  else if(diff===0){dlbar.className='dl-bar dl-over';dltext.textContent='❗ 금일 데드라인! — 미완료 '+(total-done)+'건';}
-  else if(diff<0){dlbar.className='dl-bar dl-over';dltext.textContent='⚠ 데드라인 초과 '+Math.abs(diff)+'일 ('+dlVal+') — 미완료 '+(total-done)+'건';}
-  else if(diff<=3){dlbar.className='dl-bar dl-warn';dltext.textContent='⏰ D-'+diff+' ('+dlVal+') — 미완료 '+(total-done)+'건'+(subDlToday?' ⚡세부업무 금일 데드라인':'')}
-  else{dlbar.className='dl-bar dl-ok';dltext.textContent='📅 D-'+diff+' ('+dlVal+') — 미완료 '+(total-done)+'건'+(subDlToday?' ⚡세부업무 금일 데드라인':'');}
+  const dlDate = new Date(dlVal); dlDate.setHours(0,0,0,0);
+  const diff   = Math.round((dlDate - todayDate) / 86400000);
+  const allDone = total > 0 && done === total;
+  const sub = subDlToday ? ' ⚡세부업무 금일 데드라인' : '';
+
+  if (allDone)    { dlbar.className = 'dl-bar dl-ok';   dltext.textContent = '✓ 전체 완료 (데드라인 ' + dlVal + ')'; }
+  else if (diff === 0) { dlbar.className = 'dl-bar dl-over'; dltext.textContent = '❗ 금일 데드라인! — 미완료 ' + (total-done) + '건' + sub; }
+  else if (diff  < 0)  { dlbar.className = 'dl-bar dl-over'; dltext.textContent = '⚠ 데드라인 초과 ' + Math.abs(diff) + '일 (' + dlVal + ') — 미완료 ' + (total-done) + '건'; }
+  else if (diff <= 3)  { dlbar.className = 'dl-bar dl-warn'; dltext.textContent = '⏰ D-' + diff + ' (' + dlVal + ') — 미완료 ' + (total-done) + '건' + sub; }
+  else                 { dlbar.className = 'dl-bar dl-ok';   dltext.textContent = '📅 D-' + diff + ' (' + dlVal + ') — 미완료 ' + (total-done) + '건' + sub; }
 }
 
-function updateSummary(){
-  const data=getProjectsData(); // reads from selects
-  const allSubs=data.flatMap(p=>p.subtasks||[]);
-  const total=allSubs.length, done=allSubs.filter(t=>t.status==='완료').length;
-  const prog=allSubs.filter(t=>t.status==='진행중').length;
-  const delay=allSubs.filter(t=>t.status&&t.status.includes('딜레이')).length;
-  document.getElementById('ts-proj').textContent=data.length;
-  document.getElementById('ts-total').textContent=total;
-  document.getElementById('ts-done').textContent=done;
-  document.getElementById('ts-prog').textContent=prog;
-  document.getElementById('ts-delay').textContent=delay;
-  document.getElementById('ts-rate').textContent=total?Math.round(done/total*100)+'%':'—';
-  const names=data.map(p=>p.name).filter(Boolean);
-  document.getElementById('ts-proj-names').textContent=names.length?'📁 '+names.join('  ·  '):'프로젝트를 추가해 주세요';
+function updateSummary() {
+  const data    = getProjectsData();
+  const allSubs = data.flatMap(p => p.subtasks || []);
+  const total   = allSubs.length;
+  const done    = allSubs.filter(t => t.status === '완료').length;
+  const prog    = allSubs.filter(t => t.status === '진행중').length;
+  const delay   = allSubs.filter(t => t.status && t.status.includes('딜레이')).length;
+  document.getElementById('ts-proj').textContent  = data.length;
+  document.getElementById('ts-total').textContent = total;
+  document.getElementById('ts-done').textContent  = done;
+  document.getElementById('ts-prog').textContent  = prog;
+  document.getElementById('ts-delay').textContent = delay;
+  document.getElementById('ts-rate').textContent  = total ? Math.round(done/total*100) + '%' : '—';
+  const names = data.map(p => p.name).filter(Boolean);
+  document.getElementById('ts-proj-names').textContent =
+    names.length ? '📁 ' + names.join('  ·  ') : '프로젝트를 추가해 주세요';
 }
 
-function getProjectsData(){
-  const projs=[];
-  document.querySelectorAll('.project-block').forEach(pEl=>{
-    const pid=pEl.id.replace('proj-','');
-    const nameEl=pEl.querySelector('.proj-name-input');
-    const catEl=document.getElementById('proj-cat-'+pid);
-    const dlEl=document.getElementById('proj-dl-'+pid);
-    const name=nameEl?nameEl.value.trim():'';
-    const subs=[];
-    pEl.querySelectorAll('tbody tr').forEach(tr=>{
-      const sid=tr.id.replace('sub-','');
-      const ni=tr.querySelector('input[type="text"]');
-      const n=ni?ni.value.trim():'';
-      if(!n)return;
-      const selEl=document.getElementById('ssel-'+sid);
-      const status=selEl?selEl.value:(tr.dataset.status||'시작전');
+function getProjectsData() {
+  const projs = [];
+  document.querySelectorAll('.project-block').forEach(pEl => {
+    const pid     = pEl.id.replace('proj-','');
+    const nameEl  = pEl.querySelector('.proj-name-input');
+    const catEl   = document.getElementById('proj-cat-' + pid);
+    const dlEl    = document.getElementById('proj-dl-' + pid);
+    const pStatEl = document.getElementById('proj-status-' + pid);
+    const pDlDlEl = document.getElementById('proj-delay-dl-' + pid);
+    const pDlRsEl = document.getElementById('proj-delay-reason-' + pid);
+    const name    = nameEl ? nameEl.value.trim() : '';
+    const subs    = [];
+    pEl.querySelectorAll('tbody tr').forEach(tr => {
+      const sid  = tr.id.replace('sub-','');
+      const ni   = tr.querySelector('input[type="text"]');
+      const n    = ni ? ni.value.trim() : '';
+      if (!n) return;
+      const selEl = document.getElementById('ssel-' + sid);
       subs.push({
-        name:n,
-        start:(document.getElementById('sedit-s-'+sid)||{}).value||'',
-        end:(document.getElementById('sedit-e-'+sid)||{}).value||'',
-        duration:(document.getElementById('sdur-'+sid)||{}).textContent||'—',
-        status,
-        delay_reason:(document.getElementById('sdr-'+sid)||{}).value||'',
-        delay_deadline:(document.getElementById('sdd-'+sid)||{}).value||''
+        name:          n,
+        start:         (document.getElementById('sedit-s-' + sid) || {}).value || '',
+        end:           (document.getElementById('sedit-e-' + sid) || {}).value || '',
+        duration:      (document.getElementById('sdur-' + sid)    || {}).textContent || '—',
+        status:        selEl ? selEl.value : (tr.dataset.status || '시작전'),
+        delay_reason:  (document.getElementById('sdr-' + sid) || {}).value || '',
+        delay_deadline:(document.getElementById('sdd-' + sid) || {}).value || '',
       });
     });
-    const pStatusEl=document.getElementById('proj-status-'+pid);
-    const pDelayDlEl=document.getElementById('proj-delay-dl-'+pid);
-    const pDelayRsEl=document.getElementById('proj-delay-reason-'+pid);
-    if(name||subs.length) projs.push({
-      name,
-      category:catEl?catEl.value:'기타',
-      deadline:dlEl?dlEl.value:'',
-      proj_status:pStatusEl?pStatusEl.value:'미완료',
-      proj_delay_deadline:pDelayDlEl?pDelayDlEl.value:'',
-      proj_delay_reason:pDelayRsEl?pDelayRsEl.value:'',
-      subtasks:subs
-    });
+    if (name || subs.length) {
+      projs.push({
+        name,
+        category:            catEl   ? catEl.value   : '기타',
+        deadline:            dlEl    ? dlEl.value    : '',
+        proj_status:         pStatEl ? pStatEl.value : '미완료',
+        proj_delay_deadline: pDlDlEl ? pDlDlEl.value : '',
+        proj_delay_reason:   pDlRsEl ? pDlRsEl.value : '',
+        subtasks: subs,
+      });
+    }
   });
   return projs;
 }
 
-// ═══════════════════════════════════
-//  SAVE
-// ═══════════════════════════════════
-function eKey(n){ return n.replace(/[^a-zA-Z0-9가-힣]/g,'_'); }
-function esc(s){ return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+// ── 날짜 이동 ────────────────────────────────────────────────────────────────
+function changeDateBy(days) {
+  const el = document.getElementById('input-date');
+  if (!el) return;
+  const d = new Date(el.value || new Date().toISOString().split('T')[0]);
+  d.setDate(d.getDate() + days);
+  el.value = d.toISOString().split('T')[0];
+  reloadInputPage();
+}
+function reloadInputPage() {
+  document.getElementById('project-list').innerHTML = '';
+  projCount = 0; subCount = 0;
+  loadTodayIntoForm().then(() => {
+    if (document.getElementById('project-list').children.length === 0) addProject();
+  });
+}
 
-async function saveToday(isDraft){
-  const projects=getProjectsData();
-  if(!isDraft&&!projects.length){showToast('프로젝트를 추가해 주세요');return;}
-  const date=document.getElementById('input-date').value;
-  const name=CU.name;  // 항상 본인으로 저장
-  await dbSet('tasks',date+'__'+eKey(name),{date,name,team:document.getElementById('sel-team').value,projects,is_draft:isDraft,saved_at:new Date().toISOString()});
-  showToast(isDraft?'임시저장되었습니다':'✓ 저장되었습니다. 계속 편집 가능합니다');
+// ── 저장 / 불러오기 ───────────────────────────────────────────────────────────
+function eKey(n)  { return String(n).trim().replace(/[^a-zA-Z0-9가-힣]/g, '_'); }
+function esc(s)   { return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+async function saveToday(isDraft) {
+  const projects = getProjectsData();
+  if (!isDraft && !projects.length) { showToast('프로젝트를 추가해 주세요'); return; }
+  const date = document.getElementById('input-date').value;
+  const name = CU.name; // 항상 본인
+  const team = CU.team;
+  await dbSet('tasks', date + '__' + eKey(name), {
+    date, name, team, projects, is_draft: isDraft,
+    saved_at: new Date().toISOString(),
+  });
+  showToast(isDraft ? '임시저장되었습니다' : '✓ 저장되었습니다. 계속 편집 가능합니다');
   updateSummary();
 }
 
-// Load today's saved data back into the input form
-async function loadTodayIntoForm(){
-  const date=document.getElementById('input-date').value;
-  const name=CU?CU.name:'';
-  if(!name||!date) return;
+async function loadTodayIntoForm() {
+  const date = document.getElementById('input-date').value;
+  const name = CU ? CU.name : '';
+  if (!name || !date) return;
 
-  let projects=[];
-  const todayEntry=await dbGetDoc('tasks',date+'__'+eKey(name));
+  let projects = [];
+  const todayEntry = await dbGetDoc('tasks', date + '__' + eKey(name));
 
-  if(todayEntry&&todayEntry.projects&&todayEntry.projects.length){
-    // Use today's saved data
-    projects=todayEntry.projects;
+  if (todayEntry && todayEntry.projects && todayEntry.projects.length) {
+    projects = todayEntry.projects;
   } else {
-    // No today entry — pull ongoing projects from past entries (deadline >= today)
-    const allEntries=await dbGetAll('tasks');
-    const myEntries=allEntries.filter(e=>e.name===name&&e.date<date).sort((a,b)=>b.date.localeCompare(a.date));
-    const seen=new Set();
-    myEntries.forEach(entry=>{
-      (entry.projects||[]).forEach(p=>{
-        if(!p.deadline||p.deadline<date) return; // skip expired
-        if((p.proj_status||'미완료')==='완료') return; // skip completed projects
-        if(seen.has(p.name)) return;
-        // Carry over project but reset subtask statuses for new day
-        const freshSubs=(p.subtasks||[]).map(t=>({...t, status:'시작전', start:'', end:'', duration:'—', delay_reason:'', delay_deadline:''}));
-        projects.push({...p, subtasks:freshSubs});
+    // 이전 기록에서 데드라인이 아직 지나지 않은 미완료 프로젝트 불러오기
+    const allEntries = await dbGetAll('tasks');
+    const myEntries  = allEntries
+      .filter(e => e.name === name && e.date < date)
+      .sort((a,b) => b.date.localeCompare(a.date));
+    const seen = new Set();
+    myEntries.forEach(entry => {
+      (entry.projects || []).forEach(p => {
+        if (!p.deadline || p.deadline < date) return; // 만료됨
+        if ((p.proj_status || '미완료') === '완료') return; // 완료됨 — 반복 불필요
+        if (seen.has(p.name)) return;
+        seen.add(p.name);
+        const freshSubs = (p.subtasks || []).map(t => ({
+          ...t, status: '시작전', start: '', end: '', duration: '—',
+          delay_reason: '', delay_deadline: '',
+        }));
+        projects.push({ ...p, subtasks: freshSubs });
       });
     });
   }
 
-  document.getElementById('project-list').innerHTML='';
-  projCount=0; subCount=0;
+  document.getElementById('project-list').innerHTML = '';
+  projCount = 0; subCount = 0;
 
-  projects.forEach(p=>{
-    const isToday=p.deadline===date;
-    addProject(p.name||'', p.category||'사업운영', p.deadline||'', isToday, p.proj_status||'', p.proj_delay_deadline||'', p.proj_delay_reason||'');
-    const pid=projCount;
-    if(p.subtasks&&p.subtasks.length){
-      p.subtasks.forEach(t=>addSubTask(pid,t));
-    }
+  projects.forEach(p => {
+    const isDeadlineToday = p.deadline === date;
+    addProject(p.name||'', p.category||'사업운영', p.deadline||'',
+               isDeadlineToday, p.proj_status||'', p.proj_delay_deadline||'', p.proj_delay_reason||'');
+    const pid = projCount;
+    (p.subtasks || []).forEach(t => addSubTask(pid, t));
   });
   updateSummary();
 }
-async function saveRetro(){
-  const date=document.getElementById('input-date').value;
-  const name=CU.name;  // 항상 본인으로 저장
-  await dbSet('retros',date+'__'+eKey(name),{
-    date,name,
-    satisfaction:document.getElementById('satisfaction').value,
-    keep:document.getElementById('retro-keep').value,
-    problem:document.getElementById('retro-problem').value,
-    try_text:document.getElementById('retro-try').value,
-    memo:document.getElementById('retro-memo').value,
-    tomorrow:document.getElementById('retro-tomorrow').value,
-    distractions:['dist-meeting','dist-comm','dist-task','dist-personal'].filter(id=>document.getElementById(id).checked).map(id=>document.getElementById(id).nextElementSibling.textContent.trim()),
-    saved_at:new Date().toISOString()
+
+// ── 회고 ─────────────────────────────────────────────────────────────────────
+async function saveRetro() {
+  const date = document.getElementById('input-date').value;
+  const name = CU.name;
+  await dbSet('retros', date + '__' + eKey(name), {
+    date, name,
+    satisfaction:  document.getElementById('satisfaction').value,
+    keep:          document.getElementById('retro-keep').value,
+    problem:       document.getElementById('retro-problem').value,
+    try_text:      document.getElementById('retro-try').value,
+    memo:          document.getElementById('retro-memo').value,
+    tomorrow:      document.getElementById('retro-tomorrow').value,
+    distractions:  ['dist-meeting','dist-comm','dist-task','dist-personal']
+      .filter(id => document.getElementById(id) && document.getElementById(id).checked)
+      .map(id => document.getElementById(id).nextElementSibling.textContent.trim()),
+    saved_at: new Date().toISOString(),
   });
   showToast('✓ 데일리 회고가 저장되었습니다');
 }
 
-// ═══════════════════════════════════
-//  RETRO SUMMARY (오늘 달성 현황)
-// ═══════════════════════════════════
-async function loadRetroSummary(){
-  const date=document.getElementById('input-date').value;
-  const name=CU.name;
-  const taskEntry=await dbGetDoc('tasks',date+'__'+eKey(name));
-  const projects=taskEntry?taskEntry.projects:getProjectsData();
-  const body=document.getElementById('retro-summary-body');
-  if(!projects.length){body.innerHTML='<div style="color:var(--text-muted);font-size:13px">오늘 저장된 업무가 없습니다. 업무 입력 후 저장해 주세요.</div>';return;}
-  const allSubs=projects.flatMap(p=>p.subtasks||[]);
-  const total=allSubs.length, done=allSubs.filter(t=>t.status==='완료').length;
-  const delays=allSubs.filter(t=>t.status.includes('딜레이'));
-  let html=`<div style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap">
+async function loadRetroSummary() {
+  const date = document.getElementById('input-date').value;
+  const name = CU.name;
+  const taskEntry = await dbGetDoc('tasks', date + '__' + eKey(name));
+  const projects  = taskEntry ? taskEntry.projects : getProjectsData();
+  const body      = document.getElementById('retro-summary-body');
+  if (!projects.length) {
+    body.innerHTML = '<div style="color:var(--text-muted);font-size:13px">오늘 저장된 업무가 없습니다.</div>';
+    return;
+  }
+  const allSubs = projects.flatMap(p => p.subtasks || []);
+  const total   = allSubs.length;
+  const done    = allSubs.filter(t => t.status === '완료').length;
+  const delays  = allSubs.filter(t => t.status.includes('딜레이'));
+  let html = `<div style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap">
     <span>총 세부업무 <strong>${total}</strong>건</span>
     <span style="color:var(--accent)">완료 <strong>${done}</strong>건 (${total?Math.round(done/total*100):0}%)</span>
     <span style="color:var(--warn)">딜레이 <strong>${delays.length}</strong>건</span>
   </div>`;
-  projects.forEach(p=>{
-    const subs=p.subtasks||[];
-    const pd=subs.filter(t=>t.status==='완료').length;
-    html+=`<div class="retro-proj-item">
-      <div class="retro-proj-name">📁 ${p.name||'(이름 없음)'} <span style="font-size:11px;color:var(--text-muted);font-weight:400">${pd}/${subs.length} 완료${p.deadline?' · D/L '+p.deadline:''}</span></div>`;
-    subs.forEach(t=>{
-      const bc=STATUS_BADGE[t.status]||'b-notstart';
-      const durPart = (t.duration&&t.duration!=='—') ? '<span style="font-family:IBM Plex Mono,monospace;font-size:11px">'+t.duration+'</span>' : '';
-      const dlRsPart = t.delay_reason ? '<span style="color:var(--warn);font-size:11px">⚠ '+t.delay_reason+(t.delay_deadline?' (목표기한: '+t.delay_deadline+')':'')+'</span>' : '';
-      html+=`<div class="retro-sub-row"><span class="badge ${bc}" style="font-size:10px">${STATUS_LABELS[t.status]||t.status}</span><span>↳ ${t.name}</span>${durPart}${dlRsPart}`;
+  projects.forEach(p => {
+    const subs = p.subtasks || [];
+    const pd   = subs.filter(t => t.status === '완료').length;
+    html += `<div class="retro-proj-item">
+      <div class="retro-proj-name">📁 ${p.name||'(이름 없음)'}
+        <span style="font-size:11px;color:var(--text-muted);font-weight:400">${pd}/${subs.length} 완료${p.deadline?' · D/L '+p.deadline:''}</span>
+      </div>`;
+    subs.forEach(t => {
+      const bc      = STATUS_BADGE[t.status] || 'b-notstart';
+      const durPart = (t.duration && t.duration !== '—') ? '<span style="font-family:IBM Plex Mono,monospace;font-size:11px">' + t.duration + '</span>' : '';
+      const dlPart  = t.delay_reason ? '<span style="color:var(--warn);font-size:11px">⚠ ' + t.delay_reason + (t.delay_deadline ? ' (목표기한: ' + t.delay_deadline + ')' : '') + '</span>' : '';
+      html += `<div class="retro-sub-row"><span class="badge ${bc}" style="font-size:10px">${STATUS_LABELS[t.status]||t.status}</span><span>↳ ${t.name}</span>${durPart}${dlPart}</div>`;
     });
-    html+='</div>';
+    html += '</div>';
   });
-  body.innerHTML=html;
+  body.innerHTML = html;
 }
 
-// ═══════════════════════════════════
-//  REPORT
-// ═══════════════════════════════════
-async function generateReport(dateOverride, nameOverride){
-  const date=dateOverride||document.getElementById('input-date').value;
-  const name=nameOverride||(document.getElementById('sel-name').value||CU.name);
-  document.getElementById('report-meta-line').textContent=date+' · '+name+' · '+(document.getElementById('sel-team').value||'');
-  const taskEntry=await dbGetDoc('tasks',date+'__'+eKey(name));
-  const retroEntry=await dbGetDoc('retros',date+'__'+eKey(name));
-  const projects=taskEntry?taskEntry.projects:getProjectsData();
-  const allSubs=projects.flatMap(p=>p.subtasks||[]);
-  const total=allSubs.length, done=allSubs.filter(t=>t.status==='완료').length;
-  const dPer=allSubs.filter(t=>t.status==='딜레이-개인').length;
-  const dExt=allSubs.filter(t=>t.status==='딜레이-외부').length;
-  const totalMin=allSubs.reduce((s,t)=>{const m=parseInt(t.duration);return s+(isNaN(m)?0:m);},0);
-  document.getElementById('r-projects').textContent=projects.length||'—';
-  document.getElementById('r-rate').textContent=total?Math.round(done/total*100)+'%':'—';
-  document.getElementById('r-delay-per').textContent=dPer;
-  document.getElementById('r-delay-ext').textContent=dExt;
-  document.getElementById('r-total-min').textContent=totalMin||'—';
-  const tbody=document.getElementById('report-task-body'); tbody.innerHTML='';
-  projects.forEach(p=>{
-    const ps=p.subtasks||[], pd=ps.filter(t=>t.status==='완료').length;
-    const pSB={'완료':'b-done','부분완료':'b-delay-per','미완료':'b-notstart','딜레이':'b-danger'}[p.proj_status||'미완료']||'b-notstart';
-    const delayDlPart = (p.proj_status==='딜레이'&&p.proj_delay_deadline) ? ' <span style="font-size:10px;color:var(--danger)">목표기한: '+p.proj_delay_deadline+'</span>' : '';
-    const delayRsPart = p.proj_delay_reason ? ' <span style="font-size:10px;color:var(--text-muted)">사유: '+p.proj_delay_reason+'</span>' : '';
-    tbody.innerHTML+=`<tr class="rp-row"><td colspan="7">📁 ${p.name||'(이름 없음)'} <span style="font-size:11px;color:var(--text-muted);font-weight:400">${p.category}</span> <span class="badge ${pSB}" style="font-size:10px;margin-left:4px">${p.proj_status||'미완료'}</span>${delayDlPart}${delayRsPart}<span style="float:right;font-size:11px;color:var(--text-muted);font-weight:400">${pd}/${ps.length} 완료</span></td></tr>`;
-    ps.forEach(t=>{
-      const bc=STATUS_BADGE[t.status]||'b-notstart';
-      tbody.innerHTML+=`<tr class="rs-row"><td>↳ ${t.name}</td><td><span class="badge b-pending" style="font-size:10px">${p.category}</span></td><td style="font-size:11px;color:var(--text-muted)">${p.deadline||'—'}</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px">${t.duration||'—'}</td><td><span class="badge ${bc}" style="font-size:10px">${STATUS_LABELS[t.status]||t.status}</span></td><td style="font-size:11px;color:var(--text-muted)">${t.delay_reason||'—'}</td><td style="font-size:11px;color:var(--warn)">${t.delay_deadline||'—'}</td></tr>`;
+// ── 리포트 ────────────────────────────────────────────────────────────────────
+async function generateReport(dateOverride, nameOverride) {
+  const date = dateOverride || document.getElementById('input-date').value;
+  const name = nameOverride || CU.name;
+  document.getElementById('report-meta-line').textContent = date + ' · ' + name + ' · ' + (MEMBERS[name] ? MEMBERS[name].team : '');
+  const taskEntry  = await dbGetDoc('tasks',  date + '__' + eKey(name));
+  const retroEntry = await dbGetDoc('retros', date + '__' + eKey(name));
+  const projects   = taskEntry ? taskEntry.projects : getProjectsData();
+  const allSubs    = projects.flatMap(p => p.subtasks || []);
+  const total      = allSubs.length;
+  const done       = allSubs.filter(t => t.status === '완료').length;
+  const dPer       = allSubs.filter(t => t.status === '딜레이-개인').length;
+  const dExt       = allSubs.filter(t => t.status === '딜레이-외부').length;
+  const totalMin   = allSubs.reduce((s,t) => { const m = parseInt(t.duration); return s + (isNaN(m)?0:m); }, 0);
+
+  document.getElementById('r-projects').textContent   = projects.length || '—';
+  document.getElementById('r-rate').textContent       = total ? Math.round(done/total*100) + '%' : '—';
+  document.getElementById('r-delay-per').textContent  = dPer;
+  document.getElementById('r-delay-ext').textContent  = dExt;
+  document.getElementById('r-total-min').textContent  = totalMin || '—';
+
+  const tbody = document.getElementById('report-task-body');
+  tbody.innerHTML = '';
+  projects.forEach(p => {
+    const ps  = p.subtasks || [];
+    const pd  = ps.filter(t => t.status === '완료').length;
+    const pSB = {'완료':'b-done','부분완료':'b-delay-per','미완료':'b-notstart','딜레이':'b-danger'}[p.proj_status||'미완료'] || 'b-notstart';
+    const dlDl = (p.proj_status === '딜레이' && p.proj_delay_deadline) ? ' <span style="font-size:10px;color:var(--danger)">목표기한: ' + p.proj_delay_deadline + '</span>' : '';
+    const dlRs = p.proj_delay_reason ? ' <span style="font-size:10px;color:var(--text-muted)">사유: ' + p.proj_delay_reason + '</span>' : '';
+    tbody.innerHTML += `<tr class="rp-row"><td colspan="7">📁 ${p.name||'(이름 없음)'}
+      <span style="font-size:11px;color:var(--text-muted);font-weight:400"> ${p.category}</span>
+      <span class="badge ${pSB}" style="font-size:10px;margin-left:4px">${p.proj_status||'미완료'}</span>
+      ${dlDl}${dlRs}
+      <span style="float:right;font-size:11px;color:var(--text-muted);font-weight:400">${pd}/${ps.length} 완료</span>
+    </td></tr>`;
+    ps.forEach(t => {
+      const bc = STATUS_BADGE[t.status] || 'b-notstart';
+      tbody.innerHTML += `<tr class="rs-row">
+        <td>↳ ${t.name}</td>
+        <td><span class="badge b-pending" style="font-size:10px">${p.category}</span></td>
+        <td style="font-size:11px;color:var(--text-muted)">${p.deadline||'—'}</td>
+        <td style="font-family:'IBM Plex Mono',monospace;font-size:11px">${t.duration||'—'}</td>
+        <td><span class="badge ${bc}" style="font-size:10px">${STATUS_LABELS[t.status]||t.status}</span></td>
+        <td style="font-size:11px;color:var(--text-muted)">${t.delay_reason||'—'}</td>
+        <td style="font-size:11px;color:var(--warn)">${t.delay_deadline||'—'}</td>
+      </tr>`;
     });
   });
-  const r=retroEntry||{};
-  document.getElementById('r-satisfaction').textContent=r.satisfaction||document.getElementById('satisfaction').value;
-  document.getElementById('r-keep').textContent=r.keep||document.getElementById('retro-keep').value||'—';
-  document.getElementById('r-problem').textContent=r.problem||document.getElementById('retro-problem').value||'—';
-  document.getElementById('r-try').textContent=r.try_text||document.getElementById('retro-try').value||'—';
-  document.getElementById('r-tomorrow').textContent=r.tomorrow||document.getElementById('retro-tomorrow').value||'—';
-  const memo=r.memo||document.getElementById('retro-memo').value;
-  document.getElementById('r-memo-section').textContent=memo?'메모: '+memo:'';
-  // Feedback
+  if (!projects.length) tbody.innerHTML = '<tr><td colspan="7" style="color:var(--text-muted);font-size:12px;padding:10px 0">저장된 데이터가 없습니다.</td></tr>';
+
+  const r = retroEntry || {};
+  document.getElementById('r-satisfaction').textContent = r.satisfaction || document.getElementById('satisfaction').value;
+  document.getElementById('r-keep').textContent    = r.keep     || document.getElementById('retro-keep').value    || '—';
+  document.getElementById('r-problem').textContent = r.problem  || document.getElementById('retro-problem').value || '—';
+  document.getElementById('r-try').textContent     = r.try_text || document.getElementById('retro-try').value     || '—';
+  document.getElementById('r-tomorrow').textContent= r.tomorrow || document.getElementById('retro-tomorrow').value|| '—';
+  const memo = r.memo || (document.getElementById('retro-memo') ? document.getElementById('retro-memo').value : '');
+  document.getElementById('r-memo-section').textContent = memo ? '메모: ' + memo : '';
   await loadReportFeedback(date, name);
 }
 
-async function loadReportFeedback(date, name){
-  const feedbacks=await dbGetAll('feedbacks');
-  const mine=feedbacks.filter(f=>f.to===name&&f.date===date);
-  const area=document.getElementById('report-feedback-area');
-  if(!mine.length){area.innerHTML='';return;}
-  area.innerHTML=mine.map(f=>`
+async function loadReportFeedback(date, name) {
+  const feedbacks = await dbGetAll('feedbacks');
+  const mine      = feedbacks.filter(f => f.to === name && f.date === date);
+  const area      = document.getElementById('report-feedback-area');
+  if (!mine.length) { area.innerHTML = ''; return; }
+  area.innerHTML = mine.map(f => `
     <div class="feedback-box${f.read?'':' feedback-unread'}" style="margin-bottom:10px">
-      <div class="feedback-title">💬 관리자 피드백 — ${f.type}<span style="margin-left:auto;font-weight:400;font-size:10px">${f.from}</span></div>
+      <div class="feedback-title">💬 관리자 피드백 — ${f.type}
+        <span style="margin-left:auto;font-weight:400;font-size:10px">${f.from}</span></div>
       <div class="feedback-msg">${f.content}</div>
-      <div class="feedback-meta">${f.sent_at?f.sent_at.slice(0,16).replace('T',' '):''}</div>
+      <div class="feedback-meta">${f.sent_at ? f.sent_at.slice(0,16).replace('T',' ') : ''}</div>
     </div>`).join('');
-  // Mark as read
-  for(const f of mine){ if(!f.read){ await dbSet('feedbacks',f.id,{...f,read:true}); } }
+  for (const f of mine) {
+    if (!f.read) await dbSet('feedbacks', f.id, { ...f, read: true });
+  }
   await checkInbox();
 }
 
-// ═══════════════════════════════════
-//  WEEKLY REPORT
-// ═══════════════════════════════════
-function setDefaultWeek(){
-  const today=new Date();
-  const day=today.getDay();
-  const mon=new Date(today); mon.setDate(today.getDate()-(day===0?6:day-1));
-  const sun=new Date(mon); sun.setDate(mon.getDate()+6);
-  document.getElementById('week-start').value=mon.toISOString().split('T')[0];
-  document.getElementById('week-end').value=sun.toISOString().split('T')[0];
+async function viewDailyReport(date, name) {
+  showPage('report', document.querySelector('#nav-member .nav-item:nth-child(3)'));
+  await generateReport(date, name);
 }
-async function generateWeeklyReport(){
-  const ws=document.getElementById('week-start').value;
-  const we=document.getElementById('week-end').value;
-  if(!ws||!we){showToast('기간을 선택해 주세요');return;}
-  const name=CU.name;  // 항상 본인 데이터만 (sel-name 무시)
-  const all=await dbGetAll('tasks');
-  const retros=await dbGetAll('retros');
-  const mine=all.filter(e=>e.name===name&&e.date>=ws&&e.date<=we);
-  const myRet=retros.filter(e=>e.name===name&&e.date>=ws&&e.date<=we);
-  const allSubs=mine.flatMap(e=>(e.projects||[]).flatMap(p=>p.subtasks||[]));
-  const total=allSubs.length, done=allSubs.filter(t=>t.status==='완료').length;
-  const dPer=allSubs.filter(t=>t.status==='딜레이-개인').length;
-  const dExt=allSubs.filter(t=>t.status==='딜레이-외부').length;
-  const totalMin=allSubs.reduce((s,t)=>{const m=parseInt(t.duration);return s+(isNaN(m)?0:m);},0);
-  const avgSat=myRet.length?(myRet.reduce((s,e)=>s+Number(e.satisfaction),0)/myRet.length).toFixed(1):'—';
-  let html=`<div class="report-block" id="weekly-report-block">
+
+// ── 주간 리포트 ───────────────────────────────────────────────────────────────
+function setDefaultWeek() {
+  const today = new Date();
+  const day   = today.getDay();
+  const mon   = new Date(today); mon.setDate(today.getDate() - (day===0?6:day-1));
+  const sun   = new Date(mon);   sun.setDate(mon.getDate() + 6);
+  document.getElementById('week-start').value = mon.toISOString().split('T')[0];
+  document.getElementById('week-end').value   = sun.toISOString().split('T')[0];
+}
+
+async function generateWeeklyReport() {
+  const ws   = document.getElementById('week-start').value;
+  const we   = document.getElementById('week-end').value;
+  if (!ws || !we) { showToast('기간을 선택해 주세요'); return; }
+  const name = CU.name; // 항상 본인
+  const all    = await dbGetAll('tasks');
+  const retros = await dbGetAll('retros');
+  const mine   = all.filter(e => e.name === name && e.date >= ws && e.date <= we);
+  const myRet  = retros.filter(e => e.name === name && e.date >= ws && e.date <= we);
+  const allSubs = mine.flatMap(e => (e.projects||[]).flatMap(p => p.subtasks||[]));
+  const total  = allSubs.length;
+  const done   = allSubs.filter(t => t.status === '완료').length;
+  const dPer   = allSubs.filter(t => t.status === '딜레이-개인').length;
+  const dExt   = allSubs.filter(t => t.status === '딜레이-외부').length;
+  const avgSat = myRet.length ? (myRet.reduce((s,e) => s+Number(e.satisfaction),0)/myRet.length).toFixed(1) : '—';
+
+  let html = `<div class="report-block" id="weekly-report-block">
     <div class="report-header">
       <div class="report-org">커리어사업부 · CAREER DIVISION</div>
       <div class="report-title">주간 업무 생산성 리포트</div>
@@ -1408,123 +1474,143 @@ async function generateWeeklyReport(){
     <div class="report-section">
       <div class="report-section-title">일별 상세</div>
       <table class="rt"><thead><tr><th>날짜</th><th>프로젝트</th><th>세부업무</th><th>완료율</th><th>딜레이(개인)</th><th>만족도</th></tr></thead><tbody>`;
-  mine.sort((a,b)=>a.date.localeCompare(b.date)).forEach(e=>{
-    const subs=(e.projects||[]).flatMap(p=>p.subtasks||[]);
-    const d=subs.filter(t=>t.status==='완료').length;
-    const rt=subs.length?Math.round(d/subs.length*100):0;
-    const dp=subs.filter(t=>t.status==='딜레이-개인').length;
-    const retro=myRet.find(r=>r.date===e.date);
-    const projs=(e.projects||[]).map(p=>p.name).filter(Boolean).join(', ');
-    html+=`<tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px">${e.date}</td><td style="font-size:12px">${projs||'—'}</td><td style="font-size:12px;text-align:center">${subs.length}</td><td><span class="badge ${rt>=80?'b-done':'b-notstart'}" style="font-size:10px">${rt}%</span></td><td style="text-align:center;color:var(--warn)">${dp||'0'}</td><td style="text-align:center">${retro?retro.satisfaction+'/10':'—'}</td></tr>`;
+  mine.sort((a,b) => a.date.localeCompare(b.date)).forEach(e => {
+    const subs  = (e.projects||[]).flatMap(p => p.subtasks||[]);
+    const d     = subs.filter(t => t.status === '완료').length;
+    const rt    = subs.length ? Math.round(d/subs.length*100) : 0;
+    const dp    = subs.filter(t => t.status === '딜레이-개인').length;
+    const retro = myRet.find(r => r.date === e.date);
+    const projs = (e.projects||[]).map(p => p.name).filter(Boolean).join(', ');
+    html += `<tr>
+      <td style="font-family:'IBM Plex Mono',monospace;font-size:11px">${e.date}</td>
+      <td style="font-size:12px">${projs||'—'}</td>
+      <td style="font-size:12px;text-align:center">${subs.length}</td>
+      <td><span class="badge ${rt>=80?'b-done':'b-notstart'}" style="font-size:10px">${rt}%</span></td>
+      <td style="text-align:center;color:var(--warn)">${dp||'0'}</td>
+      <td style="text-align:center">${retro?retro.satisfaction+'/10':'—'}</td>
+    </tr>`;
   });
-  if(!mine.length) html+='<tr><td colspan="6" style="color:var(--text-muted);font-size:12px;padding:10px 0">해당 기간 데이터가 없습니다.</td></tr>';
-  html+=`</tbody></table></div>`;
-  if(myRet.length){
-    html+=`<div class="report-section"><div class="report-section-title">주간 회고 요약</div>`;
-    myRet.forEach(r=>{
-      html+=`<div style="margin-bottom:10px;padding:10px;background:var(--surface2);border-radius:6px"><div style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--text-muted);margin-bottom:5px">${r.date}</div>
-      <div style="font-size:12px;line-height:1.7"><span style="color:var(--accent)">K</span> ${r.keep||'—'} &nbsp;|&nbsp; <span style="color:var(--warn)">P</span> ${r.problem||'—'} &nbsp;|&nbsp; <span style="color:var(--info)">T</span> ${r.try_text||'—'}</div></div>`;
+  if (!mine.length) html += '<tr><td colspan="6" style="color:var(--text-muted);font-size:12px;padding:10px 0">해당 기간 데이터가 없습니다.</td></tr>';
+  html += '</tbody></table></div>';
+  if (myRet.length) {
+    html += '<div class="report-section"><div class="report-section-title">주간 회고 요약</div>';
+    myRet.forEach(r => {
+      html += `<div style="margin-bottom:10px;padding:10px;background:var(--surface2);border-radius:6px">
+        <div style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--text-muted);margin-bottom:5px">${r.date}</div>
+        <div style="font-size:12px;line-height:1.7">
+          <span style="color:var(--accent)">K</span> ${r.keep||'—'} &nbsp;|&nbsp;
+          <span style="color:var(--warn)">P</span> ${r.problem||'—'} &nbsp;|&nbsp;
+          <span style="color:var(--info)">T</span> ${r.try_text||'—'}
+        </div></div>`;
     });
-    html+='</div>';
+    html += '</div>';
   }
-  html+='</div>';
-  document.getElementById('weekly-report-content').innerHTML=html;
-  document.getElementById('weekly-pdf-btn').style.display='flex';
+  html += '</div>';
+  document.getElementById('weekly-report-content').innerHTML = html;
+  document.getElementById('weekly-pdf-btn').style.display = 'flex';
 }
 
-function downloadPDF(type){
-  let content='';
-  if(type==='daily'){
-    generateReport().then(()=>{
-      setTimeout(()=>{ openPrintWin(document.getElementById('report-content').innerHTML); },150);
+// ── PDF 출력 ──────────────────────────────────────────────────────────────────
+function downloadPDF(type) {
+  if (type === 'daily') {
+    generateReport().then(() => {
+      setTimeout(() => openPrintWin(document.getElementById('report-content').innerHTML), 150);
     });
   } else {
-    content=document.getElementById('weekly-report-block')?.innerHTML||'';
-    if(!content){showToast('먼저 주간 리포트를 조회해 주세요');return;}
-    openPrintWin(content);
+    const el = document.getElementById('weekly-report-block');
+    if (!el) { showToast('먼저 주간 리포트를 조회해 주세요'); return; }
+    openPrintWin(el.innerHTML);
   }
   showToast('PDF 출력 창이 열렸습니다');
 }
-function openPrintWin(content){
-  const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Noto Sans KR',sans-serif;font-size:13px;color:#1A1916;padding:28px;line-height:1.6}
-  .report-header{border-bottom:2px solid #1A1916;padding-bottom:11px;margin-bottom:14px}.report-org{font-size:10px;color:#8A8880;letter-spacing:.08em;margin-bottom:3px}.report-title{font-size:17px;font-weight:500}.report-meta{font-size:11px;color:#8A8880;margin-top:3px;font-family:'IBM Plex Mono',monospace}
-  .report-section{margin-bottom:14px}.report-section-title{font-size:10px;font-weight:700;color:#1A1916;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #E0DDD5;padding-bottom:4px;margin-bottom:7px}
-  .stat-card{display:inline-block;border:1px solid #E0DDD5;border-radius:5px;padding:8px 11px;margin-right:6px;margin-bottom:6px}.stat-label{font-size:10px;color:#8A8880;margin-bottom:2px}.stat-val{font-size:17px;font-weight:300;font-family:'IBM Plex Mono',monospace}.stat-sub{font-size:10px;color:#B0ADA5}
-  .rt{width:100%;border-collapse:collapse;font-size:11px}.rt th{text-align:left;padding:5px 6px;background:#F0EFE9;font-weight:500;font-size:10px;color:#8A8880}.rt td{padding:5px 6px;border-bottom:1px solid #E0DDD5;vertical-align:top}.rp-row td{background:#F0EFE9;font-weight:500;font-size:11px}.rs-row td{padding-left:16px;font-size:10px}
-  .badge{display:inline-block;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:500}
-  .b-done{background:#E8F2EC;color:#2D5A3D}.b-progress{background:#E8F0F8;color:#2A5A8A}.b-delay-per{background:#FDF0E3;color:#C4701A}.b-delay-ext{background:#E8F0F8;color:#2A5A8A}.b-notstart,.b-pending{background:#F5F4F0;color:#8A8880}
-  .kpt-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.kpt-block{background:#F5F4F0;border-radius:4px;padding:8px}.kpt-label{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px}.kpt-k{color:#2D5A3D}.kpt-p{color:#C4701A}.kpt-t{color:#2A5A8A}.kpt-text{font-size:11px;color:#8A8880;line-height:1.6}
-  @media print{body{padding:16px}}</style>
-  </head><body>${content}<scr'+'ipt>window.print();<\/scr'+'ipt></body></html>`);
+function openPrintWin(content) {
+  const w = window.open('', '_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Noto Sans KR',sans-serif;font-size:13px;color:#1A1916;padding:28px;line-height:1.6}
+.report-header{border-bottom:2px solid #1A1916;padding-bottom:11px;margin-bottom:14px}.report-org{font-size:10px;color:#8A8880;letter-spacing:.08em;margin-bottom:3px}.report-title{font-size:17px;font-weight:500}.report-meta{font-size:11px;color:#8A8880;margin-top:3px;font-family:'IBM Plex Mono',monospace}
+.report-section{margin-bottom:14px}.report-section-title{font-size:10px;font-weight:700;color:#1A1916;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #E0DDD5;padding-bottom:4px;margin-bottom:7px}
+.stat-card{display:inline-block;border:1px solid #E0DDD5;border-radius:5px;padding:8px 11px;margin-right:6px;margin-bottom:6px}.stat-label{font-size:10px;color:#8A8880;margin-bottom:2px}.stat-val{font-size:17px;font-weight:300;font-family:'IBM Plex Mono',monospace}.stat-sub{font-size:10px;color:#B0ADA5}
+.rt{width:100%;border-collapse:collapse;font-size:11px}.rt th{text-align:left;padding:5px 6px;background:#F0EFE9;font-weight:500;font-size:10px;color:#8A8880}.rt td{padding:5px 6px;border-bottom:1px solid #E0DDD5;vertical-align:top}.rp-row td{background:#F0EFE9;font-weight:500;font-size:11px}.rs-row td{padding-left:16px;font-size:10px}
+.badge{display:inline-block;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:500}.b-done{background:#E8F2EC;color:#2D5A3D}.b-progress{background:#E8F0F8;color:#2A5A8A}.b-delay-per{background:#FDF0E3;color:#C4701A}.b-delay-ext{background:#E8F0F8;color:#2A5A8A}.b-notstart,.b-pending{background:#F5F4F0;color:#8A8880}.b-danger{background:#FCEBEB;color:#B83030}
+.kpt-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.kpt-block{background:#F5F4F0;border-radius:4px;padding:8px}.kpt-label{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px}.kpt-k{color:#2D5A3D}.kpt-p{color:#C4701A}.kpt-t{color:#2A5A8A}.kpt-text{font-size:11px;color:#8A8880;line-height:1.6}
+.feedback-box{background:#E8F0F8;border:1px solid rgba(42,90,138,.2);border-radius:6px;padding:10px 12px;margin-bottom:8px}.feedback-title{font-size:11px;font-weight:500;color:#2A5A8A;margin-bottom:4px}.feedback-msg{font-size:12px;color:#1A1916;line-height:1.6}.feedback-meta{font-size:10px;color:#8A8880;margin-top:3px}
+@media print{body{padding:16px}}</style>
+</head><body>${content}<scr` + `ipt>window.print();<\/scr` + `ipt></body></html>`);
   w.document.close();
 }
 
-// ═══════════════════════════════════
-//  MY HISTORY
-// ═══════════════════════════════════
-async function renderMyHistory(){
-  const name=CU.name;  // 항상 본인 데이터만
-  const all=await dbGetAll('tasks');
-  const retros=await dbGetAll('retros');
-  const mine=all.filter(e=>e.name===name);
-  const myRet=retros.filter(e=>e.name===name);
-  document.getElementById('ms-days').textContent=mine.length;
-  const allSubs=mine.flatMap(e=>(e.projects||[]).flatMap(p=>p.subtasks||[]));
-  if(allSubs.length){
-    const rates=mine.map(e=>{const s=(e.projects||[]).flatMap(p=>p.subtasks||[]);return s.length?Math.round(s.filter(t=>t.status==='완료').length/s.length*100):0;});
-    document.getElementById('ms-rate').textContent=Math.round(rates.reduce((a,b)=>a+b,0)/rates.length)+'%';
-    document.getElementById('ms-delay').textContent=allSubs.filter(t=>t.status==='딜레이-개인').length;
+// ── 나의 기록 ─────────────────────────────────────────────────────────────────
+async function renderMyHistory() {
+  const name   = CU.name;
+  const all    = await dbGetAll('tasks');
+  const retros = await dbGetAll('retros');
+  const mine   = all.filter(e => e.name === name);
+  const myRet  = retros.filter(e => e.name === name);
+  document.getElementById('ms-days').textContent = mine.length;
+  const allSubs = mine.flatMap(e => (e.projects||[]).flatMap(p => p.subtasks||[]));
+  if (allSubs.length) {
+    const rates = mine.map(e => {
+      const s = (e.projects||[]).flatMap(p => p.subtasks||[]);
+      return s.length ? Math.round(s.filter(t => t.status === '완료').length / s.length * 100) : 0;
+    });
+    document.getElementById('ms-rate').textContent  = Math.round(rates.reduce((a,b)=>a+b,0)/rates.length) + '%';
+    document.getElementById('ms-delay').textContent = allSubs.filter(t => t.status === '딜레이-개인').length;
+  } else {
+    document.getElementById('ms-rate').textContent  = '—';
+    document.getElementById('ms-delay').textContent = '0';
   }
-  if(myRet.length) document.getElementById('ms-sat').textContent=(myRet.reduce((s,e)=>s+Number(e.satisfaction),0)/myRet.length).toFixed(1);
-  const cont=document.getElementById('my-history-list');
-  if(!mine.length){cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:10px 0">저장된 기록이 없습니다.</div>';return;}
-  cont.innerHTML=mine.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(e=>{
-    const subs=(e.projects||[]).flatMap(p=>p.subtasks||[]);
-    const done=subs.filter(t=>t.status==='완료').length;
-    const rate=subs.length?Math.round(done/subs.length*100):0;
-    const retro=myRet.find(r=>r.date===e.date);
+  if (myRet.length) {
+    document.getElementById('ms-sat').textContent = (myRet.reduce((s,e)=>s+Number(e.satisfaction),0)/myRet.length).toFixed(1);
+  } else {
+    document.getElementById('ms-sat').textContent = '—';
+  }
+  const cont = document.getElementById('my-history-list');
+  if (!mine.length) { cont.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:10px 0">저장된 기록이 없습니다.</div>'; return; }
+  cont.innerHTML = mine.slice().sort((a,b) => b.date.localeCompare(a.date)).map(e => {
+    const subs = (e.projects||[]).flatMap(p => p.subtasks||[]);
+    const done = subs.filter(t => t.status === '완료').length;
+    const rate = subs.length ? Math.round(done/subs.length*100) : 0;
+    const retro = myRet.find(r => r.date === e.date);
+    const projNames = (e.projects||[]).map(p=>p.name).filter(Boolean).join(', ') || '(없음)';
+    const retroTxt = retro ? '<span style="color:var(--info)">만족도 ' + retro.satisfaction + '/10</span>'
+                           : '<span style="color:var(--text-light)">회고 미작성</span>';
     return `<div class="history-item" style="cursor:pointer" onclick="viewDailyReport('${e.date}','${esc(e.name)}')">
       <span class="h-date">${e.date}</span>
-      <span class="h-name">${(e.projects||[]).map(p=>p.name).filter(Boolean).join(', ')||'(없음)'}</span>
+      <span class="h-name">${projNames}</span>
       <div class="h-stats">
         <span>${(e.projects||[]).length}개 프로젝트</span>
         <span style="color:var(--accent)">완료율 ${rate}%</span>
-        ${retro?'<span style="color:var(--info)">만족도 '+retro.satisfaction+'/10</span>':'<span style="color:var(--text-light)">회고 미작성</span>'}
+        ${retroTxt}
         <span style="color:var(--info);font-size:10px">→ 리포트 보기</span>
       </div>
     </div>`;
   }).join('');
 }
-async function viewDailyReport(date, name){
-  showPage('report', document.querySelector('#nav-member .nav-item:nth-child(3)'));
-  await generateReport(date, name);
-}
 
-// ═══════════════════════════════════
-//  FEEDBACK
-// ═══════════════════════════════════
-async function sendFeedback(){
-  const to=document.getElementById('fb-to').value.trim().replace(/\s+/g,' ');
-  const date=document.getElementById('fb-date').value;
-  const type=document.getElementById('fb-type').value;
-  const content=document.getElementById('fb-content').value.trim();
-  if(!to||!content){showToast('받는 사람과 내용을 입력해 주세요');return;}
-  // Use unique id that includes timestamp so multiple feedbacks to same person work
-  const id='fb__'+Date.now()+'__'+eKey(to);
-  const entry={id,to,date,type,content,from:CU.name,read:false,sent_at:new Date().toISOString()};
-  await dbSet('feedbacks',id,entry);
-  document.getElementById('fb-content').value='';
+// ── 피드백 ────────────────────────────────────────────────────────────────────
+async function sendFeedback() {
+  const to      = document.getElementById('fb-to').value.trim();
+  const date    = document.getElementById('fb-date').value;
+  const type    = document.getElementById('fb-type').value;
+  const content = document.getElementById('fb-content').value.trim();
+  if (!to || !content) { showToast('받는 사람과 내용을 입력해 주세요'); return; }
+  // 받는 사람이 MEMBERS에 있는지 확인
+  if (!MEMBERS[to]) { showToast('등록된 구성원 이름을 정확히 입력해 주세요'); return; }
+  const id    = 'fb__' + Date.now() + '__' + eKey(to);
+  const entry = { id, to, date, type, content, from: CU.name, read: false, sent_at: new Date().toISOString() };
+  await dbSet('feedbacks', id, entry);
+  document.getElementById('fb-content').value = '';
   await renderSentFeedbacks();
   showToast('✓ 피드백이 발송되었습니다');
 }
-async function renderSentFeedbacks(){
-  const all=await dbGetAll('feedbacks');
-  const sent=all.filter(f=>f.from===CU.name).sort((a,b)=>new Date(b.sent_at)-new Date(a.sent_at));
-  const cont=document.getElementById('sent-feedback-list');
-  if(!sent.length){cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:8px 0">발송 내역이 없습니다.</div>';return;}
-  cont.innerHTML=sent.map(f=>`<div class="history-item">
+
+async function renderSentFeedbacks() {
+  const all  = await dbGetAll('feedbacks');
+  const sent = all.filter(f => f.from === CU.name).sort((a,b) => new Date(b.sent_at) - new Date(a.sent_at));
+  const cont = document.getElementById('sent-feedback-list');
+  if (!sent.length) { cont.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:8px 0">발송 내역이 없습니다.</div>'; return; }
+  cont.innerHTML = sent.map(f => `<div class="history-item">
     <span class="h-date">${f.date}</span>
     <span class="h-name" style="font-weight:500">→ ${f.to}</span>
     <div class="h-stats">
@@ -1534,138 +1620,216 @@ async function renderSentFeedbacks(){
     </div>
   </div>`).join('');
 }
-async function renderInbox(){
-  const all=await dbGetAll('feedbacks');
-  const name=CU?CU.name:'';
-  // Trim both sides to handle any whitespace issues
-  const mine=all.filter(f=>String(f.to||'').trim()===String(name).trim()).sort((a,b)=>new Date(b.sent_at)-new Date(a.sent_at));
-  const cont=document.getElementById('inbox-list');
-  if(!mine.length){cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:10px 0">받은 피드백이 없습니다.</div>';return;}
-  cont.innerHTML=mine.map(f=>`<div class="feedback-box${f.read?'':' feedback-unread'}" style="margin-bottom:10px">
-    <div class="feedback-title">💬 ${f.type||'피드백'} &nbsp;<span style="font-weight:400;font-size:10px;color:var(--text-muted)">from ${f.from||'—'} · ${f.date||''}</span></div>
+
+async function renderInbox() {
+  const all  = await dbGetAll('feedbacks');
+  const name = CU ? CU.name : '';
+  const mine = all.filter(f => f.to === name).sort((a,b) => new Date(b.sent_at) - new Date(a.sent_at));
+  const cont = document.getElementById('inbox-list');
+  if (!mine.length) { cont.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:10px 0">받은 피드백이 없습니다.</div>'; return; }
+  cont.innerHTML = mine.map(f => `<div class="feedback-box${f.read?'':' feedback-unread'}" style="margin-bottom:10px">
+    <div class="feedback-title">💬 ${f.type||'피드백'} &nbsp;
+      <span style="font-weight:400;font-size:10px;color:var(--text-muted)">from ${f.from||'—'} · ${f.date||''}</span></div>
     <div class="feedback-msg" style="margin-top:4px">${f.content||''}</div>
     <div class="feedback-meta" style="margin-top:4px">${f.sent_at?f.sent_at.slice(0,16).replace('T',' '):''}</div>
   </div>`).join('');
-  // Mark all as read
-  const unread=mine.filter(f=>!f.read);
-  for(const f of unread){
-    const updated={...f,read:true};
-    await dbSet('feedbacks',f.id,updated);
+  // 읽음 처리
+  for (const f of mine.filter(f => !f.read)) {
+    await dbSet('feedbacks', f.id, { ...f, read: true });
   }
   await checkInbox();
 }
-async function checkInbox(){
-  if(!CU)return;
-  const all=await dbGetAll('feedbacks');
-  const unread=all.filter(f=>String(f.to||'').trim()===String(CU.name).trim()&&!f.read).length;
-  const badge=document.getElementById('inbox-badge');
-  if(!badge)return;
-  if(unread>0){badge.style.display='inline';badge.textContent=unread;}else{badge.style.display='none';}
+
+async function checkInbox() {
+  if (!CU) return;
+  const all    = await dbGetAll('feedbacks');
+  const unread = all.filter(f => f.to === CU.name && !f.read).length;
+  const badge  = document.getElementById('inbox-badge');
+  if (!badge) return;
+  if (unread > 0) { badge.style.display = 'inline'; badge.textContent = unread; }
+  else              badge.style.display = 'none';
 }
 
-// ═══════════════════════════════════
-//  ADMIN
-// ═══════════════════════════════════
-async function renderAdminDashboard(){
-  const all=await dbGetAll('tasks');
-  const retros=await dbGetAll('retros');
-  const pdf=[]; // PDF upload removed — data from tasks directly
-  const visibleNames=new Set(getAdminVisibleNames());
-  const filtered=all.filter(e=>visibleNames.has(e.name));
-  const allSubs=filtered.flatMap(e=>(e.projects||[]).flatMap(p=>p.subtasks||[]));
-  const total=allSubs.length,done=allSubs.filter(t=>t.status==='완료').length;
-  const dExt=allSubs.filter(t=>t.status==='딜레이-외부').length;
-  const dPer=allSubs.filter(t=>t.status==='딜레이-개인').length;
-  document.getElementById('d-rate').textContent=total?Math.round(done/total*100)+'%':'—';
-  document.getElementById('d-delay').textContent=dExt+dPer;
-  document.getElementById('d-delay-sub').textContent=`외부 ${dExt} / 개인 ${dPer}`;
-  const filtRet=retros.filter(e=>visibleNames.has(e.name));
-  if(filtRet.length) document.getElementById('d-sat').textContent=(filtRet.reduce((s,e)=>s+Number(e.satisfaction),0)/filtRet.length).toFixed(1);
-  const today=document.getElementById('input-date').value;
-  const expectedNames=[...visibleNames];
-  const submitted=new Set(filtered.filter(e=>e.date===today).map(e=>e.name));
-  document.getElementById('d-missing').textContent=Math.max(0,expectedNames.filter(n=>!submitted.has(n)).length);
-  const combined=Object.values(filtered.reduce((acc,e)=>{ const k=e.date+'__'+(e.name||''); if(!acc[k]||new Date(e.saved_at)>new Date(acc[k].saved_at)) acc[k]={type:'task',date:e.date,member:e.name,projects:e.projects,saved_at:e.saved_at}; return acc; },{})).sort((a,b)=>new Date(b.saved_at)-new Date(a.saved_at));
-  const cont=document.getElementById('admin-report-list');
-  if(!combined.length){cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:8px 0">제출된 데이터가 없습니다.</div>';return;}
-  cont.innerHTML=combined.slice(0,15).map(r=>{
-    const teamTag=MEMBERS[r.member]?`<span class="badge b-purple" style="font-size:10px">${MEMBERS[r.member].team}</span>`:'';
-    if(r.type==='task'){
-      const subs=(r.projects||[]).flatMap(p=>p.subtasks||[]);
-      const d=subs.filter(t=>t.status==='완료').length;
-      const rt=subs.length?Math.round(d/subs.length*100):0;
-      return `<div class="history-item"><span class="h-date">${r.date}</span><span class="h-name" style="font-weight:500">${r.member} ${teamTag}</span><div class="h-stats"><span>${(r.projects||[]).map(p=>p.name).filter(Boolean).join(', ')||'—'}</span><span style="color:var(--accent)">완료율 ${rt}%</span><span class="badge b-done" style="font-size:10px">저장</span></div></div>`;
-    }else{
-      const commentPart = r.comment ? '<span>"'+r.comment.slice(0,25)+(r.comment.length>25?'…':'')+'"</span>' : '';
-      return `<div class="history-item"><span class="h-date">${r.date}</span><span class="h-name" style="font-weight:500">${r.member} ${teamTag}</span><div class="h-stats"><span style="color:var(--accent)">완료율 ${r.rate}%</span>${commentPart}<span class="badge b-delay-ext" style="font-size:10px">PDF</span></div></div>`;
-    }
+// ── 관리자: 대시보드 ──────────────────────────────────────────────────────────
+async function renderAdminDashboard() {
+  const all        = await dbGetAll('tasks');
+  const retros     = await dbGetAll('retros');
+  const todayStr   = document.getElementById('input-date').value;
+  const visNames   = getAdminVisibleNames();
+  const visSet     = new Set(visNames);
+
+  // 중복 제거: 동일 날짜+이름은 최신 1개만
+  const deduped = Object.values(
+    all.filter(e => visSet.has(e.name))
+       .reduce((acc, e) => {
+         const k = e.date + '__' + e.name;
+         if (!acc[k] || new Date(e.saved_at) > new Date(acc[k].saved_at)) acc[k] = e;
+         return acc;
+       }, {})
+  );
+
+  // 세부업무 + 프로젝트 상태 모두 고려
+  const allSubs  = deduped.flatMap(e => (e.projects||[]).flatMap(p => p.subtasks||[]));
+  const allProjs = deduped.flatMap(e => e.projects||[]);
+  const total    = allSubs.length || allProjs.length;
+  const done     = allSubs.length
+    ? allSubs.filter(t => t.status === '완료').length
+    : allProjs.filter(p => (p.proj_status||'미완료') === '완료').length;
+  const dExt    = allSubs.filter(t => t.status === '딜레이-외부').length;
+  const dPer    = allSubs.filter(t => t.status === '딜레이-개인').length;
+
+  document.getElementById('d-rate').textContent      = total ? Math.round(done/total*100) + '%' : '—';
+  document.getElementById('d-delay').textContent     = dExt + dPer;
+  document.getElementById('d-delay-sub').textContent = '외부 ' + dExt + ' / 개인 ' + dPer;
+
+  const filtRet = retros.filter(e => visSet.has(e.name));
+  document.getElementById('d-sat').textContent = filtRet.length
+    ? (filtRet.reduce((s,e) => s+Number(e.satisfaction),0)/filtRet.length).toFixed(1) : '—';
+
+  const submitted = new Set(deduped.filter(e => e.date === todayStr).map(e => e.name));
+  document.getElementById('d-missing').textContent =
+    Math.max(0, visNames.filter(n => !submitted.has(n)).length);
+
+  const cont = document.getElementById('admin-report-list');
+  const sorted = deduped.sort((a,b) => new Date(b.saved_at) - new Date(a.saved_at));
+  if (!sorted.length) { cont.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:8px 0">제출된 데이터가 없습니다.</div>'; return; }
+  cont.innerHTML = sorted.slice(0,15).map(r => {
+    const teamTag = MEMBERS[r.name] ? '<span class="badge b-purple" style="font-size:10px">' + MEMBERS[r.name].team + '</span>' : '';
+    const subs    = (r.projects||[]).flatMap(p => p.subtasks||[]);
+    const d       = subs.filter(t => t.status === '완료').length;
+    const rt      = subs.length ? Math.round(d/subs.length*100) : 0;
+    const projs   = (r.projects||[]).map(p=>p.name).filter(Boolean).join(', ') || '—';
+    return `<div class="history-item" style="cursor:pointer" onclick="viewMemberReport('${r.date}','${esc(r.name)}')">
+      <span class="h-date">${r.date}</span>
+      <span class="h-name" style="font-weight:500">${r.name} ${teamTag}</span>
+      <div class="h-stats">
+        <span>${projs}</span>
+        <span style="color:var(--accent)">완료율 ${rt}%</span>
+        <span class="badge b-done" style="font-size:10px">저장</span>
+      </div>
+    </div>`;
   }).join('');
 }
-async function renderMemberList(){
-  const all=await dbGetAll('tasks');
-  const retros=await dbGetAll('retros');
-  const today=document.getElementById('input-date').value;
-  // Use MEMBERS definition for canonical list (not just submitted data)
-  const visibleNames=getAdminVisibleNames();
-  const colors=['#E8F2EC:#2D5A3D','#FDF0E3:#C4701A','#E8F0F8:#2A5A8A','#EEEDFE:#534AB7','#F5F4F0:#8A8880'];
-  const cont=document.getElementById('member-list-container');
-  if(!visibleNames.length){cont.innerHTML='<div style="color:var(--text-muted);font-size:13px">관리 대상 구성원이 없습니다.</div>';return;}
 
-  // Group by team for director
-  let html='';
-  if(CU.role==='director'){
-    const teams=['커리어1팀','커리어2팀','커리어3팀'];
-    teams.forEach(teamName=>{
-      const teamMembers=visibleNames.filter(n=>MEMBERS[n]&&MEMBERS[n].team===teamName);
-      if(!teamMembers.length)return;
-      html+=`<div style="font-size:11px;font-weight:500;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)">${teamName}</div>`;
-      teamMembers.forEach((name,i)=>{
-        html+=buildMemberCard(name,i,all,retros,today,colors);
-      });
-    });
+// ── 관리자: 구성원 현황 ───────────────────────────────────────────────────────
+function setMemberPeriod(type) {
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+  const fromEl = document.getElementById('member-from');
+  const toEl   = document.getElementById('member-to');
+  if (type === 'week') {
+    const day = today.getDay();
+    const mon = new Date(today); mon.setDate(today.getDate() - (day===0?6:day-1));
+    fromEl.value = mon.toISOString().split('T')[0];
+    toEl.value   = todayStr;
+  } else if (type === 'month') {
+    fromEl.value = todayStr.slice(0,7) + '-01';
+    toEl.value   = todayStr;
   } else {
-    visibleNames.forEach((name,i)=>{
-      html+=buildMemberCard(name,i,all,retros,today,colors);
-    });
+    fromEl.value = '';
+    toEl.value   = '';
   }
-  cont.innerHTML=html||'<div style="color:var(--text-muted);font-size:13px">데이터가 없습니다.</div>';
 }
 
-function buildMemberCard(name,i,all,retros,today,colors){
-  const [bg,fg]=colors[i%colors.length].split(':');
-  const mine=all.filter(e=>e.name===name);
-  const myRet=retros.filter(e=>e.name===name);
-  const subs=mine.flatMap(e=>(e.projects||[]).flatMap(p=>p.subtasks||[]));
-  const done=subs.filter(t=>t.status==='완료').length;
-  const rate=subs.length?Math.round(done/subs.length*100):0;
-  const dPer=subs.filter(t=>t.status==='딜레이-개인').length;
-  const avgSat=myRet.length?(myRet.reduce((s,e)=>s+Number(e.satisfaction),0)/myRet.length).toFixed(1):'—';
-  const submitted=mine.some(e=>e.date===today);
-  const memberInfo=MEMBERS[name]||{};
-  const roleLabel=memberInfo.role==='leader'?'팀장':memberInfo.role==='director'?'부장':'팀원';
-  const dlAlerts=[];
-  mine.forEach(e=>(e.projects||[]).forEach(p=>{
-    if(!p.deadline)return;
-    const dd=new Date(p.deadline);dd.setHours(0,0,0,0);
-    const td=new Date();td.setHours(0,0,0,0);
-    const diff=Math.round((dd-td)/86400000);
-    const allDone=(p.subtasks||[]).length>0&&(p.subtasks||[]).every(t=>t.status==='완료');
-    if(!allDone&&diff<=3) dlAlerts.push(`${p.name} D-${diff<=0?'초과':diff}`);
+async function renderMemberList() {
+  const all      = await dbGetAll('tasks');
+  const retros   = await dbGetAll('retros');
+  const todayStr = document.getElementById('input-date').value;
+  // 조회 기간 필터
+  const fromDate = (document.getElementById('member-from')||{}).value || '';
+  const toDate   = (document.getElementById('member-to')||{}).value   || '';
+  const visNames = getAdminVisibleNames();
+  const cont     = document.getElementById('member-list-container');
+  if (!visNames.length) { cont.innerHTML = '<div style="color:var(--text-muted);font-size:13px">관리 대상 구성원이 없습니다.</div>'; return; }
+
+  // 기간 필터 + 중복 제거된 최신 데이터
+  const filteredAll = (fromDate || toDate)
+    ? all.filter(e => (!fromDate || e.date >= fromDate) && (!toDate || e.date <= toDate))
+    : all;
+  const dedupedAll = Object.values(
+    filteredAll.reduce((acc, e) => {
+      const k = e.date + '__' + e.name;
+      if (!acc[k] || new Date(e.saved_at) > new Date(acc[k].saved_at)) acc[k] = e;
+      return acc;
+    }, {})
+  );
+  // 회고도 기간 필터
+  const filteredRetros = (fromDate || toDate)
+    ? retros.filter(e => (!fromDate || e.date >= fromDate) && (!toDate || e.date <= toDate))
+    : retros;
+
+  const colors = ['#E8F2EC:#2D5A3D','#FDF0E3:#C4701A','#E8F0F8:#2A5A8A','#EEEDFE:#534AB7','#F5F4F0:#8A8880'];
+  let html = '';
+
+  if (CU.role === 'director') {
+    ['커리어1팀','커리어2팀','커리어3팀'].forEach(teamName => {
+      const members = visNames.filter(n => MEMBERS[n] && MEMBERS[n].team === teamName);
+      if (!members.length) return;
+      html += `<div style="font-size:11px;font-weight:500;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)">${teamName}</div>`;
+      members.forEach((name, i) => { html += buildMemberCard(name, i, dedupedAll, filteredRetros, todayStr, colors); });
+    });
+  } else {
+    visNames.forEach((name, i) => { html += buildMemberCard(name, i, dedupedAll, filteredRetros, todayStr, colors); });
+  }
+  cont.innerHTML = html || '<div style="color:var(--text-muted);font-size:13px">데이터가 없습니다.</div>';
+}
+
+function buildMemberCard(name, i, all, retros, today, colors) {
+  const [bg,fg]  = colors[i % colors.length].split(':');
+  const mine     = all.filter(e => e.name === name);
+  const myRet    = retros.filter(e => e.name === name);
+  const subs     = mine.flatMap(e => (e.projects||[]).flatMap(p => p.subtasks||[]));
+  const done     = subs.filter(t => t.status === '완료').length;
+  // 세부업무 없으면 프로젝트 상태 기준으로 완료율 계산
+  let rate = null;
+  if (subs.length) {
+    rate = Math.round(done / subs.length * 100);
+  } else {
+    const allProjs = mine.flatMap(e => e.projects||[]);
+    if (allProjs.length) {
+      const doneProjs = allProjs.filter(p => (p.proj_status||'미완료') === '완료').length;
+      rate = Math.round(doneProjs / allProjs.length * 100);
+    }
+  }
+  const dPer = subs.filter(t => t.status === '딜레이-개인').length
+             + mine.flatMap(e => e.projects||[]).filter(p => (p.proj_status||'') === '딜레이').length;
+  const avgSat   = myRet.length ? (myRet.reduce((s,e)=>s+Number(e.satisfaction),0)/myRet.length).toFixed(1) : null;
+  const submitted= mine.some(e => e.date === today);
+  const info     = MEMBERS[name] || {};
+  const roleLabel= info.role === 'leader' ? '팀장' : info.role === 'director' ? '부장' : '팀원';
+
+  // 마감 임박 알림
+  const dlAlerts = [];
+  mine.forEach(e => (e.projects||[]).forEach(p => {
+    if (!p.deadline || (p.proj_status||'미완료') === '완료') return;
+    const dd = new Date(p.deadline); dd.setHours(0,0,0,0);
+    const td = new Date(); td.setHours(0,0,0,0);
+    const diff = Math.round((dd-td)/86400000);
+    if (diff <= 3) dlAlerts.push(p.name + (diff<=0?' D-초과':' D-'+diff));
   }));
+
   return `<div class="member-card">
     <div class="member-card-header">
       <div class="avatar" style="background:${bg};color:${fg};width:36px;height:36px;font-size:13px;font-weight:700">${name.charAt(0)}</div>
       <div class="member-meta">
         <div class="member-name-txt">${name} <span style="font-size:11px;font-weight:400;color:var(--text-muted)">${roleLabel}</span></div>
-        <div class="member-tag">${memberInfo.team||'—'}</div>
+        <div class="member-tag">${info.team||'—'}</div>
       </div>
       <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
-        ${submitted?'<span class="badge b-done">오늘 제출</span>':'<span class="badge b-notstart">오늘 미제출</span>'}
-        ${dlAlerts.map(a=>'<span class="badge b-danger" style="font-size:10px">⚠ '+a+'</span>').join('')}
+        ${submitted ? '<span class="badge b-done">오늘 제출</span>' : '<span class="badge b-notstart">오늘 미제출</span>'}
+        ${dlAlerts.map(a => '<span class="badge b-danger" style="font-size:10px">⚠ '+a+'</span>').join('')}
       </div>
     </div>
-    <div class="progress-row"><span class="progress-label">누적 완료율</span><div class="progress-bar"><div class="progress-fill" style="width:${rate}%;background:var(--accent-mid)"></div></div><span class="progress-num" style="color:var(--accent)">${subs.length?rate+'%':'—'}</span></div>
-    <div class="progress-row"><span class="progress-label">평균 만족도</span><div class="progress-bar"><div class="progress-fill" style="width:${avgSat!=='—'?avgSat*10:0}%;background:#534AB7"></div></div><span class="progress-num">${avgSat!=='—'?avgSat+'/10':'—'}</span></div>
+    <div class="progress-row">
+      <span class="progress-label">누적 완료율</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:${rate!==null?rate:0}%;background:var(--accent-mid)"></div></div>
+      <span class="progress-num" style="color:var(--accent)">${rate!==null?rate+'%':'—'}</span>
+    </div>
+    <div class="progress-row">
+      <span class="progress-label">평균 만족도</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:${avgSat!==null?avgSat*10:0}%;background:#534AB7"></div></div>
+      <span class="progress-num">${avgSat!==null?avgSat+'/10':'—'}</span>
+    </div>
     <div class="detail-row">
       <span class="badge b-notstart">기록 ${mine.length}일</span>
       <span class="badge ${dPer>2?'b-delay-per':'b-done'}">개인딜레이 ${dPer}건${dPer>2?' ⚠':''}</span>
@@ -1673,48 +1837,54 @@ function buildMemberCard(name,i,all,retros,today,colors){
     </div>
   </div>`;
 }
-// ── Member Report Viewer (replaces PDF upload) ──────────────────────────────
-async function initMemberReportViewer(){
-  // Populate member select from MEMBERS definition
-  const sel=document.getElementById('view-member-sel');
-  if(!sel)return;
-  const visNames=getAdminVisibleNames();
-  sel.innerHTML='<option value="">— 선택 —</option>'+visNames.map(n=>`<option value="${n}">${n}</option>`).join('');
-  // Default to today
-  const dateEl=document.getElementById('view-report-date');
-  if(dateEl&&!dateEl.value) dateEl.value=new Date().toISOString().split('T')[0];
+
+// ── 관리자: 구성원 리포트 조회 ────────────────────────────────────────────────
+async function initMemberReportViewer() {
+  const sel = document.getElementById('view-member-sel');
+  if (!sel) return;
+  const names = getAdminVisibleNames();
+  sel.innerHTML = '<option value="">— 선택 —</option>' + names.map(n => `<option value="${n}">${n}</option>`).join('');
+  const dateEl = document.getElementById('view-report-date');
+  if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().split('T')[0];
 }
 
-async function loadMemberReport(){
-  const memberName=document.getElementById('view-member-sel').value;
-  const date=document.getElementById('view-report-date').value;
-  const cont=document.getElementById('member-report-view');
-  const pdfBtn=document.getElementById('member-report-pdf-btn');
-  if(!memberName||!date){
-    cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:16px 0;text-align:center">구성원과 날짜를 선택해 주세요.</div>';
-    if(pdfBtn)pdfBtn.style.display='none';
+async function viewMemberReport(date, name) {
+  showPage('upload', null);
+  document.getElementById('view-report-date').value = date;
+  document.getElementById('view-member-sel').value  = name;
+  await loadMemberReport();
+}
+
+async function loadMemberReport() {
+  const memberName = document.getElementById('view-member-sel').value;
+  const date       = document.getElementById('view-report-date').value;
+  const cont       = document.getElementById('member-report-view');
+  const pdfBtn     = document.getElementById('member-report-pdf-btn');
+  if (!memberName || !date) {
+    cont.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:16px 0;text-align:center">구성원과 날짜를 선택해 주세요.</div>';
+    if (pdfBtn) pdfBtn.style.display = 'none';
     return;
   }
-  const taskEntry=await dbGetDoc('tasks',date+'__'+eKey(memberName));
-  const retroEntry=await dbGetDoc('retros',date+'__'+eKey(memberName));
-  const feedbacks=(await dbGetAll('feedbacks')).filter(f=>f.to===memberName&&f.date===date);
-
-  if(!taskEntry){
-    cont.innerHTML=`<div style="color:var(--text-muted);font-size:13px;padding:16px 0;text-align:center">${memberName}님의 ${date} 데이터가 없습니다.</div>`;
-    if(pdfBtn)pdfBtn.style.display='none';
+  const taskEntry  = await dbGetDoc('tasks',  date + '__' + eKey(memberName));
+  const retroEntry = await dbGetDoc('retros', date + '__' + eKey(memberName));
+  const feedbacks  = (await dbGetAll('feedbacks')).filter(f => f.to === memberName && f.date === date);
+  if (!taskEntry) {
+    cont.innerHTML = `<div style="color:var(--text-muted);font-size:13px;padding:16px 0;text-align:center">${memberName}님의 ${date} 데이터가 없습니다.</div>`;
+    if (pdfBtn) pdfBtn.style.display = 'none';
     return;
   }
-  const projects=taskEntry.projects||[];
-  const allSubs=projects.flatMap(p=>p.subtasks||[]);
-  const total=allSubs.length, done=allSubs.filter(t=>t.status==='완료').length;
-  const dPer=allSubs.filter(t=>t.status==='딜레이-개인').length;
-  const dExt=allSubs.filter(t=>t.status==='딜레이-외부').length;
-  const totalMin=allSubs.reduce((s,t)=>{const m=parseInt(t.duration);return s+(isNaN(m)?0:m);},0);
-  const r=retroEntry||{};
-  const STATUS_B={'시작전':'b-notstart','진행중':'b-progress','완료':'b-done','딜레이-외부':'b-delay-ext','딜레이-개인':'b-delay-per'};
-  const STATUS_L={'시작전':'시작전','진행중':'진행중','완료':'완료','딜레이-외부':'딜레이(외부)','딜레이-개인':'딜레이(개인)'};
+  const projects = taskEntry.projects || [];
+  const allSubs  = projects.flatMap(p => p.subtasks||[]);
+  const total    = allSubs.length;
+  const done     = allSubs.filter(t => t.status === '완료').length;
+  const dPer     = allSubs.filter(t => t.status === '딜레이-개인').length;
+  const dExt     = allSubs.filter(t => t.status === '딜레이-외부').length;
+  const totalMin = allSubs.reduce((s,t) => { const m=parseInt(t.duration); return s+(isNaN(m)?0:m); }, 0);
+  const r = retroEntry || {};
+  const SB = {'시작전':'b-notstart','진행중':'b-progress','완료':'b-done','딜레이-외부':'b-delay-ext','딜레이-개인':'b-delay-per'};
+  const SL = {'시작전':'시작전','진행중':'진행중','완료':'완료','딜레이-외부':'딜레이(외부)','딜레이-개인':'딜레이(개인)'};
 
-  let html=`<div class="report-block" id="member-report-content">
+  let html = `<div class="report-block" id="member-report-content">
     <div class="report-header">
       <div class="report-org">커리어사업부 · CAREER DIVISION</div>
       <div class="report-title">일일 업무 생산성 리포트</div>
@@ -1732,241 +1902,199 @@ async function loadMemberReport(){
     </div>
     <div class="report-section">
       <div class="report-section-title">프로젝트별 상세</div>
-      <table class="rt"><thead><tr><th>프로젝트 / 세부업무</th><th>카테고리</th><th>데드라인</th><th>프로젝트 상태</th><th>소요</th><th>상태</th><th>딜레이 사유</th><th>딜레이 목표기한</th></tr></thead><tbody>`;
-  projects.forEach(p=>{
-    const ps=p.subtasks||[], pd=ps.filter(t=>t.status==='완료').length;
-    const pStatusBadge={'완료':'b-done','부분완료':'b-delay-per','미완료':'b-notstart','딜레이':'b-danger'}[p.proj_status||'미완료']||'b-notstart';
-    html+=`<tr class="rp-row"><td colspan="8">📁 ${p.name||'(이름 없음)'} <span style="font-size:11px;color:var(--text-muted);font-weight:400">${p.category}</span>
-      <span class="badge ${pStatusBadge}" style="font-size:10px;margin-left:6px">${p.proj_status||'미완료'}</span>
-${p.proj_status==='딜레이'&&p.proj_delay_deadline?' <span style="font-size:10px;color:var(--danger);margin-left:4px">목표기한: '+p.proj_delay_deadline+'</span>':''}
-${p.proj_delay_reason?' <span style="font-size:10px;color:var(--text-muted);margin-left:4px">사유: '+p.proj_delay_reason+'</span>':''}
-      <span style="float:right;font-size:11px;color:var(--text-muted);font-weight:400">${pd}/${ps.length} 완료</span></td></tr>`;
-    ps.forEach(t=>{
-      html+=`<tr class="rs-row"><td>↳ ${t.name}</td><td><span class="badge b-pending" style="font-size:10px">${p.category}</span></td><td style="font-size:11px;color:var(--text-muted)">${p.deadline||'—'}</td><td>—</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px">${t.duration||'—'}</td><td><span class="badge ${STATUS_B[t.status]||'b-notstart'}" style="font-size:10px">${STATUS_L[t.status]||t.status}</span></td><td style="font-size:11px;color:var(--text-muted)">${t.delay_reason||'—'}</td><td style="font-size:11px;color:var(--warn)">${t.delay_deadline||'—'}</td></tr>`;
+      <table class="rt"><thead><tr>
+        <th>프로젝트 / 세부업무</th><th>카테고리</th><th>데드라인</th><th>프로젝트 상태</th>
+        <th>소요</th><th>상태</th><th>딜레이 사유</th><th>딜레이 목표기한</th>
+      </tr></thead><tbody>`;
+  projects.forEach(p => {
+    const ps  = p.subtasks||[];
+    const pd  = ps.filter(t=>t.status==='완료').length;
+    const pSB = {'완료':'b-done','부분완료':'b-delay-per','미완료':'b-notstart','딜레이':'b-danger'}[p.proj_status||'미완료']||'b-notstart';
+    const dlDl = (p.proj_status==='딜레이'&&p.proj_delay_deadline) ? ' <span style="font-size:10px;color:var(--danger)">목표기한: '+p.proj_delay_deadline+'</span>' : '';
+    const dlRs = p.proj_delay_reason ? ' <span style="font-size:10px;color:var(--text-muted)">사유: '+p.proj_delay_reason+'</span>' : '';
+    html += `<tr class="rp-row"><td colspan="8">📁 ${p.name||''}
+      <span style="font-size:11px;color:var(--text-muted);font-weight:400">${p.category}</span>
+      <span class="badge ${pSB}" style="font-size:10px;margin-left:5px">${p.proj_status||'미완료'}</span>
+      ${dlDl}${dlRs}
+      <span style="float:right;font-size:11px;color:var(--text-muted);font-weight:400">${pd}/${ps.length} 완료</span>
+    </td></tr>`;
+    ps.forEach(t => {
+      html += `<tr class="rs-row">
+        <td>↳ ${t.name}</td>
+        <td><span class="badge b-pending" style="font-size:10px">${p.category}</span></td>
+        <td style="font-size:11px;color:var(--text-muted)">${p.deadline||'—'}</td>
+        <td>—</td>
+        <td style="font-family:'IBM Plex Mono',monospace;font-size:11px">${t.duration||'—'}</td>
+        <td><span class="badge ${SB[t.status]||'b-notstart'}" style="font-size:10px">${SL[t.status]||t.status}</span></td>
+        <td style="font-size:11px;color:var(--text-muted)">${t.delay_reason||'—'}</td>
+        <td style="font-size:11px;color:var(--warn)">${t.delay_deadline||'—'}</td>
+      </tr>`;
     });
   });
-  html+=`</tbody></table></div>`;
-  html+=`<div class="report-section">
-    <div class="report-section-title">데일리 회고</div>
-    <div style="margin-bottom:8px;font-size:13px">생산성 만족도 <strong style="font-family:'IBM Plex Mono',monospace;font-size:16px">${r.satisfaction||'—'}</strong> /10</div>
-    <div class="kpt-grid">
-      <div class="kpt-block"><div class="kpt-label kpt-k">Keep</div><div class="kpt-text">${r.keep||'—'}</div></div>
-      <div class="kpt-block"><div class="kpt-label kpt-p">Problem</div><div class="kpt-text">${r.problem||'—'}</div></div>
-      <div class="kpt-block"><div class="kpt-label kpt-t">Try</div><div class="kpt-text">${r.try_text||'—'}</div></div>
+  html += `</tbody></table></div>
+    <div class="report-section">
+      <div class="report-section-title">데일리 회고</div>
+      <div style="margin-bottom:8px;font-size:13px">생산성 만족도
+        <strong style="font-family:'IBM Plex Mono',monospace;font-size:16px">${r.satisfaction||'—'}</strong> /10</div>
+      <div class="kpt-grid">
+        <div class="kpt-block"><div class="kpt-label kpt-k">Keep</div><div class="kpt-text">${r.keep||'—'}</div></div>
+        <div class="kpt-block"><div class="kpt-label kpt-p">Problem</div><div class="kpt-text">${r.problem||'—'}</div></div>
+        <div class="kpt-block"><div class="kpt-label kpt-t">Try</div><div class="kpt-text">${r.try_text||'—'}</div></div>
+      </div>
+      ${r.memo?'<div style="margin-top:8px;font-size:12px;color:var(--text-muted)">메모: '+r.memo+'</div>':''}
     </div>
-${r.memo?'<div style="margin-top:8px;font-size:12px;color:var(--text-muted)">메모: '+r.memo+'</div>':''}
-  </div>
-  <div class="report-section"><div class="report-section-title">내일 예정</div><div style="font-size:13px;color:var(--text-muted);line-height:1.7">${r.tomorrow||'—'}</div></div>`;
-  // Feedbacks from admin
-  if(feedbacks.length){
-    html+=`<div class="report-section"><div class="report-section-title">관리자 피드백</div>`;
-    feedbacks.forEach(f=>{
-      html+=`<div class="feedback-box" style="margin-bottom:8px"><div class="feedback-title">💬 ${f.type} — from ${f.from}</div><div class="feedback-msg">${f.content}</div><div class="feedback-meta">${f.sent_at?f.sent_at.slice(0,16).replace('T',' '):''}</div></div>`;
+    <div class="report-section"><div class="report-section-title">내일 예정</div>
+      <div style="font-size:13px;color:var(--text-muted);line-height:1.7">${r.tomorrow||'—'}</div>
+    </div>`;
+  if (feedbacks.length) {
+    html += '<div class="report-section"><div class="report-section-title">관리자 피드백</div>';
+    feedbacks.forEach(f => {
+      html += `<div class="feedback-box" style="margin-bottom:8px">
+        <div class="feedback-title">💬 ${f.type} — from ${f.from}</div>
+        <div class="feedback-msg">${f.content}</div>
+        <div class="feedback-meta">${f.sent_at?f.sent_at.slice(0,16).replace('T',' '):''}</div>
+      </div>`;
     });
-    html+='</div>';
+    html += '</div>';
   }
-  html+='</div>'; // close report-block
-  cont.innerHTML=html;
-  if(pdfBtn)pdfBtn.style.display='flex';
+  html += '</div>';
+  cont.innerHTML = html;
+  if (pdfBtn) pdfBtn.style.display = 'flex';
 }
 
-function downloadMemberReportPDF(){
-  const content=document.getElementById('member-report-content');
-  if(!content){showToast('리포트를 먼저 조회해 주세요');return;}
+function downloadMemberReportPDF() {
+  const content = document.getElementById('member-report-content');
+  if (!content) { showToast('리포트를 먼저 조회해 주세요'); return; }
   openPrintWin(content.innerHTML);
   showToast('PDF 출력 창이 열렸습니다');
 }
 
-// ═══════════════════════════════════
-//  NAV
-// ═══════════════════════════════════
-function showPage(id, btn){
-  document.querySelectorAll('.page-section').forEach(p=>p.classList.remove('visible'));
-  document.getElementById('page-'+id).classList.add('visible');
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-  if(id==='input') loadTodayIntoForm().then(()=>{ if(document.getElementById('project-list').children.length===0) addProject(); });
-  if(id==='report') generateReport();
-  if(id==='retro') loadRetroSummary();
-  if(id==='myhistory') renderMyHistory();
-  if(id==='weekly'){ setDefaultWeek(); }
-  if(id==='dashboard') renderAdminDashboard();
-  if(id==='members') renderMemberList();
-  if(id==='upload'){ initMemberReportViewer(); }
-  if(id==='feedback') renderSentFeedbacks();
-  if(id==='inbox') renderInbox();
-}
-
-// ═══════════════════════════════════
-//  할리갈리 양식 다운로드
-// ═══════════════════════════════════
-async function downloadHallygalli(type){
-  const name = (document.getElementById('sel-name')||{}).value || CU.name;
-  const today = new Date();
-  const todayStr = today.toISOString().split('T')[0];
-
-  if(type==='daily'){
-    // 오늘 업무 데이터 가져오기
-    const date = document.getElementById('input-date').value;
-    const taskEntry = await dbGetDoc('tasks', date+'__'+eKey(name));
-    const projects = taskEntry ? taskEntry.projects : getProjectsData();
-
-    // 텍스트 생성: * + 팀명 / #사업운영 or #사업제안 / - 프로젝트명
-    let text = buildHallygalliText(name, projects);
-    downloadTextFile(text, '할리갈리_'+name+'_'+date+'.txt');
-
+// ── 할리갈리 양식 ─────────────────────────────────────────────────────────────
+async function downloadHallygalli(type) {
+  const name    = CU.name;
+  const todayStr = new Date().toISOString().split('T')[0];
+  if (type === 'daily') {
+    const date      = document.getElementById('input-date').value;
+    const taskEntry = await dbGetDoc('tasks', date + '__' + eKey(name));
+    const projects  = taskEntry ? taskEntry.projects : getProjectsData();
+    const text      = buildHallygalliText(name, projects);
+    downloadTextFile(text, '할리갈리_' + name + '_' + date + '.txt');
   } else {
-    // 주간: 이번 주 월~금 데이터
     const ws = document.getElementById('week-start').value;
     const we = document.getElementById('week-end').value;
-    if(!ws||!we){showToast('주간 리포트를 먼저 조회해 주세요');return;}
-
-    const all = await dbGetAll('tasks');
-    const mine = all.filter(e=>e.name===name&&e.date>=ws&&e.date<=we)
-                    .sort((a,b)=>a.date.localeCompare(b.date));
-
-    if(!mine.length){showToast('해당 기간 데이터가 없습니다');return;}
-
-    // 지난주 한 일 / 이번주 할 일 구분
-    // 지난주 = ws~we 중 앞 3일(월화수), 이번주 할 일 = 오늘 기준 미완료 프로젝트
-    // 실제로는: 저장된 모든 날짜의 프로젝트를 "지난주 한 일"로, 오늘 기준 미완료를 "이번주 할 일"로
-    const doneProjects = collectWeeklyProjects(mine);
-    const todayEntry = await dbGetDoc('tasks', todayStr+'__'+eKey(name));
+    if (!ws || !we) { showToast('주간 리포트를 먼저 조회해 주세요'); return; }
+    const all   = await dbGetAll('tasks');
+    const mine  = all.filter(e => e.name === name && e.date >= ws && e.date <= we)
+                     .sort((a,b) => a.date.localeCompare(b.date));
+    const todayEntry = await dbGetDoc('tasks', todayStr + '__' + eKey(name));
     const todayProjs = todayEntry ? todayEntry.projects : getProjectsData();
-    const todoProjs = todayProjs.filter(p=>(p.proj_status||'미완료')!=='완료');
-
-    let text = name+'\n';
-
-    text += '*커리어\n\n';
-
-
-    text += buildCategoryBlock(doneProjects, '지난주 한 일');
+    const doneProjs  = collectWeeklyProjects(mine);
+    const todoProjs  = todayProjs.filter(p => (p.proj_status||'미완료') !== '완료');
+    let text = name + '\n*커리어\n\n';
+    text += buildCategoryBlock(doneProjs, '지난주 한 일');
     text += '\n';
-
-
     text += buildCategoryBlock(todoProjs, '이번주 할 일');
-    downloadTextFile(text, '주간할리갈리_'+name+'_'+ws+'~'+we+'.txt');
+    downloadTextFile(text, '주간할리갈리_' + name + '_' + ws + '~' + we + '.txt');
   }
   showToast('📋 할리갈리 양식이 다운로드되었습니다');
 }
-
-function buildHallygalliText(name, projects){
-  // 카테고리별로 그룹핑
+function buildHallygalliText(name, projects) {
   const groups = {};
-  projects.forEach(p=>{
-    const cat = p.category||'기타';
-    if(!groups[cat]) groups[cat]=[];
+  projects.forEach(p => {
+    const cat = p.category || '기타';
+    if (!groups[cat]) groups[cat] = [];
     groups[cat].push(p.name);
   });
-
-  let text = name+'\n';
-
-  text += '*커리어\n\n';
-
-
-
-  // 사업운영, 사업제안, 기타 순서
-  const catOrder = ['사업운영','사업제안','기타'];
-  catOrder.forEach(cat=>{
-    if(!groups[cat]||!groups[cat].length) return;
-    const catPrefix = (cat==='기타') ? '*' : '#';
-    text += catPrefix+cat+'\n';
-
-    groups[cat].forEach(projName=>{
-      if(projName) text += '- '+projName+'\n';
-
-    });
+  let text = name + '\n*커리어\n\n';
+  ['사업운영','사업제안','기타'].forEach(cat => {
+    if (!groups[cat] || !groups[cat].length) return;
+    const prefix = cat === '기타' ? '*' : '#';
+    text += prefix + cat + '\n';
+    groups[cat].forEach(n => { if (n) text += '- ' + n + '\n'; });
     text += '\n';
-
   });
   return text.trim();
 }
-
-function collectWeeklyProjects(entries){
-  // 주중 모든 프로젝트 중복 제거해서 모으기
-  const seen = new Set();
-  const result = [];
-  entries.forEach(e=>{
-    (e.projects||[]).forEach(p=>{
-      if(p.name&&!seen.has(p.name)){
-        seen.add(p.name);
-        result.push(p);
-      }
+function collectWeeklyProjects(entries) {
+  const seen = new Set(), result = [];
+  entries.forEach(e => {
+    (e.projects||[]).forEach(p => {
+      if (p.name && !seen.has(p.name)) { seen.add(p.name); result.push(p); }
     });
   });
   return result;
 }
-
-function buildCategoryBlock(projects, label){
+function buildCategoryBlock(projects, label) {
   const groups = {};
-  projects.forEach(p=>{
-    const cat = p.category||'기타';
-    if(!groups[cat]) groups[cat]=[];
-    if(p.name) groups[cat].push(p.name);
+  projects.forEach(p => {
+    const cat = p.category || '기타';
+    if (!groups[cat]) groups[cat] = [];
+    if (p.name) groups[cat].push(p.name);
   });
-
-  let text = '';
-  const catOrder = ['사업운영','사업제안','기타'];
-  let hasContent = false;
-  catOrder.forEach(cat=>{
-    if(!groups[cat]||!groups[cat].length) return;
-    if(!hasContent){ text += '【'+label+'】\n'; hasContent=true; }
-
-    const catPrefix = (cat==='기타') ? '*' : '#';
-    text += catPrefix+cat+'\n';
-
-    groups[cat].forEach(projName=>{
-      text += '- '+projName+'\n';
-
-    });
+  let text = '', hasContent = false;
+  ['사업운영','사업제안','기타'].forEach(cat => {
+    if (!groups[cat] || !groups[cat].length) return;
+    if (!hasContent) { text += '【' + label + '】\n'; hasContent = true; }
+    const prefix = cat === '기타' ? '*' : '#';
+    text += prefix + cat + '\n';
+    groups[cat].forEach(n => { text += '- ' + n + '\n'; });
     text += '\n';
-
   });
   return text;
 }
-
-function downloadTextFile(text, filename){
-  const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href=url; a.download=filename;
+function downloadTextFile(text, filename) {
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = filename;
   document.body.appendChild(a); a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
 
+// ── 네비게이션 ────────────────────────────────────────────────────────────────
+function showPage(id, btn) {
+  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('visible'));
+  const target = document.getElementById('page-' + id);
+  if (target) target.classList.add('visible');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (btn) btn.classList.add('active');
 
-function changeDateBy(days){
-  const el=document.getElementById('input-date');
-  if(!el)return;
-  const d=new Date(el.value||new Date().toISOString().split('T')[0]);
-  d.setDate(d.getDate()+days);
-  el.value=d.toISOString().split('T')[0];
-  // Reload data for the new date
-  document.getElementById('project-list').innerHTML='';
-  projCount=0; subCount=0;
-  loadTodayIntoForm().then(()=>{
-    if(document.getElementById('project-list').children.length===0) addProject();
-    showToast(el.value+' 업무를 불러왔습니다');
-  });
+  if (id === 'input') {
+    loadTodayIntoForm().then(() => {
+      if (document.getElementById('project-list').children.length === 0) addProject();
+    });
+  }
+  if (id === 'report')    generateReport();
+  if (id === 'retro')     loadRetroSummary();
+  if (id === 'myhistory') renderMyHistory();
+  if (id === 'weekly')    setDefaultWeek();
+  if (id === 'dashboard') renderAdminDashboard();
+  if (id === 'members') {
+    // 기본값: 이번 달
+    const fromEl = document.getElementById('member-from');
+    const toEl   = document.getElementById('member-to');
+    if (fromEl && !fromEl.value) setMemberPeriod('month');
+    renderMemberList();
+  }
+  if (id === 'upload')    initMemberReportViewer();
+  if (id === 'feedback')  renderSentFeedbacks();
+  if (id === 'inbox')     renderInbox();
 }
 
-function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
 
-// ── 모든 함수/변수 선언 후 실행 ──
-(function init(){
-  // 버튼 바인딩
-  var apb = document.getElementById('add-project-btn');
-  if(apb) apb.addEventListener('click', function(){ addProject(); });
-  // 세션 자동복원 제거 - 항상 로그인 화면부터 시작
-  // (로그인 화면은 HTML 기본값으로 표시됨)
+// ── 초기화 ────────────────────────────────────────────────────────────────────
+(function init() {
+  const apb = document.getElementById('add-project-btn');
+  if (apb) apb.addEventListener('click', () => addProject());
+  // 세션 자동 복원 없음 — 항상 로그인 화면부터 시작
 })();
 
-// Fix: bind add-project button after DOM is ready
-document.addEventListener('DOMContentLoaded', function(){
-  var apb=document.getElementById('add-project-btn');
-  if(apb) apb.addEventListener('click', function(){ addProject(); });
-});
 </script>
 
 
