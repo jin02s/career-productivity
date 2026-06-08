@@ -149,9 +149,6 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csv
 
 /* Delay extra fields */
 .delay-fields{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:4px 6px;background:var(--warn-light);border-radius:5px;margin-top:3px}
-.lunch-deduct{display:inline-flex;align-items:center;gap:4px;margin-left:6px;font-size:11px;color:var(--text-muted)}
-.lunch-deduct input{width:44px;border:1px solid var(--border);border-radius:4px;padding:2px 5px;font-size:11px;text-align:center;font-family:'IBM Plex Mono',monospace}
-.dur-net{font-size:10px;color:var(--text-light);margin-top:1px;text-align:center}
 .delay-fields input{border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:11px;background:var(--surface);outline:none;color:var(--text)}
 .delay-fields label{font-size:10px;color:var(--warn);white-space:nowrap}
 
@@ -334,7 +331,6 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
       구성원 리포트
     </button>
-      <button class="nav-item" onclick="openFirebaseModal()" id="firebase-nav-btn" style="color:rgba(255,255,255,.4)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"></path></svg>Firebase 설정
     </button>
   </div>
@@ -631,8 +627,9 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
     <div style="font-size:12px;color:var(--text-muted);line-height:1.7;margin-bottom:12px;background:var(--surface2);padding:9px 11px;border-radius:6px">
       <strong>PIN 변경:</strong> Firestore → 컬렉션 <code>config</code> → 문서 <code>pins</code> → 이름을 필드로, PIN을 값으로 입력<br>
       예: 필드 <code>송진영</code> = <code>새PIN번호</code><br><br>
-      <strong>초기 PIN 목록:</strong> Firestore 연결 후 반드시 변경하세요.<br>
-      초기 PIN은 부장(송진영)에게 문의하세요.
+      <strong>초기 PIN 목록 (변경 권장):</strong><br>
+      송진영(부장) 1000 · 임혜진 2100 · 박현지 3110 · 전율리 3120<br>
+      정은지 2200 · 정현정 3210 · 김승현 2300 · 유화경 3310
     </div>
     <div style="display:flex;gap:8px;justify-content:flex-end">
       <button class="btn" onclick="closeFirebaseModal()">닫기</button>
@@ -643,70 +640,13 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
 
 <div class="toast" id="toast">✓ 피드백이 발송되었습니다</div>
 
-<script>// ═══════════════════════════════════════════════════════════════════════
-//  커리어사업부 생산성 관리 시스템 — JS (완전 재작성 v3)
-// ═══════════════════════════════════════════════════════════════════════
+<script>// ═══════════════════════════════════════════════════════
+//  커리어사업부 생산성 관리 시스템 v4 (Clean)
+// ═══════════════════════════════════════════════════════
 
-// ── Firebase / DB ────────────────────────────────────────────────────────────
+// ── Firebase ─────────────────────────────────────────────────────────────────
 let db = null, useFirebase = false;
 
-function initFirebase(cfg) {
-  try {
-    if (firebase.apps.length) firebase.apps.forEach(a => a.delete());
-    firebase.initializeApp(cfg);
-    db = firebase.firestore();
-    useFirebase = true;
-    updFbStatus(true);
-    return true;
-  } catch(e) { showToast('Firebase 오류: ' + e.message); return false; }
-}
-function updFbStatus(ok) {
-  const el = document.getElementById('fb-status');
-  const tx = document.getElementById('fb-status-text');
-  if (!el) return;
-  el.className = 'fb-status ' + (ok ? 'ok' : 'warn');
-  tx.textContent = ok ? '연결됨 — Firestore 실시간 동기화 중' : '미연결 — 로컬 저장 사용 중';
-}
-
-async function dbSet(col, id, data) {
-  if (useFirebase && db) {
-    await db.collection(col).doc(id).set(data, { merge: true });
-  } else {
-    const a = JSON.parse(localStorage.getItem(col) || '{}');
-    a[id] = data;
-    localStorage.setItem(col, JSON.stringify(a));
-  }
-}
-async function dbGetAll(col) {
-  if (useFirebase && db) {
-    const s = await db.collection(col).get();
-    return s.docs.map(d => ({ id: d.id, ...d.data() }));
-  } else {
-    const a = JSON.parse(localStorage.getItem(col) || '{}');
-    return Object.entries(a).map(([id, v]) => ({ id, ...v }));
-  }
-}
-async function dbGetDoc(col, id) {
-  if (useFirebase && db) {
-    const s = await db.collection(col).doc(id).get();
-    return s.exists ? s.data() : null;
-  } else {
-    const a = JSON.parse(localStorage.getItem(col) || '{}');
-    return a[id] || null;
-  }
-}
-async function dbDelete(col, id) {
-  if (useFirebase && db) {
-    await db.collection(col).doc(id).delete();
-  } else {
-    const a = JSON.parse(localStorage.getItem(col) || '{}');
-    delete a[id];
-    localStorage.setItem(col, JSON.stringify(a));
-  }
-}
-
-// ── Firebase 설정 저장 자동 로드 ─────────────────────────────────────────────
-// Firebase Config 자동 연결 (팀원 설정 불필요)
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyCb1k-OV6g50WZxJg_hR-uLlafxSp0el-s",
   authDomain: "work-management-9c44b.firebaseapp.com",
@@ -715,27 +655,68 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "1037886574318",
   appId: "1:1037886574318:web:c7a63f7a45e2ef9f64edff"
 };
-(function() {
-  // 코드에 Config 하드코딩 — 팀원이 별도 설정 없이 자동 연결
-  initFirebase(FIREBASE_CONFIG);
-  // localStorage에도 저장해서 모달에서도 확인 가능
-  try { localStorage.setItem('fb_config', JSON.stringify(FIREBASE_CONFIG)); } catch(e) {}
-})();
+
+function initFirebase(cfg) {
+  try {
+    if (firebase.apps.length) firebase.apps.forEach(a => a.delete());
+    firebase.initializeApp(cfg);
+    db = firebase.firestore();
+    useFirebase = true;
+    return true;
+  } catch(e) { console.error('Firebase init error:', e); return false; }
+}
+
+// 자동 연결
+(function() { initFirebase(FIREBASE_CONFIG); })();
+
 function openFirebaseModal() {
-  const s = localStorage.getItem('fb_config');
-  if (s) document.getElementById('fb-config-input').value = s;
   updFbStatus(useFirebase);
   document.getElementById('firebase-overlay').classList.add('open');
 }
-function closeFirebaseModal() { document.getElementById('firebase-overlay').classList.remove('open'); }
+function closeFirebaseModal() {
+  document.getElementById('firebase-overlay').classList.remove('open');
+}
+function updFbStatus(ok) {
+  const el = document.getElementById('fb-status');
+  const tx = document.getElementById('fb-status-text');
+  if (!el) return;
+  el.className = 'fb-status ' + (ok ? 'ok' : 'warn');
+  tx.textContent = ok ? '연결됨 — Firestore 실시간 동기화 중' : '미연결 — 로컬 저장 사용 중';
+}
 function applyFirebaseConfig() {
   const raw = document.getElementById('fb-config-input').value.trim();
   try {
     const cfg = JSON.parse(raw);
     if (!cfg.apiKey || !cfg.projectId) throw new Error('필수 항목 누락');
-    localStorage.setItem('fb_config', raw);
     if (initFirebase(cfg)) { closeFirebaseModal(); showToast('✓ Firebase 연결 성공!'); }
   } catch(e) { showToast('JSON 오류: ' + e.message); }
+}
+
+// ── DB helpers ───────────────────────────────────────────────────────────────
+async function dbSet(col, id, data) {
+  if (useFirebase && db) {
+    await db.collection(col).doc(id).set(data, { merge: true });
+  } else {
+    const store = JSON.parse(localStorage.getItem('ldb_' + col) || '{}');
+    store[id] = data;
+    localStorage.setItem('ldb_' + col, JSON.stringify(store));
+  }
+}
+async function dbGetAll(col) {
+  if (useFirebase && db) {
+    const snap = await db.collection(col).get();
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  }
+  const store = JSON.parse(localStorage.getItem('ldb_' + col) || '{}');
+  return Object.entries(store).map(([id, v]) => ({ id, ...v }));
+}
+async function dbGetDoc(col, id) {
+  if (useFirebase && db) {
+    const snap = await db.collection(col).doc(id).get();
+    return snap.exists ? snap.data() : null;
+  }
+  const store = JSON.parse(localStorage.getItem('ldb_' + col) || '{}');
+  return store[id] || null;
 }
 
 // ── 구성원 / 권한 ─────────────────────────────────────────────────────────────
@@ -749,58 +730,74 @@ const MEMBERS = {
   '김승현': { role: 'leader',   team: '커리어3팀',   pin: '2300' },
   '유화경': { role: 'member',   team: '커리어3팀',   pin: '3310' },
 };
-const LEADER_TEAMS = { '임혜진': '커리어1팀', '정은지': '커리어2팀', '김승현': '커리어3팀' };
+const TEAM_OF_LEADER = { '임혜진': '커리어1팀', '정은지': '커리어2팀', '김승현': '커리어3팀' };
 
-let CU = null; // { name, role, team }
+let CU = null; // 현재 로그인 사용자 { name, role, team }
 
-// 본인 포함 볼 수 있는 이름 목록 (내 업무용)
-function getVisibleNames() {
+// 관리자 대시보드/구성원현황에서 볼 수 있는 이름 목록
+function adminTargetNames() {
   if (!CU) return [];
-  if (CU.role === 'director') return Object.keys(MEMBERS);
-  if (CU.role === 'leader') {
-    const myTeam = LEADER_TEAMS[CU.name] || CU.team;
-    return Object.keys(MEMBERS).filter(n => MEMBERS[n].team === myTeam && MEMBERS[n].role === 'member');
+  if (CU.role === 'director') {
+    // 부장: MEMBERS 전체 (본인 포함)
+    return Object.keys(MEMBERS);
   }
-  return [CU.name];
-}
-// 관리자가 볼 수 있는 팀원 목록 (대시보드/구성원현황용 — 본인 포함 여부 역할별 상이)
-function getAdminVisibleNames() {
-  if (!CU) return [];
-  if (CU.role === 'director') return Object.keys(MEMBERS); // 부장: 전체
   if (CU.role === 'leader') {
-    const myTeam = LEADER_TEAMS[CU.name] || CU.team;
-    // 팀장: 본인 팀의 팀원만 (본인 제외)
-    return Object.keys(MEMBERS).filter(n => MEMBERS[n].team === myTeam && n !== CU.name);
+    // 팀장: 자기 팀 팀원만 (본인 제외)
+    const myTeam = TEAM_OF_LEADER[CU.name] || CU.team;
+    return Object.keys(MEMBERS).filter(n =>
+      MEMBERS[n].team === myTeam && MEMBERS[n].role === 'member'
+    );
   }
   return [];
 }
 
+// 피드백 발송 가능한 대상 목록
+function feedbackTargetNames() {
+  if (!CU) return [];
+  if (CU.role === 'director') return Object.keys(MEMBERS).filter(n => n !== CU.name);
+  if (CU.role === 'leader') {
+    const myTeam = TEAM_OF_LEADER[CU.name] || CU.team;
+    return Object.keys(MEMBERS).filter(n =>
+      MEMBERS[n].team === myTeam && n !== CU.name
+    );
+  }
+  return [];
+}
+
+// ── 로그인 ────────────────────────────────────────────────────────────────────
 async function loadPinsOverride() {
   try {
     const d = await dbGetDoc('config', 'pins');
-    if (d) { Object.keys(d).forEach(name => { if (MEMBERS[name]) MEMBERS[name].pin = String(d[name]); }); }
+    if (d) Object.keys(d).forEach(name => { if (MEMBERS[name]) MEMBERS[name].pin = String(d[name]); });
   } catch(e) {}
 }
 
-// ── 로그인/로그아웃 ───────────────────────────────────────────────────────────
 async function doLogin() {
-  const name = document.getElementById('login-name').value.trim();
-  const pin  = document.getElementById('login-pin').value.trim();
-  const err  = document.getElementById('login-error');
-  if (!name) { err.textContent = '이름을 입력해 주세요'; return; }
-  if (!pin)  { err.textContent = 'PIN을 입력해 주세요'; return; }
+  const nameVal = document.getElementById('login-name').value.trim();
+  const pinVal  = document.getElementById('login-pin').value.trim();
+  const errEl   = document.getElementById('login-error');
+  errEl.textContent = '';
+
+  if (!nameVal) { errEl.textContent = '이름을 입력해 주세요'; return; }
+  if (!pinVal)  { errEl.textContent = 'PIN을 입력해 주세요'; return; }
+
   await loadPinsOverride();
-  const member = MEMBERS[name];
-  if (!member) { err.textContent = '등록되지 않은 이름입니다'; return; }
-  if (pin !== member.pin) { err.textContent = 'PIN이 올바르지 않습니다'; return; }
-  CU = { name, role: member.role, team: member.team };
+  const member = MEMBERS[nameVal];
+  if (!member)          { errEl.textContent = '등록되지 않은 이름입니다'; return; }
+  if (pinVal !== member.pin) { errEl.textContent = 'PIN이 올바르지 않습니다'; return; }
+
+  CU = { name: nameVal, role: member.role, team: member.team };
+  try { sessionStorage.setItem('career_cu', JSON.stringify(CU)); } catch(e) {}
   enterApp();
 }
 
 function doLogout() {
   CU = null;
   try { sessionStorage.removeItem('career_cu'); } catch(e) {}
-  if (window._inboxInterval) clearInterval(window._inboxInterval);
+  if (window._inboxTimer) clearInterval(window._inboxTimer);
+  // 폼 초기화
+  document.getElementById('project-list').innerHTML = '';
+  projCount = 0; subCount = 0;
   document.getElementById('main-app').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('login-pin').value = '';
@@ -811,97 +808,90 @@ function doLogout() {
 function enterApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('main-app').style.display = 'flex';
+
   const { name, role, team } = CU;
 
-  // 사이드바 사용자 정보
+  // 사이드바
   document.getElementById('sb-name').textContent = name;
   document.getElementById('sb-avatar').textContent = name.charAt(0);
-  document.getElementById('sb-role').textContent = team + ' · ' + (role === 'director' ? '부장' : role === 'leader' ? '팀장' : '팀원');
+  document.getElementById('sb-role').textContent = team + ' · ' + { director:'부장', leader:'팀장', member:'팀원' }[role];
 
-  const badge    = document.getElementById('role-badge');
+  const badge = document.getElementById('role-badge');
+  badge.textContent = { director:'부장', leader:'팀장', member:'팀원' }[role];
+  badge.className   = 'role-badge role-' + role;
+
   const adminNav = document.getElementById('nav-admin');
-
-  if (role === 'director') {
-    badge.textContent = '부장'; badge.className = 'role-badge role-director';
-    document.getElementById('admin-nav-label').textContent = '전체 관리 (부장)';
-    document.getElementById('dash-nav-label').textContent  = '전체 대시보드';
-    document.getElementById('dashboard-title').textContent = '전체 생산성 대시보드';
-    adminNav.style.display = '';
-  } else if (role === 'leader') {
-    badge.textContent = '팀장'; badge.className = 'role-badge role-leader';
-    document.getElementById('admin-nav-label').textContent = team + ' 관리';
-    document.getElementById('dash-nav-label').textContent  = team + ' 대시보드';
-    document.getElementById('dashboard-title').textContent = team + ' 생산성 대시보드';
-    adminNav.style.display = '';
-  } else {
-    badge.textContent = '팀원'; badge.className = 'role-badge role-member';
+  if (role === 'member') {
     adminNav.style.display = 'none';
+  } else {
+    adminNav.style.display = '';
+    const teamLabel = role === 'director' ? '전체 관리 (부장)' : team + ' 관리';
+    const dashLabel = role === 'director' ? '전체 대시보드'    : team + ' 대시보드';
+    document.getElementById('admin-nav-label').textContent  = teamLabel;
+    document.getElementById('dash-nav-label').textContent   = dashLabel;
+    document.getElementById('dashboard-title').textContent  = role === 'director' ? '전체 생산성 대시보드' : team + ' 생산성 대시보드';
   }
 
-  const today = new Date();
-  const todayStr = today.toISOString().split('T')[0];
+  // 날짜/주간 초기화
+  const todayStr = new Date().toISOString().split('T')[0];
   document.getElementById('today-date-label').textContent =
-    today.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+    new Date().toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric', weekday:'long' });
   document.getElementById('input-date').value = todayStr;
   const fbDateEl = document.getElementById('fb-date');
   if (fbDateEl) fbDateEl.value = todayStr;
   document.getElementById('dashboard-date').textContent =
-    today.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }) + '  기준';
-
+    new Date().toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric' }) + '  기준';
   setDefaultWeek();
-  checkInbox();
-  if (window._inboxInterval) clearInterval(window._inboxInterval);
-  window._inboxInterval = setInterval(() => checkInbox(), 30000);
+
+  // 피드백 datalist
+  const fbList = document.getElementById('fb-member-list');
+  if (fbList) {
+    fbList.innerHTML = feedbackTargetNames().map(n => `<option value="${n}">`).join('');
+  }
+
   // Firebase 연결 상태 표시
   const fbBtn = document.getElementById('firebase-nav-btn');
   if (fbBtn) {
-    if (useFirebase) {
-      fbBtn.style.color = 'rgba(74,140,98,.8)';
-      fbBtn.title = 'Firebase 연결됨 ✓';
-    } else {
-      fbBtn.style.color = 'rgba(184,48,48,.8)';
-      fbBtn.title = 'Firebase 미연결 — 클릭하여 설정';
-      // 관리자에게 경고
-      if (role === 'director' || role === 'leader') {
-        setTimeout(() => showToast('⚠ Firebase 미연결: 팀 데이터 공유가 안 됩니다. Firebase 설정을 확인해 주세요.'), 1000);
-      }
-    }
+    fbBtn.style.color = useFirebase ? 'rgba(74,140,98,.8)' : 'rgba(184,48,48,.8)';
+    fbBtn.title = useFirebase ? 'Firebase 연결됨 ✓' : 'Firebase 미연결';
   }
-  // 세션 저장 (새로고침 후 복원용)
-  try { sessionStorage.setItem('career_cu', JSON.stringify(CU)); } catch(e) {}
 
-  // 항상 오늘 업무 입력 화면부터 시작
+  checkInbox();
+  if (window._inboxTimer) clearInterval(window._inboxTimer);
+  window._inboxTimer = setInterval(checkInbox, 30000);
+
+  // 입력 페이지로 시작
   showPage('input', document.querySelector('#nav-member .nav-item'));
 }
+
+// ── 유틸 ──────────────────────────────────────────────────────────────────────
+function eKey(s) { return String(s).trim().replace(/[^a-zA-Z0-9가-힣]/g, '_'); }
+function esc(s)  { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function taskKey(date, name) { return date + '__' + eKey(name); }
 
 // ── 프로젝트 / 세부업무 ───────────────────────────────────────────────────────
 let projCount = 0, subCount = 0;
 
-const STATUS_LABELS = {
-  '시작전': '시작전', '진행중': '진행중', '완료': '완료',
-  '딜레이-외부': '딜레이(외부)', '딜레이-개인': '딜레이(개인)'
-};
-const STATUS_BADGE = {
-  '시작전': 'b-notstart', '진행중': 'b-progress', '완료': 'b-done',
-  '딜레이-외부': 'b-delay-ext', '딜레이-개인': 'b-delay-per'
-};
+const STATUS_LABEL = { '시작전':'시작전', '진행중':'진행중', '완료':'완료', '딜레이-외부':'딜레이(외부)', '딜레이-개인':'딜레이(개인)' };
+const STATUS_CLS   = { '시작전':'b-notstart', '진행중':'b-progress', '완료':'b-done', '딜레이-외부':'b-delay-ext', '딜레이-개인':'b-delay-per' };
 
-function addProject(name='', category='사업운영', deadline='', isDeadlineToday=false,
-                    projStatus='', projDelayDeadline='', projDelayReason='') {
+function addProject(cfg = {}) {
+  const { name='', category='사업운영', deadline='', isDeadlineToday=false,
+          projStatus='', projDelayDeadline='', projDelayReason='' } = cfg;
   projCount++;
   const pid = projCount;
   const div = document.createElement('div');
   div.className = 'project-block';
   div.id = 'proj-' + pid;
 
-  const todayBadge = isDeadlineToday ? '<span class="deadline-today-badge">! 금일 데드라인</span>' : '';
-  const delayRowDisplay = projStatus === '딜레이' ? 'flex' : 'none';
+  const dlBadge    = isDeadlineToday ? '<span class="deadline-today-badge">! 금일 데드라인</span>' : '';
+  const delayStyle = projStatus === '딜레이' ? 'flex' : 'none';
 
   div.innerHTML = `
     <div class="project-header">
       <input class="proj-name-input" style="width:100%" type="text" placeholder="프로젝트명"
         value="${esc(name)}" oninput="updateProjProgress(${pid});updateSummary()">
-      ${todayBadge}
+      ${dlBadge}
       <select class="proj-cat-sel" id="proj-cat-${pid}">
         <option${category==='사업운영'?' selected':''}>사업운영</option>
         <option${category==='사업제안'?' selected':''}>사업제안</option>
@@ -920,10 +910,10 @@ function addProject(name='', category='사업운영', deadline='', isDeadlineTod
       <span class="proj-prog-text" id="proj-prog-${pid}">0/0</span>
       <button class="del-proj-btn" onclick="document.getElementById('proj-${pid}').remove();updateSummary()">×</button>
     </div>
-    <div class="proj-delay-row" id="proj-delay-row-${pid}" style="display:${delayRowDisplay}">
+    <div class="proj-delay-row" id="proj-delay-row-${pid}" style="display:${delayStyle}">
       <label>📌 딜레이 사유</label>
       <input type="text" id="proj-delay-reason-${pid}" value="${esc(projDelayReason)}"
-        placeholder="딜레이 사유 입력" style="flex:1;min-width:120px">
+        placeholder="딜레이 사유" style="flex:1;min-width:120px">
       <label>목표 데드라인</label>
       <input type="date" id="proj-delay-dl-${pid}" value="${esc(projDelayDeadline)}">
     </div>
@@ -937,9 +927,9 @@ function addProject(name='', category='사업운영', deadline='', isDeadlineTod
           <th style="padding-left:14px;min-width:170px">세부업무</th>
           <th style="min-width:80px">시작 타각</th>
           <th style="min-width:80px">완료 타각</th>
-          <th style="text-align:center;min-width:44px">소요</th>
+          <th style="min-width:90px;text-align:center">소요</th>
           <th style="min-width:100px">상태</th>
-          <th style="min-width:130px">딜레이 정보</th>
+          <th style="min-width:150px">딜레이 정보</th>
           <th style="width:26px"></th>
         </tr></thead>
         <tbody id="sub-body-${pid}"></tbody>
@@ -958,18 +948,22 @@ function onProjStatusChange(pid, val) {
   updateSummary();
 }
 
-function addSubTask(pid, data={}) {
+function addSubTask(pid, data = {}) {
   subCount++;
   const sid = subCount;
   const tbody = document.getElementById('sub-body-' + pid);
   if (!tbody) return;
-  const status   = data.status || '시작전';
-  const startVal = data.start  || '';
-  const endVal   = data.end    || '';
+
+  const status   = data.status   || '시작전';
+  const startVal = data.start    || '';
+  const endVal   = data.end      || '';
+  const lunch    = data.lunch_deduct || 0;
+
   const tr = document.createElement('tr');
-  tr.id = 'sub-' + sid;
+  tr.id             = 'sub-' + sid;
   tr.dataset.pid    = pid;
   tr.dataset.status = status;
+
   tr.innerHTML = `
     <td style="padding-left:14px">
       <input class="sub-input" type="text" placeholder="세부업무 입력"
@@ -989,12 +983,13 @@ function addSubTask(pid, data={}) {
         onchange="onTimeEdit(${sid},'end',${pid})">
       <span class="edit-link" onclick="toggleEdit(${sid},'end')">수동편집</span>
     </td>
-    <td style="vertical-align:middle;text-align:center;min-width:80px">
-      <span class="dur-cell" id="sdur-${sid}" style="display:block">${data.duration||'—'}</span>
-      <div class="dur-net" id="sdur-net-${sid}" style="font-size:10px;color:var(--text-light)"></div>
-      <div class="lunch-deduct" title="점심시간 차감(분)" style="margin-top:3px">
-        ☕<input type="number" id="slunch-${sid}" min="0" max="240" value="${data.lunch_deduct||0}"
-          onchange="recalcDur(${sid},${pid})" style="width:40px" placeholder="0">분
+    <td style="text-align:center;vertical-align:middle;min-width:90px">
+      <span id="sdur-${sid}" style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:var(--text-muted)">${data.duration||'—'}</span>
+      <div id="sdur-net-${sid}" style="font-size:10px;color:var(--text-light)"></div>
+      <div style="margin-top:3px;font-size:11px;color:var(--text-muted)">
+        ☕<input type="number" id="slunch-${sid}" min="0" max="240" value="${lunch}"
+          onchange="recalcDur(${sid},${pid})"
+          style="width:38px;border:1px solid var(--border);border-radius:4px;padding:1px 4px;font-size:11px;text-align:center">분
       </div>
     </td>
     <td>
@@ -1018,36 +1013,65 @@ function addSubTask(pid, data={}) {
 
 function buildDelayCell(sid, status, reason, deadline) {
   if (!status.includes('딜레이')) return '<span style="color:var(--text-light);font-size:11px">—</span>';
-  // reasons는 배열 또는 문자열 허용
-  const reasons = Array.isArray(reason) ? reason : (reason ? [reason] : ['']);
-  const deadlines = Array.isArray(deadline) ? deadline : (deadline ? [deadline] : ['']);
+  const reasons   = Array.isArray(reason)   ? reason   : [reason||''];
+  const deadlines = Array.isArray(deadline) ? deadline : [deadline||''];
   let rows = '';
-  const count = Math.max(reasons.length, 1);
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < Math.max(reasons.length, 1); i++) {
     rows += `<div class="delay-row" style="display:flex;gap:4px;align-items:center;margin-bottom:3px">
-      <input type="text" class="sdr-input" data-sid="${sid}" value="${esc(reasons[i]||'')}" placeholder="딜레이 사유" style="flex:1;min-width:70px;border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:11px">
-      <input type="date" class="sdd-input" data-sid="${sid}" value="${esc(deadlines[i]||'')}" style="width:110px;border:1px solid var(--border);border-radius:4px;padding:3px 5px;font-size:11px">
-      ${i === 0 ? '<button onclick="addDelayRow(this)" style="border:none;background:none;color:var(--accent);font-size:14px;cursor:pointer;padding:0 2px" title="딜레이 추가">+</button>' : '<button onclick="removeDelayRow(this)" style="border:none;background:none;color:var(--danger);font-size:14px;cursor:pointer;padding:0 2px">×</button>'}
+      <input type="text" class="sdr-input" data-sid="${sid}" value="${esc(reasons[i]||'')}"
+        placeholder="딜레이 사유" style="flex:1;min-width:70px;border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:11px">
+      <input type="date" class="sdd-input" data-sid="${sid}" value="${esc(deadlines[i]||'')}"
+        style="width:110px;border:1px solid var(--border);border-radius:4px;padding:3px 5px;font-size:11px">
+      ${i===0
+        ? '<button onclick="addDelayRow(this)" style="border:none;background:none;color:var(--accent);font-size:16px;cursor:pointer;line-height:1;padding:0 2px" title="항목 추가">+</button>'
+        : '<button onclick="removeDelayRow(this)" style="border:none;background:none;color:var(--danger);font-size:16px;cursor:pointer;line-height:1;padding:0 2px">×</button>'
+      }
     </div>`;
   }
-  return '<div class="delay-fields" id="sdelay-wrap-' + sid + '" style="flex-direction:column">' + rows + '</div>';
+  return '<div id="sdelay-wrap-' + sid + '" style="display:flex;flex-direction:column">' + rows + '</div>';
 }
 
 function addDelayRow(btn) {
   const wrap = btn.closest('[id^="sdelay-wrap-"]');
   if (!wrap) return;
   const sid = wrap.id.replace('sdelay-wrap-','');
-  const newRow = document.createElement('div');
-  newRow.className = 'delay-row';
-  newRow.style.cssText = 'display:flex;gap:4px;align-items:center;margin-bottom:3px';
-  newRow.innerHTML = '<input type="text" class="sdr-input" data-sid="' + sid + '" placeholder="딜레이 사유" style="flex:1;min-width:70px;border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:11px">' +
-    '<input type="date" class="sdd-input" data-sid="' + sid + '" style="width:110px;border:1px solid var(--border);border-radius:4px;padding:3px 5px;font-size:11px">' +
-    '<button onclick="removeDelayRow(this)" style="border:none;background:none;color:var(--danger);font-size:14px;cursor:pointer;padding:0 2px">×</button>';
-  wrap.appendChild(newRow);
+  const row = document.createElement('div');
+  row.className = 'delay-row';
+  row.style.cssText = 'display:flex;gap:4px;align-items:center;margin-bottom:3px';
+  row.innerHTML = `<input type="text" class="sdr-input" data-sid="${sid}" placeholder="딜레이 사유"
+      style="flex:1;min-width:70px;border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:11px">
+    <input type="date" class="sdd-input" data-sid="${sid}"
+      style="width:110px;border:1px solid var(--border);border-radius:4px;padding:3px 5px;font-size:11px">
+    <button onclick="removeDelayRow(this)" style="border:none;background:none;color:var(--danger);font-size:16px;cursor:pointer;line-height:1;padding:0 2px">×</button>`;
+  wrap.appendChild(row);
 }
-function removeDelayRow(btn) {
-  const row = btn.closest('.delay-row');
-  if (row) row.remove();
+function removeDelayRow(btn) { btn.closest('.delay-row')?.remove(); }
+
+function recalcDur(sid, pid) {
+  const sEl = document.getElementById('sedit-s-' + sid);
+  const eEl = document.getElementById('sedit-e-' + sid);
+  const durEl = document.getElementById('sdur-' + sid);
+  const netEl = document.getElementById('sdur-net-' + sid);
+  const lunchEl = document.getElementById('slunch-' + sid);
+  if (!sEl || !eEl || !durEl) return;
+
+  if (sEl.value && eEl.value) {
+    let raw = (parseInt(eEl.value)*60 + parseInt(eEl.value.split(':')[1]))
+            - (parseInt(sEl.value)*60  + parseInt(sEl.value.split(':')[1]));
+    // 분 단위로 재계산 (시:분 파싱)
+    const toMin = v => parseInt(v.split(':')[0])*60 + parseInt(v.split(':')[1]);
+    let diff = toMin(eEl.value) - toMin(sEl.value);
+    if (diff < 0) diff += 1440; // 자정 넘김
+    const lunch = lunchEl ? (parseInt(lunchEl.value) || 0) : 0;
+    const net   = Math.max(0, diff - lunch);
+    durEl.textContent = net + '분';
+    durEl.style.color = 'var(--accent)';
+    if (netEl) netEl.textContent = lunch > 0 ? '점심 -' + lunch + '분' : '';
+  } else {
+    durEl.textContent = '—';
+    durEl.style.color = '';
+    if (netEl) netEl.textContent = '';
+  }
 }
 
 function stampTime(sid, type, pid) {
@@ -1068,58 +1092,28 @@ function stampTime(sid, type, pid) {
   updateSummary();
 }
 function toggleEdit(sid, type) {
-  const e = document.getElementById('sedit-' + type[0] + '-' + sid);
-  if (e) e.style.display = (e.style.display === 'block') ? 'none' : 'block';
+  const el = document.getElementById('sedit-' + type[0] + '-' + sid);
+  if (el) el.style.display = el.style.display === 'block' ? 'none' : 'block';
 }
 function onTimeEdit(sid, type, pid) {
   const edit = document.getElementById('sedit-' + type[0] + '-' + sid);
   const btn  = document.getElementById('sbtn-'  + type[0] + '-' + sid);
   if (edit && btn) {
     if (edit.value) { btn.textContent = edit.value; btn.classList.add('stamped'); }
-    else { btn.textContent = type === 'start' ? '▶ 시작' : '■ 완료'; btn.classList.remove('stamped'); }
+    else { btn.textContent = type==='start'?'▶ 시작':'■ 완료'; btn.classList.remove('stamped'); }
   }
   const row = document.getElementById('sub-' + sid);
   if (row && edit) {
-    if (type === 'start' && edit.value && (row.dataset.status === '시작전' || !row.dataset.status))
+    if (type==='start' && edit.value && (row.dataset.status==='시작전'||!row.dataset.status))
       setSubStatus(sid, pid, '진행중');
-    if (type === 'end' && edit.value) setSubStatus(sid, pid, '완료');
+    if (type==='end' && edit.value) setSubStatus(sid, pid, '완료');
   }
   recalcDur(sid, pid);
   updateProjProgress(pid);
   updateSummary();
 }
-function recalcDur(sid, pid) {
-  const s = document.getElementById('sedit-s-' + sid);
-  const e = document.getElementById('sedit-e-' + sid);
-  const c = document.getElementById('sdur-' + sid);
-  const lunchEl = document.getElementById('slunch-' + sid);
-  if (!s || !e || !c) return;
-  if (s.value && e.value) {
-    let diff = (parseInt(e.value.split(':')[0])*60 + parseInt(e.value.split(':')[1]))
-             - (parseInt(s.value.split(':')[0])*60 + parseInt(s.value.split(':')[1]));
-    // 자정을 넘긴 경우 (예: 23:00 → 01:00 = +120분)
-    if (diff < 0) diff += 24 * 60;
-    // 점심 차감
-    const lunch = lunchEl ? (parseInt(lunchEl.value) || 0) : 0;
-    const net = Math.max(0, diff - lunch);
-    if (net > 0 || diff > 0) {
-      c.textContent = net + '분';
-      c.style.color = 'var(--accent)';
-      const netEl = document.getElementById('sdur-net-' + sid);
-      if (netEl) netEl.textContent = lunch > 0 ? '점심 -' + lunch + '분' : '';
-    } else {
-      c.textContent = diff + '분'; c.style.color = 'var(--accent)';
-      const netEl = document.getElementById('sdur-net-' + sid);
-      if (netEl) netEl.textContent = '';
-    }
-  } else {
-    c.textContent = '—'; c.style.color = '';
-    const netEl = document.getElementById('sdur-net-' + sid);
-    if (netEl) netEl.textContent = '';
-  }
-}
 function setSubStatus(sid, pid, status) {
-  const row = document.getElementById('sub-' + sid);
+  const row  = document.getElementById('sub-' + sid);
   if (!row) return;
   row.dataset.status = status;
   const sel  = document.getElementById('ssel-' + sid);
@@ -1130,7 +1124,7 @@ function setSubStatus(sid, pid, status) {
   updateSummary();
 }
 function onStatusSelChange(sid, pid, status) {
-  const row = document.getElementById('sub-' + sid);
+  const row  = document.getElementById('sub-' + sid);
   if (row) row.dataset.status = status;
   const cell = document.getElementById('sdelay-cell-' + sid);
   if (cell) cell.innerHTML = buildDelayCell(sid, status, '', '');
@@ -1138,8 +1132,7 @@ function onStatusSelChange(sid, pid, status) {
   updateSummary();
 }
 function removeSubTask(sid, pid) {
-  const el = document.getElementById('sub-' + sid);
-  if (el) el.remove();
+  document.getElementById('sub-' + sid)?.remove();
   updateProjProgress(pid);
   updateSummary();
 }
@@ -1150,21 +1143,19 @@ function updateProjProgress(pid) {
   const rows  = [...tbody.querySelectorAll('tr')];
   const total = rows.length;
   const done  = rows.filter(r => {
-    const s = document.getElementById('ssel-' + r.id.replace('sub-',''));
-    return s ? s.value === '완료' : r.dataset.status === '완료';
+    const sel = document.getElementById('ssel-' + r.id.replace('sub-',''));
+    return sel ? sel.value === '완료' : r.dataset.status === '완료';
   }).length;
 
   const pg  = document.getElementById('proj-prog-' + pid);
-  const bar = document.getElementById('proj-bar-' + pid);
+  const bar = document.getElementById('proj-bar-'  + pid);
   if (pg)  pg.textContent = done + '/' + total;
   if (bar) bar.style.width = (total ? Math.round(done/total*100) : 0) + '%';
 
-  // 프로젝트 상태 자동 업데이트 (딜레이 수동 설정 제외)
+  // 자동 상태 (딜레이 수동 설정 제외)
   const pSel = document.getElementById('proj-status-' + pid);
   if (pSel && pSel.value !== '딜레이') {
-    let auto = '미완료';
-    if (total > 0 && done === total) auto = '완료';
-    else if (done > 0)               auto = '부분완료';
+    const auto = total === 0 ? '미완료' : done === total ? '완료' : done > 0 ? '부분완료' : '미완료';
     pSel.value     = auto;
     pSel.className = 'proj-status-sel proj-status-' + auto;
   }
@@ -1174,9 +1165,9 @@ function updateProjProgress(pid) {
   const dltext = document.getElementById('proj-dltext-' + pid);
   if (!dl || !dlbar || !dltext) return;
 
-  // 완료된 프로젝트: 데드라인 알림 없음
+  // 완료 프로젝트: 데드라인 알림 없음
   if (pSel && pSel.value === '완료') {
-    dlbar.className = 'dl-bar dl-ok';
+    dlbar.className    = 'dl-bar dl-ok';
     dltext.textContent = '✓ 완료';
     return;
   }
@@ -1184,66 +1175,60 @@ function updateProjProgress(pid) {
   const todayStr  = new Date().toISOString().split('T')[0];
   const todayDate = new Date(); todayDate.setHours(0,0,0,0);
 
-  // 세부업무 중 금일 딜레이 목표기한 체크
-  let subDlToday = false;
+  // 세부업무 금일 딜레이 목표기한 배지
   rows.forEach(r => {
+    const sid   = r.id.replace('sub-','');
+    const sddEl = document.getElementById('sdd-' + sid);
+    const nameInput = r.querySelector('input[type="text"]');
+    const sselEl = document.getElementById('ssel-' + sid);
+    if (!nameInput) return;
+    const badge = nameInput.parentNode.querySelector('.sub-dl-badge');
+    if (sddEl && sddEl.value === todayStr && sselEl && sselEl.value !== '완료') {
+      if (!badge) {
+        const b = document.createElement('span');
+        b.className   = 'sub-dl-badge';
+        b.textContent = '! 금일 데드라인';
+        nameInput.parentNode.appendChild(b);
+      }
+    } else if (badge) badge.remove();
+  });
+
+  // 세부업무 중 금일 딜레이기한 있는지
+  const subDlToday = rows.some(r => {
     const sid    = r.id.replace('sub-','');
     const sddEl  = document.getElementById('sdd-' + sid);
     const sselEl = document.getElementById('ssel-' + sid);
-    if (sddEl && sddEl.value === todayStr && sselEl && sselEl.value !== '완료') {
-      subDlToday = true;
-      // 세부업무 이름 옆에 금일 데드라인 배지
-      const nameInput = r.querySelector('input[type="text"]');
-      if (nameInput && !nameInput.parentNode.querySelector('.sub-dl-badge')) {
-        const badge = document.createElement('span');
-        badge.className   = 'sub-dl-badge';
-        badge.textContent = '! 금일 데드라인';
-        nameInput.parentNode.appendChild(badge);
-      }
-    } else {
-      // 완료됐거나 기한 지난 배지 제거
-      const nameInput = r.querySelector('input[type="text"]');
-      if (nameInput) {
-        const existing = nameInput.parentNode.querySelector('.sub-dl-badge');
-        if (existing) existing.remove();
-      }
-    }
+    return sddEl && sddEl.value === todayStr && sselEl && sselEl.value !== '완료';
   });
 
   const dlVal = dl.value;
   if (!dlVal) {
-    dlbar.className   = subDlToday ? 'dl-bar dl-over' : 'dl-bar dl-none';
-    dltext.textContent = subDlToday ? '⚡ 세부업무 금일 데드라인 있음' : '데드라인 미설정';
+    dlbar.className    = subDlToday ? 'dl-bar dl-over' : 'dl-bar dl-none';
+    dltext.textContent = subDlToday ? '⚡ 세부업무 금일 데드라인' : '데드라인 미설정';
     return;
   }
   const dlDate = new Date(dlVal); dlDate.setHours(0,0,0,0);
   const diff   = Math.round((dlDate - todayDate) / 86400000);
-  const allDone = total > 0 && done === total;
-  const sub = subDlToday ? ' ⚡세부업무 금일 데드라인' : '';
+  const sub    = subDlToday ? ' ⚡세부업무 금일 데드라인' : '';
+  const miss   = total - done;
 
-  if (allDone)    { dlbar.className = 'dl-bar dl-ok';   dltext.textContent = '✓ 전체 완료 (데드라인 ' + dlVal + ')'; }
-  else if (diff === 0) { dlbar.className = 'dl-bar dl-over'; dltext.textContent = '❗ 금일 데드라인! — 미완료 ' + (total-done) + '건' + sub; }
-  else if (diff  < 0)  { dlbar.className = 'dl-bar dl-over'; dltext.textContent = '⚠ 데드라인 초과 ' + Math.abs(diff) + '일 (' + dlVal + ') — 미완료 ' + (total-done) + '건'; }
-  else if (diff <= 3)  { dlbar.className = 'dl-bar dl-warn'; dltext.textContent = '⏰ D-' + diff + ' (' + dlVal + ') — 미완료 ' + (total-done) + '건' + sub; }
-  else                 { dlbar.className = 'dl-bar dl-ok';   dltext.textContent = '📅 D-' + diff + ' (' + dlVal + ') — 미완료 ' + (total-done) + '건' + sub; }
+  if (diff === 0) { dlbar.className='dl-bar dl-over'; dltext.textContent='❗ 금일 데드라인! — 미완료 '+miss+'건'+sub; }
+  else if (diff<0){ dlbar.className='dl-bar dl-over'; dltext.textContent='⚠ '+Math.abs(diff)+'일 초과 ('+dlVal+') — 미완료 '+miss+'건'; }
+  else if (diff<=3){ dlbar.className='dl-bar dl-warn'; dltext.textContent='⏰ D-'+diff+' ('+dlVal+') — 미완료 '+miss+'건'+sub; }
+  else             { dlbar.className='dl-bar dl-ok';   dltext.textContent='📅 D-'+diff+' ('+dlVal+') — 미완료 '+miss+'건'+sub; }
 }
 
 function updateSummary() {
   const data    = getProjectsData();
-  const allSubs = data.flatMap(p => p.subtasks || []);
-  const total   = allSubs.length;
-  const done    = allSubs.filter(t => t.status === '완료').length;
-  const prog    = allSubs.filter(t => t.status === '진행중').length;
-  const delay   = allSubs.filter(t => t.status && t.status.includes('딜레이')).length;
+  const allSubs = data.flatMap(p => p.subtasks||[]);
   document.getElementById('ts-proj').textContent  = data.length;
-  document.getElementById('ts-total').textContent = total;
-  document.getElementById('ts-done').textContent  = done;
-  document.getElementById('ts-prog').textContent  = prog;
-  document.getElementById('ts-delay').textContent = delay;
-  document.getElementById('ts-rate').textContent  = total ? Math.round(done/total*100) + '%' : '—';
-  const names = data.map(p => p.name).filter(Boolean);
-  document.getElementById('ts-proj-names').textContent =
-    names.length ? '📁 ' + names.join('  ·  ') : '프로젝트를 추가해 주세요';
+  document.getElementById('ts-total').textContent = allSubs.length;
+  document.getElementById('ts-done').textContent  = allSubs.filter(t=>t.status==='완료').length;
+  document.getElementById('ts-prog').textContent  = allSubs.filter(t=>t.status==='진행중').length;
+  document.getElementById('ts-delay').textContent = allSubs.filter(t=>t.status&&t.status.includes('딜레이')).length;
+  document.getElementById('ts-rate').textContent  = allSubs.length ? Math.round(allSubs.filter(t=>t.status==='완료').length/allSubs.length*100)+'%' : '—';
+  const names = data.map(p=>p.name).filter(Boolean);
+  document.getElementById('ts-proj-names').textContent = names.length ? '📁 '+names.join('  ·  ') : '프로젝트를 추가해 주세요';
 }
 
 function getProjectsData() {
@@ -1251,58 +1236,48 @@ function getProjectsData() {
   document.querySelectorAll('.project-block').forEach(pEl => {
     const pid     = pEl.id.replace('proj-','');
     const nameEl  = pEl.querySelector('.proj-name-input');
-    const catEl   = document.getElementById('proj-cat-' + pid);
-    const dlEl    = document.getElementById('proj-dl-' + pid);
-    const pStatEl = document.getElementById('proj-status-' + pid);
-    const pDlDlEl = document.getElementById('proj-delay-dl-' + pid);
-    const pDlRsEl = document.getElementById('proj-delay-reason-' + pid);
+    const catEl   = document.getElementById('proj-cat-'          + pid);
+    const dlEl    = document.getElementById('proj-dl-'            + pid);
+    const pStatEl = document.getElementById('proj-status-'        + pid);
+    const pDlDlEl = document.getElementById('proj-delay-dl-'      + pid);
+    const pDlRsEl = document.getElementById('proj-delay-reason-'  + pid);
     const name    = nameEl ? nameEl.value.trim() : '';
     const subs    = [];
+
     pEl.querySelectorAll('tbody tr').forEach(tr => {
-      const sid  = tr.id.replace('sub-','');
-      const ni   = tr.querySelector('input[type="text"]');
-      const n    = ni ? ni.value.trim() : '';
+      const sid    = tr.id.replace('sub-','');
+      const ni     = tr.querySelector('input[type="text"]');
+      const n      = ni ? ni.value.trim() : '';
       if (!n) return;
-      const selEl = document.getElementById('ssel-' + sid);
-      const lunchEl = document.getElementById('slunch-' + sid);
-      const durEl   = document.getElementById('sdur-' + sid);
-      const lunchVal = lunchEl ? (parseInt(lunchEl.value) || 0) : 0;
+      const selEl    = document.getElementById('ssel-'   + sid);
+      const lunchEl  = document.getElementById('slunch-' + sid);
+      const durEl    = document.getElementById('sdur-'   + sid);
+      // 딜레이 정보 (복수)
+      const wrap     = document.getElementById('sdelay-wrap-' + sid);
+      const reasons  = wrap ? [...wrap.querySelectorAll('.sdr-input')].map(el=>el.value.trim()).filter(Boolean) : [];
+      const deadlines= wrap ? [...wrap.querySelectorAll('.sdd-input')].map(el=>el.value).filter(Boolean) : [];
+      const reason   = reasons.length===1 ? reasons[0] : reasons.length>1 ? reasons : '';
+      const deadline = deadlines.length===1 ? deadlines[0] : deadlines.length>1 ? deadlines : '';
       subs.push({
-        name:          n,
-        start:         (document.getElementById('sedit-s-' + sid) || {}).value || '',
-        end:           (document.getElementById('sedit-e-' + sid) || {}).value || '',
+        name,
+        start:         (document.getElementById('sedit-s-'+sid)||{}).value||'',
+        end:           (document.getElementById('sedit-e-'+sid)||{}).value||'',
         duration:      durEl ? durEl.textContent.trim() : '—',
-        lunch_deduct:  lunchVal,
-        status:        selEl ? selEl.value : (tr.dataset.status || '시작전'),
-        delay_reason:  (() => {
-          const wrap = document.getElementById('sdelay-wrap-' + sid);
-          if (wrap) {
-            const vals = [...wrap.querySelectorAll('.sdr-input')].map(el => el.value.trim()).filter(Boolean);
-            return vals.length === 1 ? vals[0] : vals.length > 1 ? vals : '';
-          }
-          return (document.getElementById('sdr-' + sid) || {}).value || '';
-        })(),
-        delay_deadline: (() => {
-          const wrap = document.getElementById('sdelay-wrap-' + sid);
-          if (wrap) {
-            const vals = [...wrap.querySelectorAll('.sdd-input')].map(el => el.value).filter(Boolean);
-            return vals.length === 1 ? vals[0] : vals.length > 1 ? vals : '';
-          }
-          return (document.getElementById('sdd-' + sid) || {}).value || '';
-        })(),
+        lunch_deduct:  lunchEl ? (parseInt(lunchEl.value)||0) : 0,
+        status:        selEl ? selEl.value : (tr.dataset.status||'시작전'),
+        delay_reason:  reason,
+        delay_deadline:deadline,
       });
     });
-    if (name || subs.length) {
-      projs.push({
-        name,
-        category:            catEl   ? catEl.value   : '기타',
-        deadline:            dlEl    ? dlEl.value    : '',
-        proj_status:         pStatEl ? pStatEl.value : '미완료',
-        proj_delay_deadline: pDlDlEl ? pDlDlEl.value : '',
-        proj_delay_reason:   pDlRsEl ? pDlRsEl.value : '',
-        subtasks: subs,
-      });
-    }
+    if (name || subs.length) projs.push({
+      name,
+      category:            catEl   ? catEl.value   : '기타',
+      deadline:            dlEl    ? dlEl.value    : '',
+      proj_status:         pStatEl ? pStatEl.value : '미완료',
+      proj_delay_deadline: pDlDlEl ? pDlDlEl.value : '',
+      proj_delay_reason:   pDlRsEl ? pDlRsEl.value : '',
+      subtasks: subs,
+    });
   });
   return projs;
 }
@@ -1314,80 +1289,78 @@ function changeDateBy(days) {
   const d = new Date(el.value || new Date().toISOString().split('T')[0]);
   d.setDate(d.getDate() + days);
   el.value = d.toISOString().split('T')[0];
-  reloadInputPage();
-}
-function reloadInputPage() {
   document.getElementById('project-list').innerHTML = '';
   projCount = 0; subCount = 0;
   loadTodayIntoForm().then(() => {
-    if (document.getElementById('project-list').children.length === 0) addProject();
+    if (!document.getElementById('project-list').children.length) addProject();
   });
 }
 
-// ── 저장 / 불러오기 ───────────────────────────────────────────────────────────
-function eKey(n)  { return String(n).trim().replace(/[^a-zA-Z0-9가-힣]/g, '_'); }
-function esc(s)   { return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
+// ── 저장 ─────────────────────────────────────────────────────────────────────
 async function saveToday(isDraft) {
   const projects = getProjectsData();
   if (!isDraft && !projects.length) { showToast('프로젝트를 추가해 주세요'); return; }
   const date = document.getElementById('input-date').value;
-  const name = CU.name; // 항상 본인
-  const team = CU.team;
-  await dbSet('tasks', date + '__' + eKey(name), {
-    date, name, team, projects, is_draft: isDraft,
-    saved_at: new Date().toISOString(),
+  const name = CU.name; // 반드시 로그인한 본인
+  await dbSet('tasks', taskKey(date, name), {
+    date, name, team: CU.team, projects,
+    is_draft: isDraft, saved_at: new Date().toISOString(),
   });
   showToast(isDraft ? '💾 임시저장 완료!' : '✅ 오늘 업무 저장 완료!');
   updateSummary();
 }
 
+// ── 불러오기 ─────────────────────────────────────────────────────────────────
 async function loadTodayIntoForm() {
   const date = document.getElementById('input-date').value;
   const name = CU ? CU.name : '';
   if (!name || !date) return;
 
-  let projects = [];
-  const todayEntry = await dbGetDoc('tasks', date + '__' + eKey(name));
+  // 오늘 저장된 데이터 우선
+  const saved = await dbGetDoc('tasks', taskKey(date, name));
+  let projects = saved?.projects?.length ? saved.projects : [];
 
-  if (todayEntry && todayEntry.projects && todayEntry.projects.length) {
-    projects = todayEntry.projects;
-  } else {
-    // 이전 기록에서 데드라인이 아직 지나지 않은 미완료 프로젝트 불러오기
-    const allEntries = await dbGetAll('tasks');
-    const myEntries  = allEntries
+  // 없으면 이전 기록 중 만료 안 된 미완료 프로젝트 carry-over
+  if (!projects.length) {
+    const all      = await dbGetAll('tasks');
+    // 반드시 본인 데이터만 필터링
+    const myPrev   = all
       .filter(e => e.name === name && e.date < date)
       .sort((a,b) => b.date.localeCompare(a.date));
     const seen = new Set();
-    myEntries.forEach(entry => {
-      (entry.projects || []).forEach(p => {
-        if (!p.deadline || p.deadline < date) return; // 만료됨
-        if ((p.proj_status || '미완료') === '완료') return; // 완료됨 — 반복 불필요
-        if (seen.has(p.name)) return;
+    for (const entry of myPrev) {
+      for (const p of (entry.projects||[])) {
+        if (!p.deadline || p.deadline < date) continue;
+        if ((p.proj_status||'미완료') === '완료') continue;
+        if (seen.has(p.name)) continue;
         seen.add(p.name);
-        const freshSubs = (p.subtasks || []).map(t => ({
-          ...t,
-          // 완료된 세부업무는 완료 상태 유지, 나머지는 초기화
-          status: t.status === '완료' ? '완료' : '시작전',
-          start:  t.status === '완료' ? t.start : '',
-          end:    t.status === '완료' ? t.end   : '',
-          duration: t.status === '완료' ? t.duration : '—',
-          delay_reason: '', delay_deadline: '',
-        }));
-        projects.push({ ...p, subtasks: freshSubs });
-      });
-    });
+        projects.push({
+          ...p,
+          subtasks: (p.subtasks||[]).map(t => ({
+            ...t,
+            status:   t.status === '완료' ? '완료' : '시작전',
+            start:    t.status === '완료' ? t.start : '',
+            end:      t.status === '완료' ? t.end   : '',
+            duration: t.status === '완료' ? t.duration : '—',
+            delay_reason: '', delay_deadline: '',
+          })),
+        });
+      }
+    }
   }
 
   document.getElementById('project-list').innerHTML = '';
   projCount = 0; subCount = 0;
 
   projects.forEach(p => {
-    const isDeadlineToday = p.deadline === date;
-    addProject(p.name||'', p.category||'사업운영', p.deadline||'',
-               isDeadlineToday, p.proj_status||'', p.proj_delay_deadline||'', p.proj_delay_reason||'');
+    addProject({
+      name: p.name||'', category: p.category||'사업운영', deadline: p.deadline||'',
+      isDeadlineToday: p.deadline === date,
+      projStatus: p.proj_status||'', projDelayDeadline: p.proj_delay_deadline||'',
+      projDelayReason: p.proj_delay_reason||'',
+    });
     const pid = projCount;
-    (p.subtasks || []).forEach(t => addSubTask(pid, t));
+    (p.subtasks||[]).forEach(t => addSubTask(pid, t));
   });
   updateSummary();
 }
@@ -1396,135 +1369,129 @@ async function loadTodayIntoForm() {
 async function saveRetro() {
   const date = document.getElementById('input-date').value;
   const name = CU.name;
-  await dbSet('retros', date + '__' + eKey(name), {
+  await dbSet('retros', taskKey(date, name), {
     date, name,
-    satisfaction:  document.getElementById('satisfaction').value,
-    keep:          document.getElementById('retro-keep').value,
-    problem:       document.getElementById('retro-problem').value,
-    try_text:      document.getElementById('retro-try').value,
-    memo:          document.getElementById('retro-memo').value,
-    tomorrow:      document.getElementById('retro-tomorrow').value,
-    distractions:  ['dist-meeting','dist-comm','dist-task','dist-personal']
-      .filter(id => document.getElementById(id) && document.getElementById(id).checked)
-      .map(id => document.getElementById(id).nextElementSibling.textContent.trim()),
+    satisfaction: document.getElementById('satisfaction').value,
+    keep:         document.getElementById('retro-keep').value,
+    problem:      document.getElementById('retro-problem').value,
+    try_text:     document.getElementById('retro-try').value,
+    memo:         document.getElementById('retro-memo').value,
+    tomorrow:     document.getElementById('retro-tomorrow').value,
     saved_at: new Date().toISOString(),
   });
-  showToast('✓ 데일리 회고가 저장되었습니다');
+  showToast('✅ 데일리 회고 저장 완료!');
 }
 
 async function loadRetroSummary() {
   const date = document.getElementById('input-date').value;
   const name = CU.name;
-  const taskEntry = await dbGetDoc('tasks', date + '__' + eKey(name));
-  const projects  = taskEntry ? taskEntry.projects : getProjectsData();
-  const body      = document.getElementById('retro-summary-body');
+  const saved = await dbGetDoc('tasks', taskKey(date, name));
+  const projects = saved?.projects || getProjectsData();
+  const body = document.getElementById('retro-summary-body');
   if (!projects.length) {
     body.innerHTML = '<div style="color:var(--text-muted);font-size:13px">오늘 저장된 업무가 없습니다.</div>';
     return;
   }
-  const allSubs = projects.flatMap(p => p.subtasks || []);
-  const total   = allSubs.length;
-  const done    = allSubs.filter(t => t.status === '완료').length;
-  const delays  = allSubs.filter(t => t.status.includes('딜레이'));
+  const allSubs = projects.flatMap(p=>p.subtasks||[]);
+  const done    = allSubs.filter(t=>t.status==='완료').length;
+  const delays  = allSubs.filter(t=>t.status.includes('딜레이'));
   let html = `<div style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap">
-    <span>총 세부업무 <strong>${total}</strong>건</span>
-    <span style="color:var(--accent)">완료 <strong>${done}</strong>건 (${total?Math.round(done/total*100):0}%)</span>
+    <span>총 <strong>${allSubs.length}</strong>건</span>
+    <span style="color:var(--accent)">완료 <strong>${done}</strong>건 (${allSubs.length?Math.round(done/allSubs.length*100):0}%)</span>
     <span style="color:var(--warn)">딜레이 <strong>${delays.length}</strong>건</span>
   </div>`;
   projects.forEach(p => {
-    const subs = p.subtasks || [];
-    const pd   = subs.filter(t => t.status === '완료').length;
+    const subs = p.subtasks||[];
+    const pd   = subs.filter(t=>t.status==='완료').length;
     html += `<div class="retro-proj-item">
       <div class="retro-proj-name">📁 ${p.name||'(이름 없음)'}
         <span style="font-size:11px;color:var(--text-muted);font-weight:400">${pd}/${subs.length} 완료${p.deadline?' · D/L '+p.deadline:''}</span>
       </div>`;
     subs.forEach(t => {
-      const bc      = STATUS_BADGE[t.status] || 'b-notstart';
-      const durPart = (t.duration && t.duration !== '—') ? '<span style="font-family:IBM Plex Mono,monospace;font-size:11px">' + t.duration + '</span>' : '';
-      const dlPart  = t.delay_reason ? '<span style="color:var(--warn);font-size:11px">⚠ ' + t.delay_reason + (t.delay_deadline ? ' (목표기한: ' + t.delay_deadline + ')' : '') + '</span>' : '';
-      html += `<div class="retro-sub-row"><span class="badge ${bc}" style="font-size:10px">${STATUS_LABELS[t.status]||t.status}</span><span>↳ ${t.name}</span>${durPart}${dlPart}</div>`;
+      const bc     = STATUS_CLS[t.status]||'b-notstart';
+      const durPart= (t.duration&&t.duration!=='—') ? '<span style="font-family:IBM Plex Mono,monospace;font-size:11px">'+t.duration+'</span>' : '';
+      const reasons= Array.isArray(t.delay_reason) ? t.delay_reason : [t.delay_reason||''];
+      const dlPart = reasons.filter(Boolean).map(r => '<span style="color:var(--warn);font-size:11px">⚠ '+r+'</span>').join(' ');
+      html += `<div class="retro-sub-row"><span class="badge ${bc}" style="font-size:10px">${STATUS_LABEL[t.status]||t.status}</span><span>↳ ${t.name}</span>${durPart}${dlPart}</div>`;
     });
     html += '</div>';
   });
   body.innerHTML = html;
 }
 
-// ── 리포트 ────────────────────────────────────────────────────────────────────
+// ── 리포트 ───────────────────────────────────────────────────────────────────
 async function generateReport(dateOverride, nameOverride) {
   const date = dateOverride || document.getElementById('input-date').value;
   const name = nameOverride || CU.name;
-  document.getElementById('report-meta-line').textContent = date + ' · ' + name + ' · ' + (MEMBERS[name] ? MEMBERS[name].team : '');
-  const taskEntry  = await dbGetDoc('tasks',  date + '__' + eKey(name));
-  const retroEntry = await dbGetDoc('retros', date + '__' + eKey(name));
-  const projects   = taskEntry ? taskEntry.projects : getProjectsData();
-  const allSubs    = projects.flatMap(p => p.subtasks || []);
-  const total      = allSubs.length;
-  const done       = allSubs.filter(t => t.status === '완료').length;
-  const dPer       = allSubs.filter(t => t.status === '딜레이-개인').length;
-  const dExt       = allSubs.filter(t => t.status === '딜레이-외부').length;
-  const totalMin   = allSubs.reduce((s,t) => { const m = parseInt(t.duration); return s + (isNaN(m)?0:m); }, 0);
+  document.getElementById('report-meta-line').textContent = date + ' · ' + name + ' · ' + (MEMBERS[name]?.team||'');
 
-  document.getElementById('r-projects').textContent   = projects.length || '—';
-  document.getElementById('r-rate').textContent       = total ? Math.round(done/total*100) + '%' : '—';
-  document.getElementById('r-delay-per').textContent  = dPer;
-  document.getElementById('r-delay-ext').textContent  = dExt;
-  document.getElementById('r-total-min').textContent  = totalMin || '—';
+  const saved = await dbGetDoc('tasks',  taskKey(date, name));
+  const retro = await dbGetDoc('retros', taskKey(date, name));
+  const projects = saved?.projects || getProjectsData();
+  const allSubs  = projects.flatMap(p=>p.subtasks||[]);
+  const done     = allSubs.filter(t=>t.status==='완료').length;
+  const dPer     = allSubs.filter(t=>t.status==='딜레이-개인').length;
+  const dExt     = allSubs.filter(t=>t.status==='딜레이-외부').length;
+  const totalMin = allSubs.reduce((s,t)=>{const m=parseInt(t.duration);return s+(isNaN(m)?0:m);},0);
+
+  document.getElementById('r-projects').textContent  = projects.length||'—';
+  document.getElementById('r-rate').textContent      = allSubs.length ? Math.round(done/allSubs.length*100)+'%' : '—';
+  document.getElementById('r-delay-per').textContent = dPer;
+  document.getElementById('r-delay-ext').textContent = dExt;
+  document.getElementById('r-total-min').textContent = totalMin||'—';
 
   const tbody = document.getElementById('report-task-body');
   tbody.innerHTML = '';
   projects.forEach(p => {
-    const ps  = p.subtasks || [];
-    const pd  = ps.filter(t => t.status === '완료').length;
-    const pSB = {'완료':'b-done','부분완료':'b-delay-per','미완료':'b-notstart','딜레이':'b-danger'}[p.proj_status||'미완료'] || 'b-notstart';
-    const dlDl = (p.proj_status === '딜레이' && p.proj_delay_deadline) ? ' <span style="font-size:10px;color:var(--danger)">목표기한: ' + p.proj_delay_deadline + '</span>' : '';
-    const dlRs = p.proj_delay_reason ? ' <span style="font-size:10px;color:var(--text-muted)">사유: ' + p.proj_delay_reason + '</span>' : '';
-    tbody.innerHTML += `<tr class="rp-row"><td colspan="7">📁 ${p.name||'(이름 없음)'}
-      <span style="font-size:11px;color:var(--text-muted);font-weight:400"> ${p.category}</span>
-      <span class="badge ${pSB}" style="font-size:10px;margin-left:4px">${p.proj_status||'미완료'}</span>
-      ${dlDl}${dlRs}
+    const ps  = p.subtasks||[];
+    const pd  = ps.filter(t=>t.status==='완료').length;
+    const pSB = {완료:'b-done',부분완료:'b-delay-per',미완료:'b-notstart',딜레이:'b-danger'}[p.proj_status||'미완료']||'b-notstart';
+    const dlDl= (p.proj_status==='딜레이'&&p.proj_delay_deadline) ? ' <span style="font-size:10px;color:var(--danger)">목표기한: '+p.proj_delay_deadline+'</span>' : '';
+    const dlRs= p.proj_delay_reason ? ' <span style="font-size:10px;color:var(--text-muted)">사유: '+p.proj_delay_reason+'</span>' : '';
+    tbody.innerHTML += `<tr class="rp-row"><td colspan="7">📁 ${p.name||''}
+      <span style="font-size:11px;color:var(--text-muted);font-weight:400">${p.category}</span>
+      <span class="badge ${pSB}" style="font-size:10px;margin-left:4px">${p.proj_status||'미완료'}</span>${dlDl}${dlRs}
       <span style="float:right;font-size:11px;color:var(--text-muted);font-weight:400">${pd}/${ps.length} 완료</span>
     </td></tr>`;
     ps.forEach(t => {
-      const bc = STATUS_BADGE[t.status] || 'b-notstart';
+      const bc = STATUS_CLS[t.status]||'b-notstart';
+      const reasons = Array.isArray(t.delay_reason) ? t.delay_reason.join(' / ') : t.delay_reason||'—';
+      const deadlines = Array.isArray(t.delay_deadline) ? t.delay_deadline.join(' / ') : t.delay_deadline||'—';
       tbody.innerHTML += `<tr class="rs-row">
         <td>↳ ${t.name}</td>
         <td><span class="badge b-pending" style="font-size:10px">${p.category}</span></td>
         <td style="font-size:11px;color:var(--text-muted)">${p.deadline||'—'}</td>
         <td style="font-family:'IBM Plex Mono',monospace;font-size:11px">${t.duration||'—'}</td>
-        <td><span class="badge ${bc}" style="font-size:10px">${STATUS_LABELS[t.status]||t.status}</span></td>
-        <td style="font-size:11px;color:var(--text-muted)">${t.delay_reason||'—'}</td>
-        <td style="font-size:11px;color:var(--warn)">${t.delay_deadline||'—'}</td>
+        <td><span class="badge ${bc}" style="font-size:10px">${STATUS_LABEL[t.status]||t.status}</span></td>
+        <td style="font-size:11px;color:var(--text-muted)">${reasons}</td>
+        <td style="font-size:11px;color:var(--warn)">${deadlines}</td>
       </tr>`;
     });
   });
   if (!projects.length) tbody.innerHTML = '<tr><td colspan="7" style="color:var(--text-muted);font-size:12px;padding:10px 0">저장된 데이터가 없습니다.</td></tr>';
 
-  const r = retroEntry || {};
+  const r = retro||{};
   document.getElementById('r-satisfaction').textContent = r.satisfaction || document.getElementById('satisfaction').value;
   document.getElementById('r-keep').textContent    = r.keep     || document.getElementById('retro-keep').value    || '—';
   document.getElementById('r-problem').textContent = r.problem  || document.getElementById('retro-problem').value || '—';
   document.getElementById('r-try').textContent     = r.try_text || document.getElementById('retro-try').value     || '—';
   document.getElementById('r-tomorrow').textContent= r.tomorrow || document.getElementById('retro-tomorrow').value|| '—';
-  const memo = r.memo || (document.getElementById('retro-memo') ? document.getElementById('retro-memo').value : '');
-  document.getElementById('r-memo-section').textContent = memo ? '메모: ' + memo : '';
+  const memo = r.memo || document.getElementById('retro-memo')?.value || '';
+  document.getElementById('r-memo-section').textContent = memo ? '메모: '+memo : '';
   await loadReportFeedback(date, name);
 }
 
 async function loadReportFeedback(date, name) {
-  const feedbacks = await dbGetAll('feedbacks');
-  const mine      = feedbacks.filter(f => f.to === name && f.date === date);
-  const area      = document.getElementById('report-feedback-area');
+  const all  = await dbGetAll('feedbacks');
+  const mine = all.filter(f => f.to === name && f.date === date);
+  const area = document.getElementById('report-feedback-area');
   if (!mine.length) { area.innerHTML = ''; return; }
-  area.innerHTML = mine.map(f => `
-    <div class="feedback-box${f.read?'':' feedback-unread'}" style="margin-bottom:10px">
-      <div class="feedback-title">💬 관리자 피드백 — ${f.type}
-        <span style="margin-left:auto;font-weight:400;font-size:10px">${f.from}</span></div>
-      <div class="feedback-msg">${f.content}</div>
-      <div class="feedback-meta">${f.sent_at ? f.sent_at.slice(0,16).replace('T',' ') : ''}</div>
-    </div>`).join('');
-  for (const f of mine) {
-    if (!f.read) await dbSet('feedbacks', f.id, { ...f, read: true });
-  }
+  area.innerHTML = mine.map(f => `<div class="feedback-box${f.read?'':' feedback-unread'}" style="margin-bottom:10px">
+    <div class="feedback-title">💬 관리자 피드백 — ${f.type}<span style="margin-left:auto;font-weight:400;font-size:10px">${f.from}</span></div>
+    <div class="feedback-msg">${f.content}</div>
+    <div class="feedback-meta">${f.sent_at?f.sent_at.slice(0,16).replace('T',' '):''}</div>
+  </div>`).join('');
+  for (const f of mine.filter(f=>!f.read)) await dbSet('feedbacks', f.id, {...f, read:true});
   await checkInbox();
 }
 
@@ -1537,8 +1504,8 @@ async function viewDailyReport(date, name) {
 function setDefaultWeek() {
   const today = new Date();
   const day   = today.getDay();
-  const mon   = new Date(today); mon.setDate(today.getDate() - (day===0?6:day-1));
-  const sun   = new Date(mon);   sun.setDate(mon.getDate() + 6);
+  const mon   = new Date(today); mon.setDate(today.getDate()-(day===0?6:day-1));
+  const sun   = new Date(mon);   sun.setDate(mon.getDate()+6);
   document.getElementById('week-start').value = mon.toISOString().split('T')[0];
   document.getElementById('week-end').value   = sun.toISOString().split('T')[0];
 }
@@ -1546,18 +1513,18 @@ function setDefaultWeek() {
 async function generateWeeklyReport() {
   const ws   = document.getElementById('week-start').value;
   const we   = document.getElementById('week-end').value;
-  if (!ws || !we) { showToast('기간을 선택해 주세요'); return; }
-  const name = CU.name; // 항상 본인
+  if (!ws||!we) { showToast('기간을 선택해 주세요'); return; }
+  const name = CU.name; // 반드시 본인
   const all    = await dbGetAll('tasks');
   const retros = await dbGetAll('retros');
-  const mine   = all.filter(e => e.name === name && e.date >= ws && e.date <= we);
-  const myRet  = retros.filter(e => e.name === name && e.date >= ws && e.date <= we);
-  const allSubs = mine.flatMap(e => (e.projects||[]).flatMap(p => p.subtasks||[]));
-  const total  = allSubs.length;
-  const done   = allSubs.filter(t => t.status === '완료').length;
-  const dPer   = allSubs.filter(t => t.status === '딜레이-개인').length;
-  const dExt   = allSubs.filter(t => t.status === '딜레이-외부').length;
-  const avgSat = myRet.length ? (myRet.reduce((s,e) => s+Number(e.satisfaction),0)/myRet.length).toFixed(1) : '—';
+  // 본인 데이터만
+  const mine  = all.filter(e => e.name === name && e.date >= ws && e.date <= we);
+  const myRet = retros.filter(e => e.name === name && e.date >= ws && e.date <= we);
+  const allSubs = mine.flatMap(e=>(e.projects||[]).flatMap(p=>p.subtasks||[]));
+  const done  = allSubs.filter(t=>t.status==='완료').length;
+  const dPer  = allSubs.filter(t=>t.status==='딜레이-개인').length;
+  const dExt  = allSubs.filter(t=>t.status==='딜레이-외부').length;
+  const avgSat= myRet.length ? (myRet.reduce((s,e)=>s+Number(e.satisfaction),0)/myRet.length).toFixed(1) : '—';
 
   let html = `<div class="report-block" id="weekly-report-block">
     <div class="report-header">
@@ -1569,7 +1536,7 @@ async function generateWeeklyReport() {
       <div class="report-section-title">주간 요약</div>
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
         <div class="stat-card"><div class="stat-label">기록 일수</div><div class="stat-val">${mine.length}</div><div class="stat-sub">일</div></div>
-        <div class="stat-card"><div class="stat-label">완료율</div><div class="stat-val" style="color:var(--accent)">${total?Math.round(done/total*100)+'%':'—'}</div></div>
+        <div class="stat-card"><div class="stat-label">완료율</div><div class="stat-val" style="color:var(--accent)">${allSubs.length?Math.round(done/allSubs.length*100)+'%':'—'}</div></div>
         <div class="stat-card"><div class="stat-label">딜레이(개인)</div><div class="stat-val" style="color:var(--warn)">${dPer}</div></div>
         <div class="stat-card"><div class="stat-label">딜레이(외부)</div><div class="stat-val" style="color:var(--info)">${dExt}</div></div>
         <div class="stat-card"><div class="stat-label">평균 만족도</div><div class="stat-val">${avgSat}</div><div class="stat-sub">/ 10</div></div>
@@ -1578,20 +1545,19 @@ async function generateWeeklyReport() {
     <div class="report-section">
       <div class="report-section-title">일별 상세</div>
       <table class="rt"><thead><tr><th>날짜</th><th>프로젝트</th><th>세부업무</th><th>완료율</th><th>딜레이(개인)</th><th>만족도</th></tr></thead><tbody>`;
-  mine.sort((a,b) => a.date.localeCompare(b.date)).forEach(e => {
-    const subs  = (e.projects||[]).flatMap(p => p.subtasks||[]);
-    const d     = subs.filter(t => t.status === '완료').length;
-    const rt    = subs.length ? Math.round(d/subs.length*100) : 0;
-    const dp    = subs.filter(t => t.status === '딜레이-개인').length;
-    const retro = myRet.find(r => r.date === e.date);
-    const projs = (e.projects||[]).map(p => p.name).filter(Boolean).join(', ');
+  mine.sort((a,b)=>a.date.localeCompare(b.date)).forEach(e => {
+    const subs = (e.projects||[]).flatMap(p=>p.subtasks||[]);
+    const d    = subs.filter(t=>t.status==='완료').length;
+    const rt   = subs.length ? Math.round(d/subs.length*100) : 0;
+    const dp   = subs.filter(t=>t.status==='딜레이-개인').length;
+    const r2   = myRet.find(r=>r.date===e.date);
     html += `<tr>
       <td style="font-family:'IBM Plex Mono',monospace;font-size:11px">${e.date}</td>
-      <td style="font-size:12px">${projs||'—'}</td>
+      <td style="font-size:12px">${(e.projects||[]).map(p=>p.name).filter(Boolean).join(', ')||'—'}</td>
       <td style="font-size:12px;text-align:center">${subs.length}</td>
       <td><span class="badge ${rt>=80?'b-done':'b-notstart'}" style="font-size:10px">${rt}%</span></td>
-      <td style="text-align:center;color:var(--warn)">${dp||'0'}</td>
-      <td style="text-align:center">${retro?retro.satisfaction+'/10':'—'}</td>
+      <td style="text-align:center;color:var(--warn)">${dp||0}</td>
+      <td style="text-align:center">${r2?r2.satisfaction+'/10':'—'}</td>
     </tr>`;
   });
   if (!mine.length) html += '<tr><td colspan="6" style="color:var(--text-muted);font-size:12px;padding:10px 0">해당 기간 데이터가 없습니다.</td></tr>';
@@ -1614,12 +1580,10 @@ async function generateWeeklyReport() {
   document.getElementById('weekly-pdf-btn').style.display = 'flex';
 }
 
-// ── PDF 출력 ──────────────────────────────────────────────────────────────────
+// ── PDF ──────────────────────────────────────────────────────────────────────
 function downloadPDF(type) {
   if (type === 'daily') {
-    generateReport().then(() => {
-      setTimeout(() => openPrintWin(document.getElementById('report-content').innerHTML), 150);
-    });
+    generateReport().then(() => setTimeout(() => openPrintWin(document.getElementById('report-content').innerHTML), 150));
   } else {
     const el = document.getElementById('weekly-report-block');
     if (!el) { showToast('먼저 주간 리포트를 조회해 주세요'); return; }
@@ -1628,7 +1592,7 @@ function downloadPDF(type) {
   showToast('PDF 출력 창이 열렸습니다');
 }
 function openPrintWin(content) {
-  const w = window.open('', '_blank');
+  const w = window.open('','_blank');
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Noto Sans KR',sans-serif;font-size:13px;color:#1A1916;padding:28px;line-height:1.6}
@@ -1649,43 +1613,36 @@ async function renderMyHistory() {
   const name   = CU.name;
   const all    = await dbGetAll('tasks');
   const retros = await dbGetAll('retros');
-  const mine   = all.filter(e => e.name === name);
+  const mine   = all.filter(e => e.name === name); // 본인만
   const myRet  = retros.filter(e => e.name === name);
+
   document.getElementById('ms-days').textContent = mine.length;
-  const allSubs = mine.flatMap(e => (e.projects||[]).flatMap(p => p.subtasks||[]));
+  const allSubs = mine.flatMap(e=>(e.projects||[]).flatMap(p=>p.subtasks||[]));
   if (allSubs.length) {
-    const rates = mine.map(e => {
-      const s = (e.projects||[]).flatMap(p => p.subtasks||[]);
-      return s.length ? Math.round(s.filter(t => t.status === '완료').length / s.length * 100) : 0;
-    });
-    document.getElementById('ms-rate').textContent  = Math.round(rates.reduce((a,b)=>a+b,0)/rates.length) + '%';
-    document.getElementById('ms-delay').textContent = allSubs.filter(t => t.status === '딜레이-개인').length;
+    const rates = mine.map(e=>{const s=(e.projects||[]).flatMap(p=>p.subtasks||[]);return s.length?Math.round(s.filter(t=>t.status==='완료').length/s.length*100):0;});
+    document.getElementById('ms-rate').textContent  = Math.round(rates.reduce((a,b)=>a+b,0)/rates.length)+'%';
+    document.getElementById('ms-delay').textContent = allSubs.filter(t=>t.status==='딜레이-개인').length;
   } else {
     document.getElementById('ms-rate').textContent  = '—';
     document.getElementById('ms-delay').textContent = '0';
   }
-  if (myRet.length) {
-    document.getElementById('ms-sat').textContent = (myRet.reduce((s,e)=>s+Number(e.satisfaction),0)/myRet.length).toFixed(1);
-  } else {
-    document.getElementById('ms-sat').textContent = '—';
-  }
+  document.getElementById('ms-sat').textContent = myRet.length
+    ? (myRet.reduce((s,e)=>s+Number(e.satisfaction),0)/myRet.length).toFixed(1) : '—';
+
   const cont = document.getElementById('my-history-list');
-  if (!mine.length) { cont.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:10px 0">저장된 기록이 없습니다.</div>'; return; }
-  cont.innerHTML = mine.slice().sort((a,b) => b.date.localeCompare(a.date)).map(e => {
-    const subs = (e.projects||[]).flatMap(p => p.subtasks||[]);
-    const done = subs.filter(t => t.status === '완료').length;
+  if (!mine.length) { cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:10px 0">저장된 기록이 없습니다.</div>'; return; }
+  cont.innerHTML = mine.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(e => {
+    const subs = (e.projects||[]).flatMap(p=>p.subtasks||[]);
+    const done = subs.filter(t=>t.status==='완료').length;
     const rate = subs.length ? Math.round(done/subs.length*100) : 0;
-    const retro = myRet.find(r => r.date === e.date);
-    const projNames = (e.projects||[]).map(p=>p.name).filter(Boolean).join(', ') || '(없음)';
-    const retroTxt = retro ? '<span style="color:var(--info)">만족도 ' + retro.satisfaction + '/10</span>'
-                           : '<span style="color:var(--text-light)">회고 미작성</span>';
-    return `<div class="history-item" style="cursor:pointer" onclick="viewDailyReport('${e.date}','${esc(e.name)}')">
+    const ret  = myRet.find(r=>r.date===e.date);
+    return `<div class="history-item" style="cursor:pointer" onclick="viewDailyReport('${e.date}','${esc(name)}')">
       <span class="h-date">${e.date}</span>
-      <span class="h-name">${projNames}</span>
+      <span class="h-name">${(e.projects||[]).map(p=>p.name).filter(Boolean).join(', ')||'(없음)'}</span>
       <div class="h-stats">
         <span>${(e.projects||[]).length}개 프로젝트</span>
         <span style="color:var(--accent)">완료율 ${rate}%</span>
-        ${retroTxt}
+        ${ret?'<span style="color:var(--info)">만족도 '+ret.satisfaction+'/10</span>':'<span style="color:var(--text-light)">회고 미작성</span>'}
         <span style="color:var(--info);font-size:10px">→ 리포트 보기</span>
       </div>
     </div>`;
@@ -1698,23 +1655,21 @@ async function sendFeedback() {
   const date    = document.getElementById('fb-date').value;
   const type    = document.getElementById('fb-type').value;
   const content = document.getElementById('fb-content').value.trim();
-  if (!to || !content) { showToast('받는 사람과 내용을 입력해 주세요'); return; }
-  // 받는 사람이 MEMBERS에 있는지 확인
-  if (!MEMBERS[to]) { showToast('등록된 구성원 이름을 정확히 입력해 주세요'); return; }
+  if (!to||!content) { showToast('받는 사람과 내용을 입력해 주세요'); return; }
+  if (!MEMBERS[to])  { showToast('등록된 구성원 이름을 정확히 입력해 주세요'); return; }
   const id    = 'fb__' + Date.now() + '__' + eKey(to);
-  const entry = { id, to, date, type, content, from: CU.name, read: false, sent_at: new Date().toISOString() };
-  await dbSet('feedbacks', id, entry);
+  await dbSet('feedbacks', id, { id, to, date, type, content, from: CU.name, read: false, sent_at: new Date().toISOString() });
   document.getElementById('fb-content').value = '';
   await renderSentFeedbacks();
-  showToast('✓ 피드백이 발송되었습니다');
+  showToast('✅ 피드백 발송 완료!');
 }
 
 async function renderSentFeedbacks() {
   const all  = await dbGetAll('feedbacks');
-  const sent = all.filter(f => f.from === CU.name).sort((a,b) => new Date(b.sent_at) - new Date(a.sent_at));
+  const sent = all.filter(f=>f.from===CU.name).sort((a,b)=>new Date(b.sent_at)-new Date(a.sent_at));
   const cont = document.getElementById('sent-feedback-list');
-  if (!sent.length) { cont.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:8px 0">발송 내역이 없습니다.</div>'; return; }
-  cont.innerHTML = sent.map(f => `<div class="history-item">
+  if (!sent.length) { cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:8px 0">발송 내역이 없습니다.</div>'; return; }
+  cont.innerHTML = sent.map(f=>`<div class="history-item">
     <span class="h-date">${f.date}</span>
     <span class="h-name" style="font-weight:500">→ ${f.to}</span>
     <div class="h-stats">
@@ -1727,87 +1682,79 @@ async function renderSentFeedbacks() {
 
 async function renderInbox() {
   const all  = await dbGetAll('feedbacks');
-  const name = CU ? CU.name : '';
-  const mine = all.filter(f => f.to === name).sort((a,b) => new Date(b.sent_at) - new Date(a.sent_at));
+  const mine = all.filter(f=>f.to===CU.name).sort((a,b)=>new Date(b.sent_at)-new Date(a.sent_at));
   const cont = document.getElementById('inbox-list');
-  if (!mine.length) { cont.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:10px 0">받은 피드백이 없습니다.</div>'; return; }
-  cont.innerHTML = mine.map(f => `<div class="feedback-box${f.read?'':' feedback-unread'}" style="margin-bottom:10px">
-    <div class="feedback-title">💬 ${f.type||'피드백'} &nbsp;
-      <span style="font-weight:400;font-size:10px;color:var(--text-muted)">from ${f.from||'—'} · ${f.date||''}</span></div>
+  if (!mine.length) { cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:10px 0">받은 피드백이 없습니다.</div>'; return; }
+  cont.innerHTML = mine.map(f=>`<div class="feedback-box${f.read?'':' feedback-unread'}" style="margin-bottom:10px">
+    <div class="feedback-title">💬 ${f.type||'피드백'} &nbsp;<span style="font-weight:400;font-size:10px;color:var(--text-muted)">from ${f.from||'—'} · ${f.date||''}</span></div>
     <div class="feedback-msg" style="margin-top:4px">${f.content||''}</div>
     <div class="feedback-meta" style="margin-top:4px">${f.sent_at?f.sent_at.slice(0,16).replace('T',' '):''}</div>
   </div>`).join('');
-  // 읽음 처리
-  for (const f of mine.filter(f => !f.read)) {
-    await dbSet('feedbacks', f.id, { ...f, read: true });
-  }
+  for (const f of mine.filter(f=>!f.read)) await dbSet('feedbacks', f.id, {...f, read:true});
   await checkInbox();
 }
 
 async function checkInbox() {
   if (!CU) return;
   const all    = await dbGetAll('feedbacks');
-  const unread = all.filter(f => f.to === CU.name && !f.read).length;
+  const unread = all.filter(f=>f.to===CU.name&&!f.read).length;
   const badge  = document.getElementById('inbox-badge');
   if (!badge) return;
-  if (unread > 0) { badge.style.display = 'inline'; badge.textContent = unread; }
-  else              badge.style.display = 'none';
+  badge.style.display = unread > 0 ? 'inline' : 'none';
+  if (unread > 0) badge.textContent = unread;
 }
 
 // ── 관리자: 대시보드 ──────────────────────────────────────────────────────────
 async function renderAdminDashboard() {
-  const all        = await dbGetAll('tasks');
-  const retros     = await dbGetAll('retros');
-  const todayStr   = document.getElementById('input-date').value;
-  const visNames   = getAdminVisibleNames();
-  const visSet     = new Set(visNames);
+  const all      = await dbGetAll('tasks');
+  const retros   = await dbGetAll('retros');
+  const todayStr = document.getElementById('input-date').value;
+  const targets  = adminTargetNames();
+  const tSet     = new Set(targets);
 
-  // 중복 제거: 동일 날짜+이름은 최신 1개만
+  // 대상 인원 데이터만 — 중복 제거(날짜+이름 기준 최신)
   const deduped = Object.values(
-    all.filter(e => visSet.has(e.name))
-       .reduce((acc, e) => {
+    all.filter(e => tSet.has(e.name))
+       .reduce((acc,e) => {
          const k = e.date + '__' + e.name;
          if (!acc[k] || new Date(e.saved_at) > new Date(acc[k].saved_at)) acc[k] = e;
          return acc;
        }, {})
   );
 
-  // 세부업무 + 프로젝트 상태 모두 고려
-  const allSubs  = deduped.flatMap(e => (e.projects||[]).flatMap(p => p.subtasks||[]));
-  const allProjs = deduped.flatMap(e => e.projects||[]);
+  const allSubs  = deduped.flatMap(e=>(e.projects||[]).flatMap(p=>p.subtasks||[]));
+  const allProjs = deduped.flatMap(e=>e.projects||[]);
   const total    = allSubs.length || allProjs.length;
   const done     = allSubs.length
-    ? allSubs.filter(t => t.status === '완료').length
-    : allProjs.filter(p => (p.proj_status||'미완료') === '완료').length;
-  const dExt    = allSubs.filter(t => t.status === '딜레이-외부').length;
-  const dPer    = allSubs.filter(t => t.status === '딜레이-개인').length;
+    ? allSubs.filter(t=>t.status==='완료').length
+    : allProjs.filter(p=>(p.proj_status||'미완료')==='완료').length;
+  const dExt = allSubs.filter(t=>t.status==='딜레이-외부').length;
+  const dPer = allSubs.filter(t=>t.status==='딜레이-개인').length;
 
-  document.getElementById('d-rate').textContent      = total ? Math.round(done/total*100) + '%' : '—';
+  document.getElementById('d-rate').textContent      = total ? Math.round(done/total*100)+'%' : '—';
   document.getElementById('d-delay').textContent     = dExt + dPer;
-  document.getElementById('d-delay-sub').textContent = '외부 ' + dExt + ' / 개인 ' + dPer;
+  document.getElementById('d-delay-sub').textContent = '외부 '+dExt+' / 개인 '+dPer;
 
-  const filtRet = retros.filter(e => visSet.has(e.name));
+  const filtRet = retros.filter(e=>tSet.has(e.name));
   document.getElementById('d-sat').textContent = filtRet.length
-    ? (filtRet.reduce((s,e) => s+Number(e.satisfaction),0)/filtRet.length).toFixed(1) : '—';
+    ? (filtRet.reduce((s,e)=>s+Number(e.satisfaction),0)/filtRet.length).toFixed(1) : '—';
 
-  const submitted = new Set(deduped.filter(e => e.date === todayStr).map(e => e.name));
-  document.getElementById('d-missing').textContent =
-    Math.max(0, visNames.filter(n => !submitted.has(n)).length);
+  const submitted = new Set(deduped.filter(e=>e.date===todayStr).map(e=>e.name));
+  document.getElementById('d-missing').textContent = Math.max(0, targets.filter(n=>!submitted.has(n)).length);
 
   const cont = document.getElementById('admin-report-list');
-  const sorted = deduped.sort((a,b) => new Date(b.saved_at) - new Date(a.saved_at));
-  if (!sorted.length) { cont.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:8px 0">제출된 데이터가 없습니다.</div>'; return; }
+  const sorted = deduped.sort((a,b)=>new Date(b.saved_at)-new Date(a.saved_at));
+  if (!sorted.length) { cont.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:8px 0">제출된 데이터가 없습니다.</div>'; return; }
   cont.innerHTML = sorted.slice(0,15).map(r => {
-    const teamTag = MEMBERS[r.name] ? '<span class="badge b-purple" style="font-size:10px">' + MEMBERS[r.name].team + '</span>' : '';
-    const subs    = (r.projects||[]).flatMap(p => p.subtasks||[]);
-    const d       = subs.filter(t => t.status === '완료').length;
+    const teamTag = MEMBERS[r.name] ? '<span class="badge b-purple" style="font-size:10px">'+MEMBERS[r.name].team+'</span>' : '';
+    const subs    = (r.projects||[]).flatMap(p=>p.subtasks||[]);
+    const d       = subs.filter(t=>t.status==='완료').length;
     const rt      = subs.length ? Math.round(d/subs.length*100) : 0;
-    const projs   = (r.projects||[]).map(p=>p.name).filter(Boolean).join(', ') || '—';
     return `<div class="history-item" style="cursor:pointer" onclick="viewMemberReport('${r.date}','${esc(r.name)}')">
       <span class="h-date">${r.date}</span>
       <span class="h-name" style="font-weight:500">${r.name} ${teamTag}</span>
       <div class="h-stats">
-        <span>${projs}</span>
+        <span>${(r.projects||[]).map(p=>p.name).filter(Boolean).join(', ')||'—'}</span>
         <span style="color:var(--accent)">완료율 ${rt}%</span>
         <span class="badge b-done" style="font-size:10px">저장</span>
       </div>
@@ -1817,21 +1764,17 @@ async function renderAdminDashboard() {
 
 // ── 관리자: 구성원 현황 ───────────────────────────────────────────────────────
 function setMemberPeriod(type) {
-  const today = new Date();
-  const todayStr = today.toISOString().split('T')[0];
+  const today = new Date().toISOString().split('T')[0];
   const fromEl = document.getElementById('member-from');
   const toEl   = document.getElementById('member-to');
   if (type === 'week') {
-    const day = today.getDay();
-    const mon = new Date(today); mon.setDate(today.getDate() - (day===0?6:day-1));
-    fromEl.value = mon.toISOString().split('T')[0];
-    toEl.value   = todayStr;
+    const d   = new Date(); const day = d.getDay();
+    const mon = new Date(d); mon.setDate(d.getDate()-(day===0?6:day-1));
+    fromEl.value = mon.toISOString().split('T')[0]; toEl.value = today;
   } else if (type === 'month') {
-    fromEl.value = todayStr.slice(0,7) + '-01';
-    toEl.value   = todayStr;
+    fromEl.value = today.slice(0,7)+'-01'; toEl.value = today;
   } else {
-    fromEl.value = '';
-    toEl.value   = '';
+    fromEl.value = ''; toEl.value = '';
   }
 }
 
@@ -1839,77 +1782,67 @@ async function renderMemberList() {
   const all      = await dbGetAll('tasks');
   const retros   = await dbGetAll('retros');
   const todayStr = document.getElementById('input-date').value;
-  // 조회 기간 필터
-  const fromDate = (document.getElementById('member-from')||{}).value || '';
-  const toDate   = (document.getElementById('member-to')||{}).value   || '';
-  const visNames = getAdminVisibleNames();
+  const fromDate = document.getElementById('member-from')?.value || '';
+  const toDate   = document.getElementById('member-to')?.value   || '';
+  const targets  = adminTargetNames();
   const cont     = document.getElementById('member-list-container');
-  if (!visNames.length) { cont.innerHTML = '<div style="color:var(--text-muted);font-size:13px">관리 대상 구성원이 없습니다.</div>'; return; }
 
-  // 기간 필터 + 중복 제거된 최신 데이터
-  const filteredAll = (fromDate || toDate)
-    ? all.filter(e => (!fromDate || e.date >= fromDate) && (!toDate || e.date <= toDate))
+  if (!targets.length) { cont.innerHTML='<div style="color:var(--text-muted);font-size:13px">관리 대상 구성원이 없습니다.</div>'; return; }
+
+  const filtered = (fromDate||toDate)
+    ? all.filter(e=>(!fromDate||e.date>=fromDate)&&(!toDate||e.date<=toDate))
     : all;
-  const dedupedAll = Object.values(
-    filteredAll.reduce((acc, e) => {
-      const k = e.date + '__' + e.name;
-      if (!acc[k] || new Date(e.saved_at) > new Date(acc[k].saved_at)) acc[k] = e;
+  // 중복 제거
+  const deduped = Object.values(
+    filtered.reduce((acc,e)=>{
+      const k=e.date+'__'+e.name;
+      if(!acc[k]||new Date(e.saved_at)>new Date(acc[k].saved_at)) acc[k]=e;
       return acc;
-    }, {})
+    },{})
   );
-  // 회고도 기간 필터
-  const filteredRetros = (fromDate || toDate)
-    ? retros.filter(e => (!fromDate || e.date >= fromDate) && (!toDate || e.date <= toDate))
+  const filtRet = (fromDate||toDate)
+    ? retros.filter(e=>(!fromDate||e.date>=fromDate)&&(!toDate||e.date<=toDate))
     : retros;
 
   const colors = ['#E8F2EC:#2D5A3D','#FDF0E3:#C4701A','#E8F0F8:#2A5A8A','#EEEDFE:#534AB7','#F5F4F0:#8A8880'];
   let html = '';
 
   if (CU.role === 'director') {
-    ['커리어1팀','커리어2팀','커리어3팀'].forEach(teamName => {
-      const members = visNames.filter(n => MEMBERS[n] && MEMBERS[n].team === teamName);
+    ['커리어1팀','커리어2팀','커리어3팀'].forEach(team => {
+      const members = targets.filter(n=>MEMBERS[n]?.team===team);
       if (!members.length) return;
-      html += `<div style="font-size:11px;font-weight:500;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)">${teamName}</div>`;
-      members.forEach((name, i) => { html += buildMemberCard(name, i, dedupedAll, filteredRetros, todayStr, colors); });
+      html += `<div style="font-size:11px;font-weight:500;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)">${team}</div>`;
+      members.forEach((name,i) => { html += buildMemberCard(name, i, deduped, filtRet, todayStr, colors); });
     });
   } else {
-    visNames.forEach((name, i) => { html += buildMemberCard(name, i, dedupedAll, filteredRetros, todayStr, colors); });
+    targets.forEach((name,i) => { html += buildMemberCard(name, i, deduped, filtRet, todayStr, colors); });
   }
   cont.innerHTML = html || '<div style="color:var(--text-muted);font-size:13px">데이터가 없습니다.</div>';
 }
 
-function buildMemberCard(name, i, all, retros, today, colors) {
-  const [bg,fg]  = colors[i % colors.length].split(':');
-  const mine     = all.filter(e => e.name === name);
-  const myRet    = retros.filter(e => e.name === name);
-  const subs     = mine.flatMap(e => (e.projects||[]).flatMap(p => p.subtasks||[]));
-  const done     = subs.filter(t => t.status === '완료').length;
-  // 세부업무 없으면 프로젝트 상태 기준으로 완료율 계산
-  let rate = null;
-  if (subs.length) {
-    rate = Math.round(done / subs.length * 100);
-  } else {
-    const allProjs = mine.flatMap(e => e.projects||[]);
-    if (allProjs.length) {
-      const doneProjs = allProjs.filter(p => (p.proj_status||'미완료') === '완료').length;
-      rate = Math.round(doneProjs / allProjs.length * 100);
-    }
-  }
-  const dPer = subs.filter(t => t.status === '딜레이-개인').length
-             + mine.flatMap(e => e.projects||[]).filter(p => (p.proj_status||'') === '딜레이').length;
-  const avgSat   = myRet.length ? (myRet.reduce((s,e)=>s+Number(e.satisfaction),0)/myRet.length).toFixed(1) : null;
-  const submitted= mine.some(e => e.date === today);
-  const info     = MEMBERS[name] || {};
-  const roleLabel= info.role === 'leader' ? '팀장' : info.role === 'director' ? '부장' : '팀원';
+function buildMemberCard(name, idx, all, retros, today, colors) {
+  const [bg,fg] = colors[idx%colors.length].split(':');
+  const mine    = all.filter(e=>e.name===name);
+  const myRet   = retros.filter(e=>e.name===name);
+  const subs    = mine.flatMap(e=>(e.projects||[]).flatMap(p=>p.subtasks||[]));
+  const projs   = mine.flatMap(e=>e.projects||[]);
+  const done    = subs.filter(t=>t.status==='완료').length;
+  const rate    = subs.length ? Math.round(done/subs.length*100)
+                : projs.length ? Math.round(projs.filter(p=>(p.proj_status||'미완료')==='완료').length/projs.length*100)
+                : null;
+  const dPer    = subs.filter(t=>t.status==='딜레이-개인').length;
+  const avgSat  = myRet.length ? (myRet.reduce((s,e)=>s+Number(e.satisfaction),0)/myRet.length).toFixed(1) : null;
+  const submitted = mine.some(e=>e.date===today);
+  const info    = MEMBERS[name]||{};
+  const roleLabel = {director:'부장',leader:'팀장',member:'팀원'}[info.role]||'팀원';
 
-  // 마감 임박 알림
   const dlAlerts = [];
-  mine.forEach(e => (e.projects||[]).forEach(p => {
-    if (!p.deadline || (p.proj_status||'미완료') === '완료') return;
-    const dd = new Date(p.deadline); dd.setHours(0,0,0,0);
-    const td = new Date(); td.setHours(0,0,0,0);
-    const diff = Math.round((dd-td)/86400000);
-    if (diff <= 3) dlAlerts.push(p.name + (diff<=0?' D-초과':' D-'+diff));
+  mine.forEach(e=>(e.projects||[]).forEach(p=>{
+    if(!p.deadline||(p.proj_status||'미완료')==='완료') return;
+    const dd=new Date(p.deadline);dd.setHours(0,0,0,0);
+    const td=new Date();td.setHours(0,0,0,0);
+    const diff=Math.round((dd-td)/86400000);
+    if(diff<=3) dlAlerts.push(p.name+(diff<=0?' D-초과':' D-'+diff));
   }));
 
   return `<div class="member-card">
@@ -1920,17 +1853,15 @@ function buildMemberCard(name, i, all, retros, today, colors) {
         <div class="member-tag">${info.team||'—'}</div>
       </div>
       <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
-        ${submitted ? '<span class="badge b-done">오늘 제출</span>' : '<span class="badge b-notstart">오늘 미제출</span>'}
-        ${dlAlerts.map(a => '<span class="badge b-danger" style="font-size:10px">⚠ '+a+'</span>').join('')}
+        ${submitted?'<span class="badge b-done">오늘 제출</span>':'<span class="badge b-notstart">오늘 미제출</span>'}
+        ${dlAlerts.map(a=>'<span class="badge b-danger" style="font-size:10px">⚠ '+a+'</span>').join('')}
       </div>
     </div>
-    <div class="progress-row">
-      <span class="progress-label">누적 완료율</span>
+    <div class="progress-row"><span class="progress-label">누적 완료율</span>
       <div class="progress-bar"><div class="progress-fill" style="width:${rate!==null?rate:0}%;background:var(--accent-mid)"></div></div>
       <span class="progress-num" style="color:var(--accent)">${rate!==null?rate+'%':'—'}</span>
     </div>
-    <div class="progress-row">
-      <span class="progress-label">평균 만족도</span>
+    <div class="progress-row"><span class="progress-label">평균 만족도</span>
       <div class="progress-bar"><div class="progress-fill" style="width:${avgSat!==null?avgSat*10:0}%;background:#534AB7"></div></div>
       <span class="progress-num">${avgSat!==null?avgSat+'/10':'—'}</span>
     </div>
@@ -1942,12 +1873,11 @@ function buildMemberCard(name, i, all, retros, today, colors) {
   </div>`;
 }
 
-// ── 관리자: 구성원 리포트 조회 ────────────────────────────────────────────────
+// ── 관리자: 구성원 리포트 ─────────────────────────────────────────────────────
 async function initMemberReportViewer() {
   const sel = document.getElementById('view-member-sel');
   if (!sel) return;
-  const names = getAdminVisibleNames();
-  sel.innerHTML = '<option value="">— 선택 —</option>' + names.map(n => `<option value="${n}">${n}</option>`).join('');
+  sel.innerHTML = '<option value="">— 선택 —</option>' + adminTargetNames().map(n=>`<option value="${n}">${n}</option>`).join('');
   const dateEl = document.getElementById('view-report-date');
   if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().split('T')[0];
 }
@@ -1964,41 +1894,38 @@ async function loadMemberReport() {
   const date       = document.getElementById('view-report-date').value;
   const cont       = document.getElementById('member-report-view');
   const pdfBtn     = document.getElementById('member-report-pdf-btn');
-  if (!memberName || !date) {
+  if (!memberName||!date) {
     cont.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:16px 0;text-align:center">구성원과 날짜를 선택해 주세요.</div>';
-    if (pdfBtn) pdfBtn.style.display = 'none';
+    if (pdfBtn) pdfBtn.style.display='none';
     return;
   }
-  const taskEntry  = await dbGetDoc('tasks',  date + '__' + eKey(memberName));
-  const retroEntry = await dbGetDoc('retros', date + '__' + eKey(memberName));
-  const feedbacks  = (await dbGetAll('feedbacks')).filter(f => f.to === memberName && f.date === date);
-  if (!taskEntry) {
+  const saved  = await dbGetDoc('tasks',  taskKey(date, memberName));
+  const retro  = await dbGetDoc('retros', taskKey(date, memberName));
+  const fbs    = (await dbGetAll('feedbacks')).filter(f=>f.to===memberName&&f.date===date);
+  if (!saved) {
     cont.innerHTML = `<div style="color:var(--text-muted);font-size:13px;padding:16px 0;text-align:center">${memberName}님의 ${date} 데이터가 없습니다.</div>`;
-    if (pdfBtn) pdfBtn.style.display = 'none';
+    if (pdfBtn) pdfBtn.style.display='none';
     return;
   }
-  const projects = taskEntry.projects || [];
-  const allSubs  = projects.flatMap(p => p.subtasks||[]);
-  const total    = allSubs.length;
-  const done     = allSubs.filter(t => t.status === '완료').length;
-  const dPer     = allSubs.filter(t => t.status === '딜레이-개인').length;
-  const dExt     = allSubs.filter(t => t.status === '딜레이-외부').length;
-  const totalMin = allSubs.reduce((s,t) => { const m=parseInt(t.duration); return s+(isNaN(m)?0:m); }, 0);
-  const r = retroEntry || {};
-  const SB = {'시작전':'b-notstart','진행중':'b-progress','완료':'b-done','딜레이-외부':'b-delay-ext','딜레이-개인':'b-delay-per'};
-  const SL = {'시작전':'시작전','진행중':'진행중','완료':'완료','딜레이-외부':'딜레이(외부)','딜레이-개인':'딜레이(개인)'};
+  const projects = saved.projects||[];
+  const allSubs  = projects.flatMap(p=>p.subtasks||[]);
+  const done     = allSubs.filter(t=>t.status==='완료').length;
+  const dPer     = allSubs.filter(t=>t.status==='딜레이-개인').length;
+  const dExt     = allSubs.filter(t=>t.status==='딜레이-외부').length;
+  const totalMin = allSubs.reduce((s,t)=>{const m=parseInt(t.duration);return s+(isNaN(m)?0:m);},0);
+  const r = retro||{};
 
   let html = `<div class="report-block" id="member-report-content">
     <div class="report-header">
       <div class="report-org">커리어사업부 · CAREER DIVISION</div>
       <div class="report-title">일일 업무 생산성 리포트</div>
-      <div class="report-meta">${date} · ${memberName} · ${taskEntry.team||''}</div>
+      <div class="report-meta">${date} · ${memberName} · ${saved.team||''}</div>
     </div>
     <div class="report-section">
       <div class="report-section-title">요약 지표</div>
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
         <div class="stat-card"><div class="stat-label">프로젝트</div><div class="stat-val">${projects.length||'—'}</div></div>
-        <div class="stat-card"><div class="stat-label">완료율</div><div class="stat-val" style="color:var(--accent)">${total?Math.round(done/total*100)+'%':'—'}</div></div>
+        <div class="stat-card"><div class="stat-label">완료율</div><div class="stat-val" style="color:var(--accent)">${allSubs.length?Math.round(done/allSubs.length*100)+'%':'—'}</div></div>
         <div class="stat-card"><div class="stat-label">딜레이(개인)</div><div class="stat-val" style="color:var(--warn)">${dPer}</div></div>
         <div class="stat-card"><div class="stat-label">딜레이(외부)</div><div class="stat-val" style="color:var(--info)">${dExt}</div></div>
         <div class="stat-card"><div class="stat-label">총 소요시간</div><div class="stat-val">${totalMin||'—'}</div><div class="stat-sub">분</div></div>
@@ -2006,40 +1933,29 @@ async function loadMemberReport() {
     </div>
     <div class="report-section">
       <div class="report-section-title">프로젝트별 상세</div>
-      <table class="rt"><thead><tr>
-        <th>프로젝트 / 세부업무</th><th>카테고리</th><th>데드라인</th><th>프로젝트 상태</th>
-        <th>소요</th><th>상태</th><th>딜레이 사유</th><th>딜레이 목표기한</th>
-      </tr></thead><tbody>`;
+      <table class="rt"><thead><tr><th>프로젝트/세부업무</th><th>카테고리</th><th>데드라인</th><th>프로젝트 상태</th><th>소요</th><th>상태</th><th>딜레이 사유</th><th>딜레이 목표기한</th></tr></thead><tbody>`;
   projects.forEach(p => {
     const ps  = p.subtasks||[];
     const pd  = ps.filter(t=>t.status==='완료').length;
-    const pSB = {'완료':'b-done','부분완료':'b-delay-per','미완료':'b-notstart','딜레이':'b-danger'}[p.proj_status||'미완료']||'b-notstart';
-    const dlDl = (p.proj_status==='딜레이'&&p.proj_delay_deadline) ? ' <span style="font-size:10px;color:var(--danger)">목표기한: '+p.proj_delay_deadline+'</span>' : '';
-    const dlRs = p.proj_delay_reason ? ' <span style="font-size:10px;color:var(--text-muted)">사유: '+p.proj_delay_reason+'</span>' : '';
+    const pSB = {완료:'b-done',부분완료:'b-delay-per',미완료:'b-notstart',딜레이:'b-danger'}[p.proj_status||'미완료']||'b-notstart';
     html += `<tr class="rp-row"><td colspan="8">📁 ${p.name||''}
       <span style="font-size:11px;color:var(--text-muted);font-weight:400">${p.category}</span>
       <span class="badge ${pSB}" style="font-size:10px;margin-left:5px">${p.proj_status||'미완료'}</span>
-      ${dlDl}${dlRs}
+      ${p.proj_status==='딜레이'&&p.proj_delay_deadline?'<span style="font-size:10px;color:var(--danger)"> 목표기한: '+p.proj_delay_deadline+'</span>':''}
+      ${p.proj_delay_reason?'<span style="font-size:10px;color:var(--text-muted)"> 사유: '+p.proj_delay_reason+'</span>':''}
       <span style="float:right;font-size:11px;color:var(--text-muted);font-weight:400">${pd}/${ps.length} 완료</span>
     </td></tr>`;
     ps.forEach(t => {
-      html += `<tr class="rs-row">
-        <td>↳ ${t.name}</td>
-        <td><span class="badge b-pending" style="font-size:10px">${p.category}</span></td>
-        <td style="font-size:11px;color:var(--text-muted)">${p.deadline||'—'}</td>
-        <td>—</td>
-        <td style="font-family:'IBM Plex Mono',monospace;font-size:11px">${t.duration||'—'}</td>
-        <td><span class="badge ${SB[t.status]||'b-notstart'}" style="font-size:10px">${SL[t.status]||t.status}</span></td>
-        <td style="font-size:11px;color:var(--text-muted)">${t.delay_reason||'—'}</td>
-        <td style="font-size:11px;color:var(--warn)">${t.delay_deadline||'—'}</td>
-      </tr>`;
+      const bc       = STATUS_CLS[t.status]||'b-notstart';
+      const reasons  = Array.isArray(t.delay_reason)   ? t.delay_reason.join(' / ')   : t.delay_reason||'—';
+      const deadlines= Array.isArray(t.delay_deadline)  ? t.delay_deadline.join(' / ')  : t.delay_deadline||'—';
+      html += `<tr class="rs-row"><td>↳ ${t.name}</td><td><span class="badge b-pending" style="font-size:10px">${p.category}</span></td><td style="font-size:11px;color:var(--text-muted)">${p.deadline||'—'}</td><td>—</td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px">${t.duration||'—'}</td><td><span class="badge ${bc}" style="font-size:10px">${STATUS_LABEL[t.status]||t.status}</span></td><td style="font-size:11px;color:var(--text-muted)">${reasons}</td><td style="font-size:11px;color:var(--warn)">${deadlines}</td></tr>`;
     });
   });
   html += `</tbody></table></div>
     <div class="report-section">
       <div class="report-section-title">데일리 회고</div>
-      <div style="margin-bottom:8px;font-size:13px">생산성 만족도
-        <strong style="font-family:'IBM Plex Mono',monospace;font-size:16px">${r.satisfaction||'—'}</strong> /10</div>
+      <div style="margin-bottom:8px;font-size:13px">생산성 만족도 <strong style="font-family:'IBM Plex Mono',monospace;font-size:16px">${r.satisfaction||'—'}</strong> /10</div>
       <div class="kpt-grid">
         <div class="kpt-block"><div class="kpt-label kpt-k">Keep</div><div class="kpt-text">${r.keep||'—'}</div></div>
         <div class="kpt-block"><div class="kpt-label kpt-p">Problem</div><div class="kpt-text">${r.problem||'—'}</div></div>
@@ -2050,107 +1966,86 @@ async function loadMemberReport() {
     <div class="report-section"><div class="report-section-title">내일 예정</div>
       <div style="font-size:13px;color:var(--text-muted);line-height:1.7">${r.tomorrow||'—'}</div>
     </div>`;
-  if (feedbacks.length) {
+  if (fbs.length) {
     html += '<div class="report-section"><div class="report-section-title">관리자 피드백</div>';
-    feedbacks.forEach(f => {
-      html += `<div class="feedback-box" style="margin-bottom:8px">
-        <div class="feedback-title">💬 ${f.type} — from ${f.from}</div>
-        <div class="feedback-msg">${f.content}</div>
-        <div class="feedback-meta">${f.sent_at?f.sent_at.slice(0,16).replace('T',' '):''}</div>
-      </div>`;
+    fbs.forEach(f => {
+      html += `<div class="feedback-box" style="margin-bottom:8px"><div class="feedback-title">💬 ${f.type} — from ${f.from}</div><div class="feedback-msg">${f.content}</div><div class="feedback-meta">${f.sent_at?f.sent_at.slice(0,16).replace('T',' '):''}</div></div>`;
     });
     html += '</div>';
   }
   html += '</div>';
   cont.innerHTML = html;
-  if (pdfBtn) pdfBtn.style.display = 'flex';
+  if (pdfBtn) pdfBtn.style.display='flex';
 }
 
 function downloadMemberReportPDF() {
-  const content = document.getElementById('member-report-content');
-  if (!content) { showToast('리포트를 먼저 조회해 주세요'); return; }
-  openPrintWin(content.innerHTML);
+  const el = document.getElementById('member-report-content');
+  if (!el) { showToast('리포트를 먼저 조회해 주세요'); return; }
+  openPrintWin(el.innerHTML);
   showToast('PDF 출력 창이 열렸습니다');
 }
 
-// ── 할리갈리 양식 ─────────────────────────────────────────────────────────────
+// ── 할리갈리 ─────────────────────────────────────────────────────────────────
 async function downloadHallygalli(type) {
-  const name    = CU.name;
-  const todayStr = new Date().toISOString().split('T')[0];
+  const name = CU.name;
+  const today = new Date().toISOString().split('T')[0];
   if (type === 'daily') {
-    const date      = document.getElementById('input-date').value;
-    const taskEntry = await dbGetDoc('tasks', date + '__' + eKey(name));
-    const projects  = taskEntry ? taskEntry.projects : getProjectsData();
-    const text      = buildHallygalliText(name, projects);
-    downloadTextFile(text, '할리갈리_' + name + '_' + date + '.txt');
+    const date  = document.getElementById('input-date').value;
+    const saved = await dbGetDoc('tasks', taskKey(date, name));
+    const projs = saved?.projects || getProjectsData();
+    downloadTextFile(buildHgText(name, projs), '할리갈리_'+name+'_'+date+'.txt');
   } else {
     const ws = document.getElementById('week-start').value;
     const we = document.getElementById('week-end').value;
-    if (!ws || !we) { showToast('주간 리포트를 먼저 조회해 주세요'); return; }
-    const all   = await dbGetAll('tasks');
-    const mine  = all.filter(e => e.name === name && e.date >= ws && e.date <= we)
-                     .sort((a,b) => a.date.localeCompare(b.date));
-    const todayEntry = await dbGetDoc('tasks', todayStr + '__' + eKey(name));
-    const todayProjs = todayEntry ? todayEntry.projects : getProjectsData();
-    const doneProjs  = collectWeeklyProjects(mine);
-    const todoProjs  = todayProjs.filter(p => (p.proj_status||'미완료') !== '완료');
-    let text = name + '\n*커리어\n\n';
-    text += buildCategoryBlock(doneProjs, '지난주 한 일');
-    text += '\n';
-    text += buildCategoryBlock(todoProjs, '이번주 할 일');
-    downloadTextFile(text, '주간할리갈리_' + name + '_' + ws + '~' + we + '.txt');
+    if (!ws||!we) { showToast('주간 리포트를 먼저 조회해 주세요'); return; }
+    const all  = await dbGetAll('tasks');
+    const mine = all.filter(e=>e.name===name&&e.date>=ws&&e.date<=we).sort((a,b)=>a.date.localeCompare(b.date));
+    const todaySaved = await dbGetDoc('tasks', taskKey(today, name));
+    const todayProjs = todaySaved?.projects || getProjectsData();
+    const doneProjs  = collectWeeklyProjs(mine);
+    const todoProjs  = todayProjs.filter(p=>(p.proj_status||'미완료')!=='완료');
+    let text = name+'\n*커리어\n\n';
+    text += buildCatBlock(doneProjs, '지난주 한 일');
+    text += '\n' + buildCatBlock(todoProjs, '이번주 할 일');
+    downloadTextFile(text, '주간할리갈리_'+name+'_'+ws+'~'+we+'.txt');
   }
-  showToast('📋 할리갈리 양식이 다운로드되었습니다');
+  showToast('📋 할리갈리 양식 다운로드 완료!');
 }
-function buildHallygalliText(name, projects) {
+function buildHgText(name, projects) {
   const groups = {};
-  projects.forEach(p => {
-    const cat = p.category || '기타';
-    if (!groups[cat]) groups[cat] = [];
-    groups[cat].push(p.name);
-  });
-  let text = name + '\n*커리어\n\n';
+  projects.forEach(p => { const c=p.category||'기타'; if(!groups[c])groups[c]=[]; if(p.name)groups[c].push(p.name); });
+  let text = name+'\n*커리어\n\n';
   ['사업운영','사업제안','기타'].forEach(cat => {
-    if (!groups[cat] || !groups[cat].length) return;
-    const prefix = cat === '기타' ? '*' : '#';
-    text += prefix + cat + '\n';
-    groups[cat].forEach(n => { if (n) text += '- ' + n + '\n'; });
+    if(!groups[cat]?.length) return;
+    text += (cat==='기타'?'*':'#')+cat+'\n';
+    groups[cat].forEach(n => { text += '- '+n+'\n'; });
     text += '\n';
   });
   return text.trim();
 }
-function collectWeeklyProjects(entries) {
-  const seen = new Set(), result = [];
-  entries.forEach(e => {
-    (e.projects||[]).forEach(p => {
-      if (p.name && !seen.has(p.name)) { seen.add(p.name); result.push(p); }
-    });
-  });
+function collectWeeklyProjs(entries) {
+  const seen=new Set(), result=[];
+  entries.forEach(e=>(e.projects||[]).forEach(p=>{ if(p.name&&!seen.has(p.name)){seen.add(p.name);result.push(p);} }));
   return result;
 }
-function buildCategoryBlock(projects, label) {
+function buildCatBlock(projects, label) {
   const groups = {};
-  projects.forEach(p => {
-    const cat = p.category || '기타';
-    if (!groups[cat]) groups[cat] = [];
-    if (p.name) groups[cat].push(p.name);
-  });
-  let text = '', hasContent = false;
-  ['사업운영','사업제안','기타'].forEach(cat => {
-    if (!groups[cat] || !groups[cat].length) return;
-    if (!hasContent) { text += '【' + label + '】\n'; hasContent = true; }
-    const prefix = cat === '기타' ? '*' : '#';
-    text += prefix + cat + '\n';
-    groups[cat].forEach(n => { text += '- ' + n + '\n'; });
-    text += '\n';
+  projects.forEach(p=>{ const c=p.category||'기타'; if(!groups[c])groups[c]=[]; if(p.name)groups[c].push(p.name); });
+  let text='', has=false;
+  ['사업운영','사업제안','기타'].forEach(cat=>{
+    if(!groups[cat]?.length) return;
+    if(!has){text+='【'+label+'】\n';has=true;}
+    text+=(cat==='기타'?'*':'#')+cat+'\n';
+    groups[cat].forEach(n=>{text+='- '+n+'\n';});
+    text+='\n';
   });
   return text;
 }
 function downloadTextFile(text, filename) {
-  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const blob = new Blob([text],{type:'text/plain;charset=utf-8'});
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
-  a.href = url; a.download = filename;
+  a.href=url; a.download=filename;
   document.body.appendChild(a); a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
@@ -2158,57 +2053,54 @@ function downloadTextFile(text, filename) {
 
 // ── 네비게이션 ────────────────────────────────────────────────────────────────
 function showPage(id, btn) {
-  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('visible'));
-  const target = document.getElementById('page-' + id);
-  if (target) target.classList.add('visible');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.page-section').forEach(p=>p.classList.remove('visible'));
+  document.getElementById('page-'+id)?.classList.add('visible');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   if (btn) btn.classList.add('active');
 
-  if (id === 'input') {
+  if (id==='input') {
+    // 내용이 없을 때만 로드 (페이지 이동 시 입력 내용 보존)
     const pl = document.getElementById('project-list');
-    // 이미 내용이 있으면 재로드 안 함 (입력 내용 보존)
-    if (!pl || pl.children.length === 0) {
-      loadTodayIntoForm().then(() => {
-        if (document.getElementById('project-list').children.length === 0) addProject();
-      });
+    if (!pl || pl.children.length===0) {
+      loadTodayIntoForm().then(()=>{ if(!document.getElementById('project-list').children.length) addProject(); });
     }
   }
-  if (id === 'report')    generateReport();
-  if (id === 'retro')     loadRetroSummary();
-  if (id === 'myhistory') renderMyHistory();
-  if (id === 'weekly')    setDefaultWeek();
-  if (id === 'dashboard') renderAdminDashboard();
-  if (id === 'members') {
-    // 기본값: 이번 달
-    const fromEl = document.getElementById('member-from');
-    const toEl   = document.getElementById('member-to');
-    if (fromEl && !fromEl.value) setMemberPeriod('month');
+  if (id==='report')    generateReport();
+  if (id==='retro')     loadRetroSummary();
+  if (id==='myhistory') renderMyHistory();
+  if (id==='weekly')    setDefaultWeek();
+  if (id==='dashboard') renderAdminDashboard();
+  if (id==='members') {
+    if (!document.getElementById('member-from')?.value) setMemberPeriod('month');
     renderMemberList();
   }
-  if (id === 'upload')    initMemberReportViewer();
-  if (id === 'feedback')  renderSentFeedbacks();
-  if (id === 'inbox')     renderInbox();
+  if (id==='upload')   initMemberReportViewer();
+  if (id==='feedback') renderSentFeedbacks();
+  if (id==='inbox')    renderInbox();
 }
 
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2600);
+  setTimeout(()=>t.classList.remove('show'), 2800);
 }
 
 // ── 초기화 ────────────────────────────────────────────────────────────────────
 (function init() {
-  const apb = document.getElementById('add-project-btn');
-  if (apb) apb.addEventListener('click', () => addProject());
-  // sessionStorage에서 세션 복원 (새로고침 시 로그인 유지)
+  document.getElementById('add-project-btn')?.addEventListener('click', ()=>addProject());
+  // sessionStorage 세션 복원 (새로고침 시 로그인 유지)
   try {
     const saved = sessionStorage.getItem('career_cu');
     if (saved) {
-      CU = JSON.parse(saved);
-      if (CU && MEMBERS[CU.name]) enterApp();
-      else { CU = null; sessionStorage.removeItem('career_cu'); }
+      const cu = JSON.parse(saved);
+      if (cu && MEMBERS[cu.name] && MEMBERS[cu.name].role === cu.role) {
+        CU = cu;
+        enterApp();
+        return;
+      }
     }
-  } catch(e) { CU = null; }
+  } catch(e) {}
+  // 세션 없으면 로그인 화면
 })();
 
 </script>
