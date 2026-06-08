@@ -149,6 +149,9 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csv
 
 /* Delay extra fields */
 .delay-fields{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:4px 6px;background:var(--warn-light);border-radius:5px;margin-top:3px}
+.lunch-deduct{display:inline-flex;align-items:center;gap:4px;margin-left:6px;font-size:11px;color:var(--text-muted)}
+.lunch-deduct input{width:44px;border:1px solid var(--border);border-radius:4px;padding:2px 5px;font-size:11px;text-align:center;font-family:'IBM Plex Mono',monospace}
+.dur-net{font-size:10px;color:var(--text-light);margin-top:1px;text-align:center}
 .delay-fields input{border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:11px;background:var(--surface);outline:none;color:var(--text)}
 .delay-fields label{font-size:10px;color:var(--warn);white-space:nowrap}
 
@@ -331,6 +334,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
       구성원 리포트
     </button>
+      <button class="nav-item" onclick="openFirebaseModal()" id="firebase-nav-btn" style="color:rgba(255,255,255,.4)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"></path></svg>Firebase 설정
     </button>
   </div>
@@ -372,7 +376,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   <div class="card">
     <div class="card-title">기본 정보</div>
     <div class="form-row form-row-3">
-      <div class="form-group"><label class="form-label">이름</label><div class="form-input" id="sel-name" style="background:var(--surface2);color:var(--text);cursor:default;display:flex;align-items:center">—</div></div>
+      <div class="form-group"><label class="form-label">이름</label><input class="form-input" id="sel-name" placeholder="이름 입력"></div>
       <div class="form-group"><label class="form-label">소속 팀</label>
         <select class="form-input" id="sel-team">
           <option>커리어1팀</option>
@@ -575,8 +579,7 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
   <div class="card">
     <div class="card-title">피드백 작성</div>
     <div class="form-row form-row-3">
-      <div class="form-group"><label class="form-label">받는 사람</label><input class="form-input" id="fb-to" placeholder="이름 입력" list="fb-member-list" autocomplete="off">
-        <datalist id="fb-member-list"></datalist></div>
+      <div class="form-group"><label class="form-label">받는 사람</label><input class="form-input" id="fb-to" placeholder="이름 입력"></div>
       <div class="form-group"><label class="form-label">해당 날짜</label><input type="date" class="form-input" id="fb-date"></div>
       <div class="form-group"><label class="form-label">유형</label>
         <select class="form-input" id="fb-type">
@@ -628,17 +631,19 @@ input[type="range"]{flex:1;accent-color:var(--accent)}
     <div style="font-size:12px;color:var(--text-muted);line-height:1.7;margin-bottom:12px;background:var(--surface2);padding:9px 11px;border-radius:6px">
       <strong>PIN 변경:</strong> Firestore → 컬렉션 <code>config</code> → 문서 <code>pins</code> → 이름을 필드로, PIN을 값으로 입력<br>
       예: 필드 <code>송진영</code> = <code>새PIN번호</code><br><br>
-      <strong>초기 PIN 목록 (변경 권장):</strong><br>
-      송진영(부장) 1000 · 임혜진 2100 · 박현지 3110 · 전율리 3120<br>
-      정은지 2200 · 정현정 3210 · 김승현 2300 · 유화경 3310
+      <strong>초기 PIN 목록:</strong> Firestore 연결 후 반드시 변경하세요.<br>
+      초기 PIN은 부장(송진영)에게 문의하세요.
     </div>
     <div style="display:flex;gap:8px;justify-content:flex-end">
       <button class="btn" onclick="closeFirebaseModal()">닫기</button>
+      <button class="btn btn-primary" onclick="applyFirebaseConfig()">저장 및 연결</button>
+    </div>
+  </div>
+</div>
 
+<div class="toast" id="toast">✓ 피드백이 발송되었습니다</div>
 
-
-<script>
-// ═══════════════════════════════════════════════════════════════════════
+<script>// ═══════════════════════════════════════════════════════════════════════
 //  커리어사업부 생산성 관리 시스템 — JS (완전 재작성 v3)
 // ═══════════════════════════════════════════════════════════════════════
 
@@ -701,9 +706,20 @@ async function dbDelete(col, id) {
 }
 
 // ── Firebase 설정 저장 자동 로드 ─────────────────────────────────────────────
+// Firebase Config 자동 연결 (팀원 설정 불필요)
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCb1k-OV6g50WZxJg_hR-uLlafxSp0el-s",
+  authDomain: "work-management-9c44b.firebaseapp.com",
+  projectId: "work-management-9c44b",
+  storageBucket: "work-management-9c44b.firebasestorage.app",
+  messagingSenderId: "1037886574318",
+  appId: "1:1037886574318:web:c7a63f7a45e2ef9f64edff"
+};
 (function() {
-  const s = localStorage.getItem('fb_config');
-  if (s) { try { initFirebase(JSON.parse(s)); } catch(e) {} }
+  // 코드에 Config 하드코딩 — 팀원이 별도 설정 없이 자동 연결
+  initFirebase(FIREBASE_CONFIG);
+  // localStorage에도 저장해서 모달에서도 확인 가능
+  try { localStorage.setItem('fb_config', JSON.stringify(FIREBASE_CONFIG)); } catch(e) {}
 })();
 function openFirebaseModal() {
   const s = localStorage.getItem('fb_config');
@@ -783,6 +799,7 @@ async function doLogin() {
 
 function doLogout() {
   CU = null;
+  try { sessionStorage.removeItem('career_cu'); } catch(e) {}
   if (window._inboxInterval) clearInterval(window._inboxInterval);
   document.getElementById('main-app').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
@@ -798,8 +815,6 @@ function enterApp() {
 
   // 사이드바 사용자 정보
   document.getElementById('sb-name').textContent = name;
-  const snEl = document.getElementById('sel-name');
-  if (snEl) { if (snEl.tagName === 'INPUT') snEl.value = name; else snEl.textContent = name; }
   document.getElementById('sb-avatar').textContent = name.charAt(0);
   document.getElementById('sb-role').textContent = team + ' · ' + (role === 'director' ? '부장' : role === 'leader' ? '팀장' : '팀원');
 
@@ -837,15 +852,24 @@ function enterApp() {
   checkInbox();
   if (window._inboxInterval) clearInterval(window._inboxInterval);
   window._inboxInterval = setInterval(() => checkInbox(), 30000);
-
-  // 피드백 수신자 datalist 채우기 (오타 방지)
-  const fbList = document.getElementById('fb-member-list');
-  if (fbList) {
-    const targets = role === 'director' ? Object.keys(MEMBERS) :
-                    role === 'leader'   ? Object.keys(MEMBERS).filter(n => MEMBERS[n].team === (LEADER_TEAMS[name]||team)) :
-                    [];
-    fbList.innerHTML = targets.filter(n => n !== name).map(n => `<option value="${n}">`).join('');
+  // Firebase 연결 상태 표시
+  const fbBtn = document.getElementById('firebase-nav-btn');
+  if (fbBtn) {
+    if (useFirebase) {
+      fbBtn.style.color = 'rgba(74,140,98,.8)';
+      fbBtn.title = 'Firebase 연결됨 ✓';
+    } else {
+      fbBtn.style.color = 'rgba(184,48,48,.8)';
+      fbBtn.title = 'Firebase 미연결 — 클릭하여 설정';
+      // 관리자에게 경고
+      if (role === 'director' || role === 'leader') {
+        setTimeout(() => showToast('⚠ Firebase 미연결: 팀 데이터 공유가 안 됩니다. Firebase 설정을 확인해 주세요.'), 1000);
+      }
+    }
   }
+  // 세션 저장 (새로고침 후 복원용)
+  try { sessionStorage.setItem('career_cu', JSON.stringify(CU)); } catch(e) {}
+
   // 항상 오늘 업무 입력 화면부터 시작
   showPage('input', document.querySelector('#nav-member .nav-item'));
 }
@@ -965,7 +989,14 @@ function addSubTask(pid, data={}) {
         onchange="onTimeEdit(${sid},'end',${pid})">
       <span class="edit-link" onclick="toggleEdit(${sid},'end')">수동편집</span>
     </td>
-    <td class="dur-cell" id="sdur-${sid}">${data.duration||'—'}</td>
+    <td style="vertical-align:middle;text-align:center;min-width:80px">
+      <span class="dur-cell" id="sdur-${sid}" style="display:block">${data.duration||'—'}</span>
+      <div class="dur-net" id="sdur-net-${sid}" style="font-size:10px;color:var(--text-light)"></div>
+      <div class="lunch-deduct" title="점심시간 차감(분)" style="margin-top:3px">
+        ☕<input type="number" id="slunch-${sid}" min="0" max="240" value="${data.lunch_deduct||0}"
+          onchange="recalcDur(${sid},${pid})" style="width:40px" placeholder="0">분
+      </div>
+    </td>
     <td>
       <select class="status-sel" id="ssel-${sid}"
         onchange="onStatusSelChange(${sid},${pid},this.value)">
@@ -987,12 +1018,36 @@ function addSubTask(pid, data={}) {
 
 function buildDelayCell(sid, status, reason, deadline) {
   if (!status.includes('딜레이')) return '<span style="color:var(--text-light);font-size:11px">—</span>';
-  return `<div class="delay-fields">
-    <label>사유</label>
-    <input type="text" id="sdr-${sid}" value="${esc(reason)}" placeholder="딜레이 사유" style="flex:1;min-width:80px">
-    <label>목표기한</label>
-    <input type="date" id="sdd-${sid}" value="${esc(deadline)}" style="width:110px">
-  </div>`;
+  // reasons는 배열 또는 문자열 허용
+  const reasons = Array.isArray(reason) ? reason : (reason ? [reason] : ['']);
+  const deadlines = Array.isArray(deadline) ? deadline : (deadline ? [deadline] : ['']);
+  let rows = '';
+  const count = Math.max(reasons.length, 1);
+  for (let i = 0; i < count; i++) {
+    rows += `<div class="delay-row" style="display:flex;gap:4px;align-items:center;margin-bottom:3px">
+      <input type="text" class="sdr-input" data-sid="${sid}" value="${esc(reasons[i]||'')}" placeholder="딜레이 사유" style="flex:1;min-width:70px;border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:11px">
+      <input type="date" class="sdd-input" data-sid="${sid}" value="${esc(deadlines[i]||'')}" style="width:110px;border:1px solid var(--border);border-radius:4px;padding:3px 5px;font-size:11px">
+      ${i === 0 ? '<button onclick="addDelayRow(this)" style="border:none;background:none;color:var(--accent);font-size:14px;cursor:pointer;padding:0 2px" title="딜레이 추가">+</button>' : '<button onclick="removeDelayRow(this)" style="border:none;background:none;color:var(--danger);font-size:14px;cursor:pointer;padding:0 2px">×</button>'}
+    </div>`;
+  }
+  return '<div class="delay-fields" id="sdelay-wrap-' + sid + '" style="flex-direction:column">' + rows + '</div>';
+}
+
+function addDelayRow(btn) {
+  const wrap = btn.closest('[id^="sdelay-wrap-"]');
+  if (!wrap) return;
+  const sid = wrap.id.replace('sdelay-wrap-','');
+  const newRow = document.createElement('div');
+  newRow.className = 'delay-row';
+  newRow.style.cssText = 'display:flex;gap:4px;align-items:center;margin-bottom:3px';
+  newRow.innerHTML = '<input type="text" class="sdr-input" data-sid="' + sid + '" placeholder="딜레이 사유" style="flex:1;min-width:70px;border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:11px">' +
+    '<input type="date" class="sdd-input" data-sid="' + sid + '" style="width:110px;border:1px solid var(--border);border-radius:4px;padding:3px 5px;font-size:11px">' +
+    '<button onclick="removeDelayRow(this)" style="border:none;background:none;color:var(--danger);font-size:14px;cursor:pointer;padding:0 2px">×</button>';
+  wrap.appendChild(newRow);
+}
+function removeDelayRow(btn) {
+  const row = btn.closest('.delay-row');
+  if (row) row.remove();
 }
 
 function stampTime(sid, type, pid) {
@@ -1037,13 +1092,31 @@ function recalcDur(sid, pid) {
   const s = document.getElementById('sedit-s-' + sid);
   const e = document.getElementById('sedit-e-' + sid);
   const c = document.getElementById('sdur-' + sid);
+  const lunchEl = document.getElementById('slunch-' + sid);
   if (!s || !e || !c) return;
   if (s.value && e.value) {
-    const diff = (parseInt(e.value.split(':')[0])*60 + parseInt(e.value.split(':')[1]))
-               - (parseInt(s.value.split(':')[0])*60 + parseInt(s.value.split(':')[1]));
-    if (diff > 0) { c.textContent = diff + '분'; c.style.color = 'var(--accent)'; }
-    else           { c.textContent = '오류';     c.style.color = 'var(--danger)'; }
-  } else { c.textContent = '—'; c.style.color = ''; }
+    let diff = (parseInt(e.value.split(':')[0])*60 + parseInt(e.value.split(':')[1]))
+             - (parseInt(s.value.split(':')[0])*60 + parseInt(s.value.split(':')[1]));
+    // 자정을 넘긴 경우 (예: 23:00 → 01:00 = +120분)
+    if (diff < 0) diff += 24 * 60;
+    // 점심 차감
+    const lunch = lunchEl ? (parseInt(lunchEl.value) || 0) : 0;
+    const net = Math.max(0, diff - lunch);
+    if (net > 0 || diff > 0) {
+      c.textContent = net + '분';
+      c.style.color = 'var(--accent)';
+      const netEl = document.getElementById('sdur-net-' + sid);
+      if (netEl) netEl.textContent = lunch > 0 ? '점심 -' + lunch + '분' : '';
+    } else {
+      c.textContent = diff + '분'; c.style.color = 'var(--accent)';
+      const netEl = document.getElementById('sdur-net-' + sid);
+      if (netEl) netEl.textContent = '';
+    }
+  } else {
+    c.textContent = '—'; c.style.color = '';
+    const netEl = document.getElementById('sdur-net-' + sid);
+    if (netEl) netEl.textContent = '';
+  }
 }
 function setSubStatus(sid, pid, status) {
   const row = document.getElementById('sub-' + sid);
@@ -1191,14 +1264,32 @@ function getProjectsData() {
       const n    = ni ? ni.value.trim() : '';
       if (!n) return;
       const selEl = document.getElementById('ssel-' + sid);
+      const lunchEl = document.getElementById('slunch-' + sid);
+      const durEl   = document.getElementById('sdur-' + sid);
+      const lunchVal = lunchEl ? (parseInt(lunchEl.value) || 0) : 0;
       subs.push({
         name:          n,
         start:         (document.getElementById('sedit-s-' + sid) || {}).value || '',
         end:           (document.getElementById('sedit-e-' + sid) || {}).value || '',
-        duration:      (document.getElementById('sdur-' + sid)    || {}).textContent || '—',
+        duration:      durEl ? durEl.textContent.trim() : '—',
+        lunch_deduct:  lunchVal,
         status:        selEl ? selEl.value : (tr.dataset.status || '시작전'),
-        delay_reason:  (document.getElementById('sdr-' + sid) || {}).value || '',
-        delay_deadline:(document.getElementById('sdd-' + sid) || {}).value || '',
+        delay_reason:  (() => {
+          const wrap = document.getElementById('sdelay-wrap-' + sid);
+          if (wrap) {
+            const vals = [...wrap.querySelectorAll('.sdr-input')].map(el => el.value.trim()).filter(Boolean);
+            return vals.length === 1 ? vals[0] : vals.length > 1 ? vals : '';
+          }
+          return (document.getElementById('sdr-' + sid) || {}).value || '';
+        })(),
+        delay_deadline: (() => {
+          const wrap = document.getElementById('sdelay-wrap-' + sid);
+          if (wrap) {
+            const vals = [...wrap.querySelectorAll('.sdd-input')].map(el => el.value).filter(Boolean);
+            return vals.length === 1 ? vals[0] : vals.length > 1 ? vals : '';
+          }
+          return (document.getElementById('sdd-' + sid) || {}).value || '';
+        })(),
       });
     });
     if (name || subs.length) {
@@ -1247,7 +1338,7 @@ async function saveToday(isDraft) {
     date, name, team, projects, is_draft: isDraft,
     saved_at: new Date().toISOString(),
   });
-  showToast(isDraft ? '임시저장되었습니다' : '✓ 저장되었습니다. 계속 편집 가능합니다');
+  showToast(isDraft ? '💾 임시저장 완료!' : '✅ 오늘 업무 저장 완료!');
   updateSummary();
 }
 
@@ -1275,7 +1366,12 @@ async function loadTodayIntoForm() {
         if (seen.has(p.name)) return;
         seen.add(p.name);
         const freshSubs = (p.subtasks || []).map(t => ({
-          ...t, status: '시작전', start: '', end: '', duration: '—',
+          ...t,
+          // 완료된 세부업무는 완료 상태 유지, 나머지는 초기화
+          status: t.status === '완료' ? '완료' : '시작전',
+          start:  t.status === '완료' ? t.start : '',
+          end:    t.status === '완료' ? t.end   : '',
+          duration: t.status === '완료' ? t.duration : '—',
           delay_reason: '', delay_deadline: '',
         }));
         projects.push({ ...p, subtasks: freshSubs });
@@ -1632,7 +1728,7 @@ async function renderSentFeedbacks() {
 async function renderInbox() {
   const all  = await dbGetAll('feedbacks');
   const name = CU ? CU.name : '';
-  const mine = all.filter(f => (f.to||'').trim() === name.trim()).sort((a,b) => new Date(b.sent_at) - new Date(a.sent_at));
+  const mine = all.filter(f => f.to === name).sort((a,b) => new Date(b.sent_at) - new Date(a.sent_at));
   const cont = document.getElementById('inbox-list');
   if (!mine.length) { cont.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:10px 0">받은 피드백이 없습니다.</div>'; return; }
   cont.innerHTML = mine.map(f => `<div class="feedback-box${f.read?'':' feedback-unread'}" style="margin-bottom:10px">
@@ -1651,7 +1747,7 @@ async function renderInbox() {
 async function checkInbox() {
   if (!CU) return;
   const all    = await dbGetAll('feedbacks');
-  const unread = all.filter(f => (f.to||'').trim() === CU.name.trim() && !f.read).length;
+  const unread = all.filter(f => f.to === CU.name && !f.read).length;
   const badge  = document.getElementById('inbox-badge');
   if (!badge) return;
   if (unread > 0) { badge.style.display = 'inline'; badge.textContent = unread; }
@@ -2069,9 +2165,13 @@ function showPage(id, btn) {
   if (btn) btn.classList.add('active');
 
   if (id === 'input') {
-    loadTodayIntoForm().then(() => {
-      if (document.getElementById('project-list').children.length === 0) addProject();
-    });
+    const pl = document.getElementById('project-list');
+    // 이미 내용이 있으면 재로드 안 함 (입력 내용 보존)
+    if (!pl || pl.children.length === 0) {
+      loadTodayIntoForm().then(() => {
+        if (document.getElementById('project-list').children.length === 0) addProject();
+      });
+    }
   }
   if (id === 'report')    generateReport();
   if (id === 'retro')     loadRetroSummary();
@@ -2100,8 +2200,18 @@ function showToast(msg) {
 (function init() {
   const apb = document.getElementById('add-project-btn');
   if (apb) apb.addEventListener('click', () => addProject());
-  // 세션 자동 복원 없음 — 항상 로그인 화면부터 시작
+  // sessionStorage에서 세션 복원 (새로고침 시 로그인 유지)
+  try {
+    const saved = sessionStorage.getItem('career_cu');
+    if (saved) {
+      CU = JSON.parse(saved);
+      if (CU && MEMBERS[CU.name]) enterApp();
+      else { CU = null; sessionStorage.removeItem('career_cu'); }
+    }
+  } catch(e) { CU = null; }
 })();
 
 </script>
+
+
 </body></html>
