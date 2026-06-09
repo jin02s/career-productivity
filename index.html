@@ -825,6 +825,11 @@ function enterApp() {
 
   // 사이드바
   document.getElementById('sb-name').textContent = name;
+  // 오늘 업무 입력 - 이름/소속팀 로그인 정보로 자동 세팅
+  const selName = document.getElementById('sel-name');
+  const selTeam = document.getElementById('sel-team');
+  if (selName) selName.value = name;
+  if (selTeam) selTeam.value = team;
   document.getElementById('sb-avatar').textContent = name.charAt(0);
   document.getElementById('sb-role').textContent = team + ' · ' + { director:'부장', leader:'팀장', member:'팀원' }[role];
 
