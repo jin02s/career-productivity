@@ -663,11 +663,23 @@ function initFirebase(cfg) {
     db = firebase.firestore();
     useFirebase = true;
     return true;
-  } catch(e) { console.error('Firebase init error:', e); return false; }
+  } catch(e) { return false; }
 }
 
-// 자동 연결
-(function() { initFirebase(FIREBASE_CONFIG); })();
+// 자동 연결 — SDK 로드 후 실행 보장
+function autoInitFirebase() {
+  if (typeof firebase !== 'undefined') {
+    initFirebase(FIREBASE_CONFIG);
+  } else {
+    // SDK 아직 로드 안 됨 — 100ms 후 재시도
+    setTimeout(autoInitFirebase, 100);
+  }
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', autoInitFirebase);
+} else {
+  autoInitFirebase();
+}
 
 function openFirebaseModal() {
   updFbStatus(useFirebase);
