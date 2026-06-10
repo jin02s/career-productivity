@@ -1276,7 +1276,7 @@ function getProjectsData() {
       const reason   = reasons.length===1 ? reasons[0] : reasons.length>1 ? reasons : '';
       const deadline = deadlines.length===1 ? deadlines[0] : deadlines.length>1 ? deadlines : '';
       subs.push({
-        name,
+        name:          n,
         start:         (document.getElementById('sedit-s-'+sid)||{}).value||'',
         end:           (document.getElementById('sedit-e-'+sid)||{}).value||'',
         duration:      durEl ? durEl.textContent.trim() : '—',
@@ -1335,7 +1335,15 @@ async function loadTodayIntoForm() {
 
   // 오늘 저장된 데이터 우선
   const saved = await dbGetDoc('tasks', taskKey(date, name));
-  let projects = saved?.projects?.length ? saved.projects : [];
+  let rawProjects = saved?.projects?.length ? saved.projects : [];
+  // 잘못 저장된 subtask name 보정 (이전 버그: name 필드에 프로젝트명이 들어간 경우)
+  let projects = rawProjects.map(p => ({
+    ...p,
+    subtasks: (p.subtasks||[]).map(t => ({
+      ...t,
+      name: (t.name && t.name !== p.name) ? t.name : t.name||'',
+    }))
+  }));
 
   // 없으면 이전 기록 중 만료 안 된 미완료 프로젝트 carry-over
   if (!projects.length) {
@@ -1397,6 +1405,8 @@ async function saveRetro() {
     saved_at: new Date().toISOString(),
   });
   showToast('✅ 데일리 회고 저장 완료!');
+  // 회고 요약 즉시 업데이트
+  await loadRetroSummary();
 }
 
 async function loadRetroSummary() {
