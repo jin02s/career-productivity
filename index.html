@@ -833,8 +833,11 @@ function enterApp() {
   if (window._inboxTimer) clearInterval(window._inboxTimer);
   window._inboxTimer = setInterval(checkInbox, 30000);
 
-  // 업무 입력 화면으로 이동 (Firebase 연결 여부와 무관하게 폼 로드)
-  showPage('input', document.querySelector('#nav-member .nav-item'));
+  // 업무 입력 화면 활성화 (데이터 로드는 Firebase 연결 후 tryFirebase에서 처리)
+  document.querySelectorAll('.page-section').forEach(p=>p.classList.remove('visible'));
+  document.getElementById('page-input')?.classList.add('visible');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelector('#nav-member .nav-item')?.classList.add('active');
 }
 
 // ── 프로젝트 / 세부업무 ───────────────────────────────────────────────────────
@@ -1944,8 +1947,11 @@ function showPage(id, btn) {
   function tryFirebase() {
     if (typeof firebase !== 'undefined') {
       initFirebase();
-      // 세션 복원 후 데이터 새로고침
+      // Firebase 연결 완료 후 무조건 데이터 재로드 (세션 복원 이후라면)
       if (CU) {
+        // project-list 초기화 후 Firebase에서 최신 데이터 로드
+        document.getElementById('project-list').innerHTML = '';
+        projCount = 0; subCount = 0;
         loadTodayIntoForm().then(()=>{
           if (!document.getElementById('project-list')?.children.length) addProject();
         });
