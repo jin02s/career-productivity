@@ -700,10 +700,17 @@ async function dbDelete(col, id) {
   }
 }
 
-// ── Firebase 설정 저장 자동 로드 ─────────────────────────────────────────────
+// ── Firebase 설정 (하드코딩 — 팀원 별도 설정 불필요) ─────────────────────────
 (function() {
-  const s = localStorage.getItem('fb_config');
-  if (s) { try { initFirebase(JSON.parse(s)); } catch(e) {} }
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyCb1k-OV6g50WZxJg_hR-uLlafxSp0el-s",
+    authDomain: "work-management-9c44b.firebaseapp.com",
+    projectId: "work-management-9c44b",
+    storageBucket: "work-management-9c44b.firebasestorage.app",
+    messagingSenderId: "1037886574318",
+    appId: "1:1037886574318:web:c7a63f7a45e2ef9f64edff"
+  };
+  try { initFirebase(FIREBASE_CONFIG); } catch(e) {}
 })();
 function openFirebaseModal() {
   const s = localStorage.getItem('fb_config');
