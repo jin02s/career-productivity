@@ -961,7 +961,16 @@ function addSubTask(pid, data={}) {
         onchange="onTimeEdit(${sid},'end',${pid})">
       <span class="edit-link" onclick="toggleEdit(${sid},'end')">수동편집</span>
     </td>
-    <td class="dur-cell" id="sdur-${sid}">${data.duration||'—'}</td>
+    <td class="dur-cell" id="sdur-${sid}">${data.duration||'—'}
+      <div style="display:flex;align-items:center;gap:3px;margin-top:4px;font-size:11px;color:var(--text-muted)">
+        <span>☕</span>
+        <input type="number" id="slunch-${sid}" min="0" max="480" step="5"
+          value="${data.lunch||0}"
+          style="width:44px;font-size:11px;padding:1px 4px;border:1px solid var(--border);border-radius:4px;text-align:center"
+          onchange="recalcDur(${sid},${pid})" title="점심 등 유휴시간 차감(분)">
+        <span>분</span>
+      </div>
+    </td>
     <td>
       <select class="status-sel" id="ssel-${sid}"
         onchange="onStatusSelChange(${sid},${pid},this.value)">
@@ -1033,13 +1042,31 @@ function recalcDur(sid, pid) {
   const s = document.getElementById('sedit-s-' + sid);
   const e = document.getElementById('sedit-e-' + sid);
   const c = document.getElementById('sdur-' + sid);
+  const lunchEl = document.getElementById('slunch-' + sid);
   if (!s || !e || !c) return;
   if (s.value && e.value) {
-    const diff = (parseInt(e.value.split(':')[0])*60 + parseInt(e.value.split(':')[1]))
-               - (parseInt(s.value.split(':')[0])*60 + parseInt(s.value.split(':')[1]));
-    if (diff > 0) { c.textContent = diff + '분'; c.style.color = 'var(--accent)'; }
-    else           { c.textContent = '오류';     c.style.color = 'var(--danger)'; }
-  } else { c.textContent = '—'; c.style.color = ''; }
+    let diff = (parseInt(e.value.split(':')[0])*60 + parseInt(e.value.split(':')[1]))
+             - (parseInt(s.value.split(':')[0])*60 + parseInt(s.value.split(':')[1]));
+    if (diff < 0) diff += 1440; // 자정 넘김 처리
+    const lunch = lunchEl ? (parseInt(lunchEl.value) || 0) : 0;
+    const net = diff - lunch;
+    // 셀 내 텍스트만 업데이트 (입력란 DOM은 유지)
+    const firstChild = c.firstChild;
+    if (net > 0) {
+      if (firstChild && firstChild.nodeType === Node.TEXT_NODE) firstChild.textContent = net + '분';
+      else c.insertBefore(document.createTextNode(net + '분'), c.firstChild);
+      c.style.color = 'var(--accent)';
+    } else {
+      if (firstChild && firstChild.nodeType === Node.TEXT_NODE) firstChild.textContent = diff > 0 ? '0분' : '오류';
+      else c.insertBefore(document.createTextNode(diff > 0 ? '0분' : '오류'), c.firstChild);
+      c.style.color = net < 0 ? 'var(--danger)' : '';
+    }
+  } else {
+    const firstChild = c.firstChild;
+    if (firstChild && firstChild.nodeType === Node.TEXT_NODE) firstChild.textContent = '—';
+    c.style.color = '';
+  }
+  updateSummary();
 }
 function setSubStatus(sid, pid, status) {
   const row = document.getElementById('sub-' + sid);
@@ -1191,7 +1218,8 @@ function getProjectsData() {
         name:          n,
         start:         (document.getElementById('sedit-s-' + sid) || {}).value || '',
         end:           (document.getElementById('sedit-e-' + sid) || {}).value || '',
-        duration:      (document.getElementById('sdur-' + sid)    || {}).textContent || '—',
+        duration:      (() => { const el = document.getElementById('sdur-' + sid); if (!el) return '—'; const t = el.firstChild; return (t && t.nodeType===Node.TEXT_NODE) ? t.textContent.trim()||'—' : el.textContent.trim()||'—'; })(),
+        lunch:         parseInt((document.getElementById('slunch-' + sid)||{}).value||0)||0,
         status:        selEl ? selEl.value : (tr.dataset.status || '시작전'),
         delay_reason:  (document.getElementById('sdr-' + sid) || {}).value || '',
         delay_deadline:(document.getElementById('sdd-' + sid) || {}).value || '',
